@@ -1,6 +1,8 @@
 package com.zangcun.store.fragment;
 
 import android.content.Intent;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import cn.sharesdk.framework.Platform;
@@ -9,11 +11,19 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
+import com.google.gson.JsonObject;
 import com.zangcun.store.MyActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.activity.GetCordActivity;
 import com.zangcun.store.activity.RegisterActivity;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DictionaryTool;
+import com.zangcun.store.utils.HttpUtils;
+import com.zangcun.store.utils.ToastUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.util.HashMap;
 
@@ -88,8 +98,6 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
                 验证代码，验证成功才执行下面的回调
                  */
                 handleLogin();
-                if (listener != null)
-                    listener.onLoginClick("个人中心");
                 break;
             case R.id.mashang_login://马上注册
                 startActivity(RegisterActivity.class);
@@ -110,13 +118,58 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void handleLogin() {
-//        String uername = mLogin_uname.getText().toString();
-//        String password = mLogin_pass.getText().toString();
+        String uername = mLogin_uname.getText().toString().trim();
+        String password = mLogin_pass.getText().toString();
+        RequestParams params = new RequestParams(Const.URL_AUTH_TOKEN);
+        params.addBodyParameter("phone",uername);
+        params.addBodyParameter("password",password);
+        HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
+            @Override
+            public boolean onCache(String s) {
+                return false;
+            }
 
-//        Map<String, String> map = new HashMap<String, String>();
-//        map.put("phone", mLogin_uname.getText().toString());
-//        map.put("password", mLogin_pass.getText().toString().trim());
-//        CommandBase.requestDataMap(mThis, Const.URL_AUTH_TOKEN, handler, map);
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+                try {
+                    JSONObject obj = new JSONObject(s);
+                    String token = obj.getString("token");
+                    if (TextUtils.isEmpty(token)){
+                        return;
+                    }
+                    DictionaryTool.saveToken(getActivity().getApplicationContext(),token);
+                    if (listener != null)
+                        listener.onLoginClick("个人中心");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                ToastUtils.show(getActivity().getApplication(),"账号或密码错误，\n请重新输入");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+
+    }
+
+    /***
+     * 请求token
+     * @param uername
+     */
+    private void requestToken(String uername) {
 
     }
 //    private Handler handler = new Handler() {

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
 
     public static final String TAG_FIRST_LOADING = "tag_first_loading";
-    private  String TAG;
+    public  String TAG;
 
     protected View mView;
     protected FragmentActivity mThis;

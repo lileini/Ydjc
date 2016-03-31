@@ -1,11 +1,21 @@
 package com.zangcun.store;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.zangcun.store.fragment.*;
+import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DictionaryTool;
+import com.zangcun.store.utils.HttpUtils;
+import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.TabLayout;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 public class MyActivity extends BaseActivity implements TabLayout.ITabClick, UserFragment.ILoginClick, PersonalFragment.PersionILoginClick {
     public static String[] mTabs = new String[]{"专题", "分类", "购物车", "登录"};
@@ -32,6 +42,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         mTitle = findViewById(R.id.title_group);
         mTitleText = (TextView) findViewById(R.id.title);
         strFlag = getIntent().getStringExtra("falg");
+
     }
 
     private void initEvent() {
@@ -43,6 +54,62 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         mTitle.setVisibility(View.GONE);
         mTab.setOnTabClickListener(this);
         initFragment();
+        autoLogin();
+    }
+
+    /**
+     * 自动登录
+     */
+    private void autoLogin() {
+        String user = DictionaryTool.getUser(getApplicationContext());
+        String pwd = DictionaryTool.getPWD(getApplicationContext());
+        if (!TextUtils.isEmpty(user)  && !TextUtils.isEmpty(pwd)){
+            login(user,pwd);
+        }
+    }
+
+    private void login(String user, String pwd) {
+        RequestParams params = new RequestParams(Const.URL_AUTH_TOKEN);
+        params.addBodyParameter("phone",user);
+        params.addBodyParameter("password",pwd);
+        HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
+            @Override
+            public boolean onCache(String s) {
+                return false;
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+                try {
+                    JSONObject obj = new JSONObject(s);
+                    String token = obj.getString("token");
+                    if (TextUtils.isEmpty(token)){
+                        return;
+                    }
+                    DictionaryTool.saveToken(getApplicationContext(),token);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                ToastUtils.show(getApplication(),"自动登录失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
     }
 
     private void initFragment() {
