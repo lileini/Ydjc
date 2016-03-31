@@ -1,0 +1,252 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/dividers"
+>
+
+    <include layout="@layout/personal_title"/>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+    >
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:background="@color/white"
+                      android:layout_marginTop="15dp"
+        >
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:padding="3dp"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="处理状态"
+                          android:layout_weight="1"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="已确认"
+                          android:textColor="@color/green"
+                          android:layout_marginRight="5dp"
+                          android:textSize="15sp"
+                />
+            </LinearLayout>
+            <View android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:background="@color/divider"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginRight="10dp"
+            />
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:paddingTop="5dp"
+                          android:paddingBottom="5dp"
+                          android:paddingLeft="10dp"
+                          android:paddingRight="10dp"
+            >
+                <EditText android:layout_width="match_parent"
+                          android:layout_height="35dp"
+                          android:hint="请填写快递公司及运单号"
+                          android:textSize="15sp"
+                          android:padding="8dp"
+                          android:background="@drawable/dtk_btn_wl"
+                          android:layout_weight="1"
+                          android:layout_gravity="center"
+                />
+                <Button android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:text="提交"
+                        android:layout_weight="3"
+                        android:layout_gravity="center"
+                        android:background="@color/loess"
+                        android:textColor="@color/white"
+                />
+            </LinearLayout>
+            <!--第六个界面与之相同，隐藏运单号布局，显示追踪布局即可-->
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:padding="3dp"
+                          android:visibility="gone"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:text="运单追踪"
+                          android:layout_weight="1"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="15sp"
+
+
+                />
+                <ImageView android:layout_width="wrap_content"
+                          android:layout_height="20dp"
+                          android:src="@drawable/btn_icon_right"
+                          android:layout_marginRight="5dp"
+                />
+            </LinearLayout>
+            <View android:layout_width="match_parent"
+                  android:layout_height="8dp"
+                  android:background="@color/divider"
+            />
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:padding="3dp"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="退款编号"
+                          android:layout_weight="1"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="13sp"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="123456789"
+                          android:layout_marginRight="5dp"
+                          android:textSize="13sp"
+                />
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:padding="3dp"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="退款时间"
+                          android:layout_weight="1"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="13sp"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="2016-3-28 17:00"
+                          android:layout_marginRight="5dp"
+                          android:textSize="13sp"
+                />
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:padding="3dp"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="退款原因"
+                          android:layout_weight="1"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="13sp"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="无"
+                          android:layout_marginRight="5dp"
+                          android:textSize="13sp"
+                />
+            </LinearLayout>
+            <View android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:background="@color/divider"
+                  android:layout_marginTop="3dp"
+                  android:layout_marginBottom="3dp"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginRight="10dp"
+            />
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:padding="3dp"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="退款电话"
+                          android:layout_weight="1"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="13sp"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="123456789"
+                          android:layout_marginRight="5dp"
+                          android:textSize="13sp"
+                />
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:padding="3dp"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="退款地址"
+                          android:layout_weight="1"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="13sp"
+                />
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="四川省成都市高新区"
+                          android:layout_marginRight="5dp"
+                          android:ellipsize="end"
+                          android:maxLength="10"
+                          android:textSize="13sp"
+                />
+            </LinearLayout>
+            <View android:layout_width="match_parent"
+                  android:layout_height="8dp"
+                  android:background="@color/divider"
+            />
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_marginTop="6dp"
+                          android:background="@color/white"
+                          android:padding="3dp"
+            >
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="退款商品"
+                          android:layout_marginLeft="5dp"
+                          android:textSize="15sp"
+                />
+                <ListView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/lv"
+                          android:layout_marginTop="5dp"
+                          android:layout_marginLeft="5dp"
+                          android:layout_marginRight="5dp"
+                >
+
+                </ListView>
+
+            </LinearLayout>
+        </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="70dp"
+                  android:layout_alignParentBottom="true"
+                  android:padding="12dp"
+                  android:background="@color/white"
+    >
+        <Button android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="取消申请"
+                android:textColor="@color/white"
+                android:background="@drawable/button_divider_selector"
+
+        />
+    </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>

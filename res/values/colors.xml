@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="divider">#e0e0e0</color>
+    <color name="dividers">#FFEFEFEF</color>
+    <color name="divideres">#FFA4A4A4</color>
+    <color name="pink">#FF4B93</color>
+    <color name="clouds">#ecf0f1</color>
+    <color name="black">#000</color>
+    <color name="white">#fff</color>
+    <color name="grey">#666666</color>
+    <color name="yellow">#ae9962</color>
+    <color name="loess">#ae8327</color>
+    <color name="btn_b">#FF009acd</color>
+    <color name="btn_ay">#AA009acd</color>
+    <color name="red">#980202</color>
+    <color name="green">#FF12980D</color>
+</resources>

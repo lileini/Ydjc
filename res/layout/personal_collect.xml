@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/personal_title"/>
+
+    <GridView android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/gv_collect"
+              android:numColumns="2"
+              android:layout_margin="10dp"
+              android:visibility="gone"
+   />
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:gravity="center_horizontal"
+                  android:layout_marginTop="150dp"
+
+    >
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/icon_sc"
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="还没有收藏任何商品"
+                  android:textSize="15sp"
+                  android:layout_marginTop="18dp"
+        />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

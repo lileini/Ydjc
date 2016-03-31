@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shop_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/gwc_null"
+        android:layout_above="@+id/gwc_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+    >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="153dp"
+            android:src="@drawable/gwc_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="空" />
+
+        <Button
+            android:id="@+id/goshopping"
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="33dp"
+            android:background="@drawable/dtk_btn_wl"
+            android:text="去购物"
+            android:textColor="@color/loess"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/gwc_listview"
+        android:background="#33666666"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/gwc_layout" >
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/gwc_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/gwc_shape_bg"
+        android:padding="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:id="@+id/gwc_should_pay"
+            android:layout_weight="1"
+            android:text="应付金额:¥0" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+             android:id="@+id/gwc_to_pay"
+            android:background="@drawable/button_selector"
+            android:gravity="center"
+            android:text="去结算(0)" />
+    </LinearLayout>
+
+</RelativeLayout>

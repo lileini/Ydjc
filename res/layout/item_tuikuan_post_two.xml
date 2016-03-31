@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/dividers">
+    <include layout="@layout/personal_title"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_weight="1"
+    >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="退款原因"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="15dp"
+                  android:layout_marginTop="10dp"
+        />
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp">
+            <AutoCompleteTextView android:layout_width="match_parent"
+                                  android:layout_height="50dp"
+                                  android:hint="请选择退款原因"
+                                  android:textSize="14sp"
+                                  android:padding="9dp"
+                                  android:id="@+id/tv_cause"
+                                  android:background="@drawable/tuikuan_radius"
+                                  android:layout_marginTop="5dp"
+            />
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/icon_tk_xl"
+                       android:layout_alignParentRight="true"
+                       android:layout_centerInParent="true"
+                       android:layout_marginRight="0dp"
+                       android:padding="15dp"
+            />
+        </RelativeLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:layout_marginLeft="15dp"
+                      android:layout_marginTop="10dp">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="退款金额"
+                      android:textSize="14sp"
+            />
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="最多1.00"
+                      android:textSize="12sp"
+                      android:layout_marginLeft="5dp"
+                      android:textColor="@color/divideres"
+            />
+        </LinearLayout>
+        <EditText android:layout_width="match_parent"
+                  android:layout_height="50dp"
+                  android:hint="请输入退款金额"
+                  android:textSize="14sp"
+                  android:id="@+id/tv_money"
+                  android:padding="9dp"
+                  android:background="@drawable/tuikuan_radius"
+                  android:layout_marginLeft="15dp"
+                  android:layout_marginRight="15dp"
+                  android:layout_marginTop="5dp"
+        />
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:layout_marginLeft="15dp"
+                      android:layout_marginTop="10dp"
+        >
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="退款说明"
+                      android:textSize="14sp"
+            />
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="（可不填）"
+                      android:textSize="12sp"
+                      android:layout_marginLeft="5dp"
+                      android:textColor="@color/divideres"
+            />
+        </LinearLayout>
+        <EditText android:layout_width="match_parent"
+                  android:layout_height="50dp"
+                  android:hint="请填写退款说明"
+                  android:textSize="14sp"
+                  android:id="@+id/tv_shuoming"
+                  android:padding="9dp"
+                  android:background="@drawable/tuikuan_radius"
+                  android:layout_marginLeft="15dp"
+                  android:layout_marginRight="15dp"
+                  android:layout_marginTop="5dp"
+        />
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:layout_marginLeft="15dp"
+                      android:layout_marginTop="10dp"
+        >
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="添加凭证照片"
+                      android:textSize="14sp"
+            />
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="（最多四张）"
+                      android:textSize="12sp"
+                      android:layout_marginLeft="5dp"
+                      android:textColor="@color/divideres"
+            />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="@drawable/tuikuan_radius"
+                      android:orientation="horizontal"
+                      android:padding="5dp"
+                      android:layout_marginLeft="15dp"
+                      android:layout_marginRight="15dp"
+                      android:layout_marginTop="5dp"
+        >
+            <ImageView android:layout_width="70dp"
+                       android:layout_height="60dp"
+                       android:src="@drawable/pj_img_p"
+            />
+            <ImageView android:layout_width="50dp"
+                       android:layout_height="50dp"
+                       android:src="@drawable/sp_icon_zw"
+                       android:layout_weight="1"
+                       android:layout_marginLeft="10dp"
+                       android:visibility="gone"
+            />
+            <ImageView android:layout_width="50dp"
+                       android:layout_height="50dp"
+                       android:src="@drawable/sp_icon_zw"
+                       android:layout_weight="1"
+                       android:visibility="gone"
+            />
+            <ImageView android:layout_width="50dp"
+                       android:layout_height="50dp"
+                       android:src="@drawable/sp_icon_zw"
+                       android:layout_weight="1"
+                       android:visibility="gone"
+            />
+            <ImageView android:layout_width="50dp"
+                       android:layout_height="50dp"
+                       android:src="@drawable/sp_icon_zw"
+                       android:layout_weight="1"
+                       android:visibility="gone"
+            />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="40dp"
+                  android:orientation="horizontal"
+                  android:layout_marginRight="13dp"
+                  android:layout_marginLeft="13dp"
+                  android:layout_marginBottom="8dp"
+    >
+        <Button android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="取消申请"
+                android:layout_weight="1"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:background="@drawable/button_divider_selector"
+        />
+        <Button android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_selector"
+                android:text="提交申请"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+        />
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+</LinearLayout>

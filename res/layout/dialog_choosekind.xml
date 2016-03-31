@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/black"
+              android:orientation="vertical"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              >
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:background="@color/white"
+                  android:paddingBottom="10dp"
+    >
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/gwc_del"
+                   android:padding="10dp"
+                   android:layout_gravity="center_horizontal"
+                   android:id="@+id/goods_choose_del"/>
+        <View android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:background="@color/divider"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+        />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="尺寸分类:"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"/>
+        <!-- 这里动态加载 选择尺寸的选项 -->
+        <LinearLayout
+                android:id="@+id/choose_chicun_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+        </LinearLayout>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#33333333"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="颜色分类:"
+                android:layout_marginLeft="5dp"
+                android:textSize="14sp"/>
+        <LinearLayout
+                android:id="@+id/choose_color_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/divider"/>
+
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+        >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="购买数量:"/>
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:layout_alignParentRight="true"
+                          android:layout_centerInParent="true"
+                          android:gravity="center"
+            >
+                <ImageView
+                        android:id="@+id/choose_less"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:src="@drawable/icon_sp_js"/>
+
+                <EditText
+                        android:id="@+id/choose_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:background="@color/white"
+                        android:padding="10dp"
+                        android:text="1"/>
+
+                <ImageView
+                        android:id="@+id/choose_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/icon_sp_zj"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <View android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:background="@color/divider"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+        />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

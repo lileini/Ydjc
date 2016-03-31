@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@color/divider"
+              android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:background="@color/white"
+                  android:orientation="vertical"
+                  android:layout_margin="6dp"
+    >
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/title_layout1"
+            android:orientation="horizontal" >
+
+        <View
+                android:layout_width="110dp"
+                android:layout_height="1dp"
+                android:background="#666666" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/filter_title1"
+                android:gravity="center"
+                android:text="商品" />
+
+        <View
+                android:layout_width="110dp"
+                android:layout_height="1dp"
+                android:background="#666666" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_weight="1"
+                  android:id="@+id/filter_layout1"
+    >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="全部"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="30dp"
+                  android:id="@+id/filter_tv1"
+        />
+        <GridView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/filter_grid_1"
+                  android:numColumns="4"
+                  android:layout_marginRight="16dp"
+                  android:layout_marginLeft="5dp"
+                  android:horizontalSpacing="10dp"
+                  android:verticalSpacing="10dp"
+        />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/title_layout2"
+            android:orientation="horizontal" >
+
+        <View
+                android:layout_width="110dp"
+                android:layout_height="1dp"
+                android:background="#666666" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/filter_title2"
+                android:gravity="center"
+                android:text="商品" />
+
+        <View
+                android:layout_width="110dp"
+                android:layout_height="1dp"
+                android:background="#666666" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_weight="1"
+                  android:id="@+id/filter_layout2"
+    >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="全部"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="30dp"
+                  android:id="@+id/filter_tv2"
+        />
+        <GridView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/filter_grid_2"
+                  android:numColumns="4"
+                  android:layout_marginRight="16dp"
+                  android:layout_marginLeft="5dp"
+                  android:horizontalSpacing="10dp"
+                  android:verticalSpacing="10dp"
+                  android:layout_marginBottom="10dp"
+        />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:background="@color/white"
+    >
+        <Button
+                android:id="@+id/tv_calce"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_selector"
+                android:text="取消"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        <Button
+                android:id="@+id/tv_sure"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_shopping_selector"
+                android:text="确认"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

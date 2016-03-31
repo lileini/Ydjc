@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/tangka_container"
+>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@color/black"
+    >
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/tangka_left"
+                   android:layout_centerVertical="true"
+                   android:layout_marginLeft="10dp"
+                   android:paddingRight="20dp"
+                   android:paddingTop="5dp"
+                   android:paddingBottom="5dp"
+                   android:src="@drawable/title_img_selecotr"
+        />
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="唐卡"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_centerInParent="true"
+        />
+    </RelativeLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:orientation="horizontal"
+                  android:background="@drawable/item_bg_botto_divider"
+                  android:layout_height="35dp">
+        <TextView android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:layout_weight="1"
+                  android:text="默认"
+                  android:gravity="center"
+                  android:id="@+id/sort_tk_mr"
+        />
+        <LinearLayout android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:orientation="horizontal"
+                      android:gravity="center"
+                      android:id="@+id/root_price"
+                      android:layout_height="match_parent">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="价格"
+                      android:id="@+id/sort_tk_price"
+            />
+            <com.zangcun.store.widget.MultImageVIew
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:id="@+id/tk_price_order"
+            />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:orientation="horizontal"
+                      android:gravity="center"
+                      android:id="@+id/root_num"
+                      android:layout_height="match_parent">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/sort_tk_num"
+                      android:text="销量"
+            />
+            <com.zangcun.store.widget.MultImageVIew
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:id="@+id/tk_num_order"
+            />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp"
+                      android:layout_weight="1"
+                      android:orientation="horizontal"
+                      android:gravity="center"
+                      android:layout_height="match_parent">
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:gravity="center"
+                      android:id="@+id/root_choose"
+                      android:text="筛选"
+            />
+            <com.zangcun.store.widget.MultImageVIew
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:id="@+id/tk_choose_order"
+            />
+        </LinearLayout>
+    </LinearLayout>
+    
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/gv"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="100dp"
+        android:gravity="fill"
+        android:horizontalSpacing="6dp"
+        android:numColumns="2"
+        android:padding="3dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="6dp"
+        ptr:ptrMode="both" />
+</LinearLayout>

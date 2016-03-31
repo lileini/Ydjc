@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp"
+                  android:orientation="horizontal">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="下单时间"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="10dp"
+                  android:id="@+id/tv_dingdan"
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="2016-03-23"
+                  android:layout_weight="1"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="10dp"
+                  android:id="@+id/tv_lin_time"
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="等待付款"
+                  android:textSize="14sp"
+                  android:layout_marginRight="10dp"
+                  android:id="@+id/tv_lin_pay"
+        />
+    </LinearLayout>
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/divider"
+          android:layout_marginTop="10dp"
+    />
+    <RelativeLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+    >
+        <ImageView android:layout_width="80dp"
+                   android:layout_height="80dp"
+                   android:id="@+id/lin_img"
+                   android:src="@drawable/sp_icon_zw"
+                   android:layout_marginLeft="10dp"
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="x"
+                  android:layout_toRightOf="@+id/lin_img"
+                  android:layout_alignBottom="@+id/lin_img"
+                  android:layout_marginLeft="6dp"
+                  android:textSize="12sp"
+                  android:id="@+id/linpay_chen"
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="1"
+                  android:layout_toRightOf="@+id/linpay_chen"
+                  android:layout_alignBottom="@+id/linpay_chen"
+                  android:textSize="16sp"
+                  android:layout_marginLeft="2dp"
+                  android:id="@+id/lin_number"
+        />
+    </RelativeLayout>
+    <View android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/divider"
+          android:layout_marginTop="10dp"
+    />
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+    >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="订单金额:"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="10dp"
+                  android:id="@+id/tv_money"
+                  android:layout_centerVertical="true"
+
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="￥ 236"
+                  android:layout_toRightOf="@+id/tv_money"
+                  android:layout_marginLeft="6dp"
+                  android:textSize="18sp"
+                  android:id="@+id/money"
+                  android:textColor="@color/red"
+                  android:layout_centerVertical="true"
+        />
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="xxxx"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btn_go_pay"
+                android:id="@+id/btn_lin_cancle"
+                android:textSize="14sp"
+                android:background="@drawable/dsh_btn_tk"
+                android:layout_marginRight="15dp"
+        />
+        <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_go_pay"
+                android:textSize="14sp"
+                android:text="xxxx"
+                android:textColor="@color/loess"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/dtk_btn_wl"
+        />
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,173 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/divider"
+>
+    <include layout="@layout/personal_title"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:background="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收货人："
+                android:layout_alignParentLeft="true"/>
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/et_shouhuoren"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textSize="13sp"
+                android:padding="10dp"/>
+    </LinearLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F6F5F4"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:background="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="联系电话："
+                android:layout_alignParentLeft="true"/>
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/et_Mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textSize="13sp"
+                android:inputType="number"
+                android:padding="10dp"/>
+    </LinearLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F6F5F4"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/white"
+    >
+        <TextView
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:background="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收货时间 :"
+                android:layout_alignParentLeft="true"/>
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:id="@+id/tv_week"
+                  android:text="星期一~星期五（工作日）"
+                  android:gravity="center_vertical"
+                  android:textSize="13sp"
+        />
+        <ListView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/thund"
+                  android:visibility="gone"
+        />
+    </LinearLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="13dp"
+            android:background="@color/divider"/>
+    <LinearLayout
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:background="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="所在地区："
+                android:layout_alignParentLeft="true"/>
+        <ListView android:layout_width="100dp"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/sheng"
+                  android:layout_weight="1"
+                  android:visibility="gone"
+        />
+        <ListView android:layout_width="100dp"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/shi"
+                  android:layout_weight="1"
+                  android:visibility="gone"
+        />
+        <ListView android:layout_width="100dp"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/xian"
+                  android:layout_weight="1"
+                  android:visibility="gone"
+        />
+                <Spinner android:layout_width="80dp"
+                         android:layout_height="40dp "
+                         android:id="@+id/province"
+                         android:background="@color/white"/>
+                <Spinner android:layout_width="80dp"
+                         android:layout_height="40dp "
+                         android:id="@+id/city"
+                         android:background="@color/white"/>
+                <Spinner android:layout_width="80dp"
+                         android:layout_height="40dp "
+                         android:id="@+id/county"
+                         android:background="@color/white"/>
+    </LinearLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F6F5F4"
+    />
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+    >
+
+        <TextView
+
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:background="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="详细地址："
+                android:layout_alignParentLeft="true"
+        />
+        <EditText
+                android:layout_weight="1"
+                android:id="@+id/et_xiangxidizhi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:textSize="13sp"
+                android:padding="10dp"/>
+    </LinearLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
+
+
+</LinearLayout>

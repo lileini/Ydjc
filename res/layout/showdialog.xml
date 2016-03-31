@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_margin="60dp">
+
+    <RelativeLayout
+            android:id="@+id/rl_dialog_content"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:background="@drawable/radius">
+        <TextView
+                android:id="@+id/dialog_ts"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="提示"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:maxLines="5"
+                android:gravity="center"
+                android:textSize="18sp"
+        />
+        <TextView
+                android:id="@+id/dialog_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:maxLines="5"
+                android:textSize="14sp"
+                android:gravity="center"
+        />
+        <View android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:background="@color/divider"
+              android:layout_above="@+id/dialog_sure"
+        />
+        <Button
+                android:id="@+id/dialog_sure"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dialog_show"
+                android:text="确定"
+                android:maxLines="5"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/btn_b"
+                android:layout_alignParentBottom="true"
+        />
+    </RelativeLayout>
+</RelativeLayout>

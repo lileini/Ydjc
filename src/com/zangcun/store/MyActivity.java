@@ -1,0 +1,141 @@
+package com.zangcun.store;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.zangcun.store.fragment.*;
+import com.zangcun.store.widget.TabLayout;
+
+public class MyActivity extends BaseActivity implements TabLayout.ITabClick, UserFragment.ILoginClick, PersonalFragment.PersionILoginClick {
+    public static String[] mTabs = new String[]{"专题", "分类", "购物车", "登录"};
+    public static String[] mTabs1 = new String[]{"专题", "分类", "购物车", "个人中心"};
+    public static final String IS_LOGIN = "个人中心";
+    private View mTitle;
+    private TextView mTitleText;
+    private TabLayout mTab;
+    private String mCurrFragmentTag;
+    private boolean isLogin;
+    private String strFlag = null;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        init();
+        initEvent();
+    }
+
+
+    private void init() {
+        mTab = (TabLayout) findViewById(R.id.tab);
+        mTitle = findViewById(R.id.title_group);
+        mTitleText = (TextView) findViewById(R.id.title);
+        strFlag = getIntent().getStringExtra("falg");
+    }
+
+    private void initEvent() {
+        if (strFlag != null) {
+            mTab.setTab(3);
+        } else {
+            mTab.setTab(0);
+        }
+        mTitle.setVisibility(View.GONE);
+        mTab.setOnTabClickListener(this);
+        initFragment();
+    }
+
+    private void initFragment() {
+        for (int i = 0; i < mTabs.length; i++) {
+            putFragment(mTabs[i], getFragmentByIndex(i));
+        }
+        if (strFlag != null) {
+            for (int i = 0; i < mTabs.length; i++) {
+                putFragment(mTabs[i], getFragmentByIndexPersion(i));
+            }
+            switchFragment(mTabs[3]);
+            mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
+        } else {
+            switchFragment(mTabs[0]);
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        closeApp();
+    }
+
+    @Override
+    public void tabClick(int index) {
+        if (index == 0) {
+            mTitle.setVisibility(View.GONE);
+        } else {
+            mTitle.setVisibility(View.VISIBLE);
+            mTitleText.setText(mTabs[index]);
+        }
+        if (index == mTabs.length - 1) {
+            if (isLogin) {
+                switchFragment("个人中心");
+            } else {
+                switchFragment(mTabs[index]);
+            }
+        } else {
+            switchFragment(mTabs[index]);
+        }
+
+    }
+
+    public BaseFragment getFragmentByIndex(int index) {
+        switch (index) {
+            case 1:
+                return SortFragment.getInstance();
+            case 2:
+                return ShopFragment.getInstance();
+            case 3:
+                UserFragment fragment = UserFragment.getInstance();
+                fragment.setOnLoginClickListener(this);
+                return fragment;
+            default:
+                return SpecialFragment.getInstance();
+        }
+    }
+
+    public BaseFragment getFragmentByIndexPersion(int index) {
+        switch (index) {
+            case 0:
+                return SpecialFragment.getInstance();
+            case 1:
+                return SortFragment.getInstance();
+            case 2:
+                return ShopFragment.getInstance();
+            case 3:
+                PersonalFragment fragment = PersonalFragment.getInstance();
+                fragment.setPersionOnLoginClickListener(this);
+                return fragment;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoginClick(String text) {
+        putFragment(text, PersonalFragment.getInstance());
+        // mTab.setTabText(3,text);
+        mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
+        Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
+        mTitleText.setText(text);
+        switchFragment(text);
+        isLogin = true;
+    }
+
+    @Override
+    public void onPersionLoginClick(String text) {
+        putFragment(text, UserFragment.getInstance());
+        mTab.setTabText(3, "登录", R.drawable.btn_icon_gr, R.drawable.btn_icon_gr_sel);
+        mTitleText.setText(text);
+        switchFragment(text);
+        isLogin = true;
+    }
+}
