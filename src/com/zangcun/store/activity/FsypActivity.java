@@ -17,7 +17,7 @@ import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.FilterAdapter;
 import com.zangcun.store.adapter.FsypGridAdapter;
-import com.zangcun.store.model.FsypModel;
+import com.zangcun.store.model.FxModel;
 import com.zangcun.store.net.Http;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
@@ -49,7 +49,7 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
 
     private GridView mGv;
     private PullToRefreshGridView mPullToRefreshGridView;
-    private List<FsypModel> mDefautDatas;
+    private List<FxModel> mDefautDatas;
 
     private FsypGridAdapter mAdapter;
 
@@ -249,16 +249,16 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
             case MultImageVIew.DEFAUT:
                 vIew.setStateAndImg(MultImageVIew.HEIGHT_TO_LOW, resIds[1]);
                 if (vIew == mIvPrice) {
-                    Collections.sort(mDefautDatas, new Comparator<FsypModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(FsypModel lhs, FsypModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return Float.parseFloat(lhs.getPrice()) > Float.parseFloat(rhs.getPrice()) ? 1 : -1;
                         }
                     });
                 } else {
-                    Collections.sort(mDefautDatas, new Comparator<FsypModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(FsypModel lhs, FsypModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return lhs.getGoods_number() > rhs.getGoods_number() ? 1 : -1;
                         }
                     });
@@ -269,16 +269,16 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
             case MultImageVIew.HEIGHT_TO_LOW:
                 vIew.setStateAndImg(MultImageVIew.LOW_TO_HEIGHT, resIds[2]);
                 if (vIew == mIvPrice) {
-                    Collections.sort(mDefautDatas, new Comparator<FsypModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(FsypModel lhs, FsypModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return Float.parseFloat(lhs.getPrice()) > Float.parseFloat(rhs.getPrice()) ? -1 : 1;
                         }
                     });
                 } else {
-                    Collections.sort(mDefautDatas, new Comparator<FsypModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(FsypModel lhs, FsypModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return lhs.getGoods_number() > rhs.getGoods_number() ? -1 : 1;
                         }
                     });
@@ -305,7 +305,7 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
     public void onNetSuccess(String response, int requestCode) {
         Log.i(TAG, "onNetSuccess = "+response);
 
-        List<FsypModel> responseData = Net.parseJsonList(response, FsypModel.class);
+        List<FxModel> responseData = Net.parseJsonList(response, FxModel.class);
 		if (responseData == null) {
 			ToastUtils.show(this, "数据解析失败");
 			return;

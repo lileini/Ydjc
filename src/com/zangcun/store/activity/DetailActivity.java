@@ -14,20 +14,17 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewParent;
 import android.widget.*;
 import com.android.volley.VolleyError;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.GoodsViewPagerAdapter;
-import com.zangcun.store.model.FsypModel;
 import com.zangcun.store.model.FxModel;
-import com.zangcun.store.model.TkModel;
-import com.zangcun.store.model.XdModel;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Http;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.AdapterIndicator;
@@ -64,9 +61,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     private List<String> mGoodUrls = new ArrayList<String>();
     private List<String> mGoodContentUrls = new ArrayList<String>();
     private FxModel fxModel;
-    private XdModel xdModel;
-    private TkModel tkModel;
-    private FsypModel fsypModel;
 
     private RelativeLayout mChooseKindOption;
     private LinearLayout mGoodShowLayout;
@@ -168,18 +162,18 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         if (kind == null) {
             return;
         }
-        switch (kind) {
+        fxModel = (FxModel) getIntent().getSerializableExtra("fx");
+        if (fxModel == null) {
+            return;
+        }
+        mGoodsDesc.setText(fxModel.getGoods_name());
+        mPrice.setText("¥" + fxModel.getPrice());
+        mMarketPrice.setText("市场价：" + "¥" + fxModel.getMarket_price());
+        mGoodUrls = fxModel.getGood_image_urls();
+        mGoodContentUrls = fxModel.getContents();
+        addGoodsContent();
+        /*switch (kind) {
             case "fx":
-                fxModel = (FxModel) getIntent().getSerializableExtra("fx");
-                if (fxModel == null) {
-                    return;
-                }
-                mGoodsDesc.setText(fxModel.getGoods_name());
-                mPrice.setText("¥" + fxModel.getPrice());
-                mMarketPrice.setText("市场价：" + "¥" + fxModel.getMarket_price());
-                mGoodUrls = fxModel.getGood_image_urls();
-                mGoodContentUrls = fxModel.getContents();
-                addGoodsContent();
                 break;
             case "tk":
                 tkModel = (TkModel) getIntent().getSerializableExtra("tk");
@@ -217,7 +211,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 mGoodContentUrls = xdModel.getContents();
                 addGoodsContent();
                 break;
-        }
+        }*/
 
         mIndicator.bindViewPager(mViewPager);
         mIndicator.setPointCount(mGoodUrls.size());
@@ -322,28 +316,28 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             }
         });
         //动态添加商品数量
-        switch (kind) {
-            case "fx":
-                if (fxModel == null) {
-                    return;
-                }
-                List<List<String>> specs_array = fxModel.getSpecs_array();
-                Log.i(TAG, "specs_array = " + specs_array);
-                if (specs_array == null)
-                    return;
-                for (int i = 0, size = specs_array.size(); i < size; i++) {
-                    List<String> list = specs_array.get(i);
-                    addSizeChildView(i, list);
-                    addColorChildView(i, list);
-                }
+        if (fxModel == null) {
+            return;
+        }
+        List<List<String>> specs_array = fxModel.getSpecs_array();
+        Log.i(TAG, "specs_array = " + specs_array);
+        if (specs_array == null)
+            return;
+        for (int i = 0, size = specs_array.size(); i < size; i++) {
+            List<String> list = specs_array.get(i);
+            addSizeChildView(i, list);
+            addColorChildView(i, list);
+        }
 
-                //测试用
-                for (List<String> list : specs_array) {
-                    Log.i(TAG, "list = " + list.size());
-                    for (String s : list) {
-                        Log.i(TAG, "s = " + s);
-                    }
-                }
+        //测试用
+        for (List<String> list : specs_array) {
+            Log.i(TAG, "list = " + list.size());
+            for (String s : list) {
+                Log.i(TAG, "s = " + s);
+            }
+        }
+        /*switch (kind) {
+            case "fx":
                 break;
             case "tk":
                 if (tkModel == null) {
@@ -409,7 +403,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 }
 
                 break;
-        }
+        }*/
         //显示PopupWindow
         View rootview = LayoutInflater.from(this).inflate(R.layout.dialog_choosekind, null);
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
@@ -491,15 +485,14 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     private void addToShopCar() {
         //接口访问 操作购物车数据
         //to-do
-        switch (kind) {
+        if (fxModel == null) {
+            return;
+        }
+        int goods_id = fxModel.getGoods_id();
+        int id = fxModel.getOptions_id().get(0).getId();
+        addCart(goods_id, id,1);
+        /*switch (kind) {
             case "fx":
-                if (fxModel == null) {
-                    return;
-                }
-                int goods_id = fxModel.getGoods_id();
-                int id = fxModel.getOptions_id().get(0).getId();
-                addCart(goods_id, id,1);
-                break;
             case "tk":
                 if (tkModel == null) {
                     return;
@@ -518,7 +511,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 }
 
                 break;
-        }
+        }*/
     }
 
     /**
@@ -532,6 +525,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         params.addBodyParameter("goods_id",goods_id+"");
         params.addBodyParameter("count",""+count);
         params.addBodyParameter("option_id",id+"");
+        // TODO: 2016/4/1 处理没有用户的情况
+        params.addHeader("AUTHORIZATION", DictionaryTool.getToken(getApplicationContext()));
         HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
             @Override
             public boolean onCache(String s) {
@@ -545,8 +540,11 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                Log.i(TAG, "add cart onError = "+ throwable.toString());
-
+                String errorSt = throwable.toString();
+                Log.i(TAG, "add cart onError = "+ errorSt);
+                if (errorSt.contains("401") && errorSt.contains("no user")){
+                    reQuestToken();
+                }
             }
 
             @Override
@@ -559,6 +557,13 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
             }
         },params);
+    }
+
+    /**
+     * 请求token
+     */
+    private void reQuestToken() {
+
     }
 
 
@@ -580,12 +585,12 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     private void toShopCar() {
 //         startActivity(new Intent(this, ShopCarActivity.class));
         Map<String, String> map = new HashMap<String, String>();
-        switch (kind) {
+        map.put("good_id ", String.valueOf(fxModel.getGoods_id()));
+        map.put("count", "1");
+        map.put("option_id ", fxModel.getOptions_id() + "");
+        CommandBase.requestDataNoMap(getApplicationContext(), Net.URL_GOODS_CARTS, handler, map);
+        /*switch (kind) {
             case "fx":
-                map.put("good_id ", String.valueOf(fxModel.getGoods_id()));
-                map.put("count", "1");
-                map.put("option_id ", fxModel.getOptions_id() + "");
-                CommandBase.requestDataNoMap(getApplicationContext(), Net.URL_GOODS_CARTS, handler, map);
                 break;
             case "tk":
                 map.put("good_id ", String.valueOf(tkModel.getGoods_id()));
@@ -605,7 +610,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 map.put("option_id ", xdModel.getOptions_id() + "");
                 CommandBase.requestDataNoMap(getApplicationContext(), Net.URL_GOODS_CARTS, handler, map);
                 break;
-        }
+        }*/
 
     }
 
@@ -647,7 +652,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
      */
     public boolean isHaveChooesOption() {
 
-        List<List<String>> specs_array = fsypModel.getSpecs_array();
+        List<List<String>> specs_array = fxModel.getSpecs_array();
         Log.i(TAG, "specs_array = " + specs_array);
         if (specs_array == null)
             return false;

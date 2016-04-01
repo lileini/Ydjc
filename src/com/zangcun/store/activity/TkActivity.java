@@ -18,7 +18,7 @@ import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.FilterAdapter;
 import com.zangcun.store.adapter.TkGridAdapter;
-import com.zangcun.store.model.TkModel;
+import com.zangcun.store.model.FxModel;
 import com.zangcun.store.net.Http;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
@@ -53,7 +53,7 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
 
     private GridView mGv;
     private PullToRefreshGridView mPullToRefreshGridView;
-    private List<TkModel> mDefautDatas;
+    private List<FxModel> mDefautDatas;
 
     private TkGridAdapter mAdapter;
 
@@ -250,16 +250,16 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
             case MultImageVIew.DEFAUT:
                 vIew.setStateAndImg(MultImageVIew.HEIGHT_TO_LOW, resIds[1]);
                 if (vIew == mIvPrice) {
-                    Collections.sort(mDefautDatas, new Comparator<TkModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(TkModel lhs, TkModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return Float.parseFloat(lhs.getPrice()) > Float.parseFloat(rhs.getPrice()) ? 1 : -1;
                         }
                     });
                 } else {
-                    Collections.sort(mDefautDatas, new Comparator<TkModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(TkModel lhs, TkModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return lhs.getGoods_number() > rhs.getGoods_number() ? 1 : -1;
                         }
                     });
@@ -269,16 +269,16 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
             case MultImageVIew.HEIGHT_TO_LOW:
                 vIew.setStateAndImg(MultImageVIew.LOW_TO_HEIGHT, resIds[2]);
                 if (vIew == mIvPrice) {
-                    Collections.sort(mDefautDatas, new Comparator<TkModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(TkModel lhs, TkModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return Float.parseFloat(lhs.getPrice()) > Float.parseFloat(rhs.getPrice()) ? -1 : 1;
                         }
                     });
                 } else {
-                    Collections.sort(mDefautDatas, new Comparator<TkModel>() {
+                    Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
-                        public int compare(TkModel lhs, TkModel rhs) {
+                        public int compare(FxModel lhs, FxModel rhs) {
                             return lhs.getGoods_number() > rhs.getGoods_number() ? -1 : 1;
                         }
                     });
@@ -303,7 +303,7 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
 
     @Override
     public void onNetSuccess(String response, int requestCode) {
-    	List<TkModel> responseData = Net.parseJsonList(response, TkModel.class);
+    	List<FxModel> responseData = Net.parseJsonList(response, FxModel.class);
 		if (responseData == null) {
 			ToastUtils.show(this, "数据解析失败");
 			return;
