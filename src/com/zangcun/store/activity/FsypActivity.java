@@ -303,7 +303,9 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onNetSuccess(String response, int requestCode) {
-    	List<FsypModel> responseData = Net.parseJsonList(response, FsypModel.class);
+        Log.i(TAG, "onNetSuccess = "+response);
+
+        List<FsypModel> responseData = Net.parseJsonList(response, FsypModel.class);
 		if (responseData == null) {
 			ToastUtils.show(this, "数据解析失败");
 			return;

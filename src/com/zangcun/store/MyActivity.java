@@ -42,7 +42,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         mTitle = findViewById(R.id.title_group);
         mTitleText = (TextView) findViewById(R.id.title);
         strFlag = getIntent().getStringExtra("falg");
-
+        autoLogin();
     }
 
     private void initEvent() {
@@ -51,10 +51,11 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         } else {
             mTab.setTab(0);
         }
+
         mTitle.setVisibility(View.GONE);
         mTab.setOnTabClickListener(this);
         initFragment();
-        autoLogin();
+
     }
 
     /**
@@ -64,7 +65,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         String user = DictionaryTool.getUser(getApplicationContext());
         String pwd = DictionaryTool.getPWD(getApplicationContext());
         if (!TextUtils.isEmpty(user)  && !TextUtils.isEmpty(pwd)){
-            login(user,pwd);
+            isLogin = true;
         }
     }
 
@@ -113,9 +114,20 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
     }
 
     private void initFragment() {
-        for (int i = 0; i < mTabs.length; i++) {
-            putFragment(mTabs[i], getFragmentByIndex(i));
+        if (isLogin){
+            for (int i = 0; i < mTabs.length; i++) {
+                putFragment(mTabs1[i], getFragmentByIndex(i));
+            }
+            mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
+        }else {
+            for (int i = 0; i < mTabs.length; i++) {
+                putFragment(mTabs[i], getFragmentByIndex(i));
+            }
         }
+
+        /*for (int i = 0; i < mTabs.length; i++) {
+            putFragment(mTabs[i], getFragmentByIndex(i));
+        }*/
         if (strFlag != null) {
             for (int i = 0; i < mTabs.length; i++) {
                 putFragment(mTabs[i], getFragmentByIndexPersion(i));
@@ -140,7 +152,11 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             mTitle.setVisibility(View.GONE);
         } else {
             mTitle.setVisibility(View.VISIBLE);
-            mTitleText.setText(mTabs[index]);
+            if (isLogin){
+                mTitleText.setText(mTabs1[index]);
+            }else {
+                mTitleText.setText(mTabs[index]);
+            }
         }
         if (index == mTabs.length - 1) {
             if (isLogin) {
@@ -161,9 +177,14 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             case 2:
                 return ShopFragment.getInstance();
             case 3:
-                UserFragment fragment = UserFragment.getInstance();
-                fragment.setOnLoginClickListener(this);
-                return fragment;
+                if (isLogin){
+                    PersonalFragment personalFragment = PersonalFragment.getInstance();
+                    return personalFragment;
+                }else {
+                    UserFragment fragment = UserFragment.getInstance();
+                    fragment.setOnLoginClickListener(this);
+                    return fragment;
+                }
             default:
                 return SpecialFragment.getInstance();
         }

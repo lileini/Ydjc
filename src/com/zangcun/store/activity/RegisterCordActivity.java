@@ -115,7 +115,7 @@ public class RegisterCordActivity extends BaseActivity implements View.OnClickLi
                 DictionaryTool.savePWD(getApplicationContext(),mPhone.getText().toString());
                 DictionaryTool.saveUser(getApplicationContext(),registerEntity.getUser().getUser_name());
                 Intent intent = new Intent(getApplicationContext(), MyActivity.class);
-//                intent.putExtra("falg","zhuci");
+                intent.putExtra("falg","zhuci");
 
                 startActivity(intent);
             }

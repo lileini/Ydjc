@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -48,6 +49,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 if (isOnclick) {
                 } else {
                     try {
+                        Log.i(TAG, "handleMessage = "+msg);
+
                         JSONObject object = new JSONObject(msg.obj.toString());
                         String strToken = object.getString("token");
                         DictionaryTool.saveToken(getApplicationContext(),strToken);

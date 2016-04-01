@@ -12,6 +12,7 @@ public class Const {
     public final static int REQUEST_FSYP = 5;
     public final static int REQUEST_DETAIL = 6;
 
+    public final static String BASE_URL = "http://211.149.231.116:3000";
     // 获取手机验证码
     public final static String URL_SENDMESSGE = "http://211.149.231.116:3000/auth_token/get_code.json";
     //验证服务器发送的验证码
@@ -39,10 +40,17 @@ public class Const {
     //PUT请求 申请退款
     public final static String URL_REFUND = "http://211.149.231.116:3000/orders/:id/refund.json";
     //PUT请求 提醒发货
-    public final static String URL_URGE_SHIP = "http://211.149.231.116:3000/orders/:id/urge_ship.json";
-
-
     public final static String URL_CARTS = "http://211.149.231.116:3000/carts.json";
+
+    //商品分類
+    public final static String URL_PRODUCTS_FX = BASE_URL + "/products/foxiang.json";
+
+
+    public final static String URL_PRODUCTS_TK = BASE_URL + "/products/tangka.json";
+
+
+    public final static String URL_PRODUCTS_FS = BASE_URL + "/products/fsyp.json";
+    public final static String URL_PRODUCTS_XD = BASE_URL + "/products/xianglu.json";
 
 
 }

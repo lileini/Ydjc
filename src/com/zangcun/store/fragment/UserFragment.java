@@ -138,7 +138,10 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
                     if (TextUtils.isEmpty(token)){
                         return;
                     }
+
                     DictionaryTool.saveToken(getActivity().getApplicationContext(),token);
+                    DictionaryTool.saveUser(getActivity(),uername);
+                    DictionaryTool.savePWD(getActivity().getApplicationContext(),password);
                     if (listener != null)
                         listener.onLoginClick("个人中心");
                 } catch (JSONException e) {

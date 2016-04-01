@@ -1,6 +1,7 @@
 package com.zangcun.store.fragment;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -67,7 +68,15 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void intentData() {
-        tvPhone.setText(DictionaryTool.get(getActivity(), "phone", "").toString());
+        String pwd = DictionaryTool.getPWD(getActivity().getApplicationContext());
+        String user = DictionaryTool.getUser(getActivity().getApplicationContext());
+        if (!TextUtils.isEmpty(pwd) && !TextUtils.isEmpty(user)){
+
+            tvPhone.setText(user);
+        }else {
+
+            tvPhone.setText(DictionaryTool.get(getActivity(), "phone", "").toString());
+        }
     }
 
 

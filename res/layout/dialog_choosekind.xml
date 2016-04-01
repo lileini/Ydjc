@@ -6,7 +6,7 @@
               android:orientation="vertical"
               android:paddingLeft="10dp"
               android:paddingRight="10dp"
-              >
+>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
@@ -122,6 +122,16 @@
 
 
     </LinearLayout>
+    <Button
+            android:id="@+id/btn_sure"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/button_shopping_selector"
+            android:text="确 定"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textSize="14sp" />
 
 
 </LinearLayout>

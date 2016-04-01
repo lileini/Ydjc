@@ -2,16 +2,19 @@ package com.zangcun.store.activity;
 
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewParent;
 import android.widget.*;
 import com.android.volley.VolleyError;
 import com.zangcun.store.BaseActivity;
@@ -25,11 +28,14 @@ import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Http;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.AdapterIndicator;
 import com.zangcun.store.widget.MyScrollView;
 import com.zangcun.store.widget.MyScrollView.RealScrollView.OnScroll;
 import com.squareup.picasso.Picasso;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -261,9 +267,13 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 toShopCar();
                 break;
             case R.id.add_to_shopcar:
-                addToShopCar();
-                chooseOption();
-                ToastUtils.show(this, "加入购物车成功~");
+                if (isHaveChooesOption()) {
+//                    addToShopCar();
+                    chooseOption();
+                } else {
+                    addToShopCar();
+                }
+//                ToastUtils.show(this, "加入购物车成功~");
                 break;
             case R.id.add_to_gopay:
 //                chooseOption();//选择尺寸颜色后购买
@@ -284,11 +294,16 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
         mPopWindow.setAnimationStyle(R.style.popwin_anim_style);
+        mPopWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        mPopWindow.setFocusable(true);
+        mPopWindow.setOutsideTouchable(true);
         chooseChicun = (LinearLayout) contentView.findViewById(R.id.choose_chicun_layout);
         chooseColor = (LinearLayout) contentView.findViewById(R.id.choose_color_layout);
         ImageView less = (ImageView) contentView.findViewById(R.id.choose_less);
         ImageView more = (ImageView) contentView.findViewById(R.id.choose_more);
         ImageView del = (ImageView) contentView.findViewById(R.id.goods_choose_del);
+        Button btn_sure = (Button) contentView.findViewById(R.id.btn_sure);
         del.setOnClickListener(this);
         final TextView count = (TextView) contentView.findViewById(R.id.choose_count);
         less.setOnClickListener(new OnClickListener() {
@@ -306,56 +321,262 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 count.setText((Integer.valueOf(count.getText().toString()) + 1) + "");
             }
         });
-        //获得数据 动态加载到 俩个layout
-        //模拟 3个 到时候是动态的变量
-        for (int i = 0; i < 5; i++) {
-            TextView chicun = new TextView(this);
-            //通过给textView设置 selector背景来选择
-            chicun.setBackgroundResource(R.drawable.item_filter_selector);
-            chicun.setText("" + i);
-            chicun.setPadding(10, 10, 10, 10);
-            chicun.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //因为是单选 所以要先把状态初始化
-                    for (int j = 0; j < 5; j++) {
-                        chooseChicun.getChildAt(j).setSelected(false);
-                    }
-                    v.setSelected(!v.isSelected());
+        //动态添加商品数量
+        switch (kind) {
+            case "fx":
+                if (fxModel == null) {
+                    return;
                 }
-            });
-            chooseChicun.addView(chicun);
-        }
-
-        //模拟两个种类
-        for (int i = 0; i < 4; i++) {
-            TextView color = new TextView(this);
-            color.setBackgroundResource(R.drawable.item_filter_selector);
-            color.setPadding(10, 10, 10, 10);
-            color.setText("" + i);
-            color.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //因为是单选 所以要先把状态初始化
-                    for (int j = 0; j < 4; j++) {
-                        chooseColor.getChildAt(j).setSelected(false);
-                    }
-
-                    v.setSelected(!v.isSelected());
+                List<List<String>> specs_array = fxModel.getSpecs_array();
+                Log.i(TAG, "specs_array = " + specs_array);
+                if (specs_array == null)
+                    return;
+                for (int i = 0, size = specs_array.size(); i < size; i++) {
+                    List<String> list = specs_array.get(i);
+                    addSizeChildView(i, list);
+                    addColorChildView(i, list);
                 }
-            });
-            chooseColor.addView(color);
+
+                //测试用
+                for (List<String> list : specs_array) {
+                    Log.i(TAG, "list = " + list.size());
+                    for (String s : list) {
+                        Log.i(TAG, "s = " + s);
+                    }
+                }
+                break;
+            case "tk":
+                if (tkModel == null) {
+                    return;
+                }
+                List<List<String>> specs_array2 = tkModel.getSpecs_array();
+                Log.i(TAG, "specs_array = " + specs_array2);
+                if (specs_array2 == null)
+                    return;
+                for (int i = 0, size = specs_array2.size(); i < size; i++) {
+                    List<String> list = specs_array2.get(i);
+                    addSizeChildView(i, list);
+                    addColorChildView(i, list);
+                }
+                //测试用
+                for (List<String> list : specs_array2) {
+                    Log.i(TAG, "list = " + list.size());
+                    for (String s : list) {
+                        Log.i(TAG, "s = " + s);
+                    }
+                }
+                break;
+            case "fsyp":
+                if (fsypModel == null) {
+                    return;
+                }
+                List<List<String>> specs_array3 = fsypModel.getSpecs_array();
+                Log.i(TAG, "specs_array = " + specs_array3);
+                if (specs_array3 == null)
+                    return;
+                for (int i = 0, size = specs_array3.size(); i < size; i++) {
+                    List<String> list = specs_array3.get(i);
+                    addSizeChildView(i, list);
+                    addColorChildView(i, list);
+                }
+                //测试用
+                for (List<String> list : specs_array3) {
+                    Log.i(TAG, "list = " + list.size());
+                    for (String s : list) {
+                        Log.i(TAG, "s = " + s);
+                    }
+                }
+                break;
+            case "xd":
+                if (xdModel == null) {
+                    return;
+                }
+                List<List<String>> specs_array4 = xdModel.getSpecs_array();
+                Log.i(TAG, "specs_array = " + specs_array4);
+                if (specs_array4 == null)
+                    return;
+                for (int i = 0, size = specs_array4.size(); i < size; i++) {
+                    List<String> list = specs_array4.get(i);
+                    addSizeChildView(i, list);
+                    addColorChildView(i, list);
+                }
+                //测试用
+                for (List<String> list : specs_array4) {
+                    Log.i(TAG, "list = " + list.size());
+                    for (String s : list) {
+                        Log.i(TAG, "s = " + s);
+                    }
+                }
+
+                break;
         }
         //显示PopupWindow
         View rootview = LayoutInflater.from(this).inflate(R.layout.dialog_choosekind, null);
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
+    private void addSizeChildView(int i, final List<String> list) {
+        if (i == 0 && list != null) {//尺寸分类
+
+            for (int j = 0, sizej = list.size(); j < sizej; j++) {
+                if (!TextUtils.isEmpty(list.get(j))) {
+                    // TODO: 2016/4/1 添加尺寸view
+                    LinearLayout size2LL = null;
+                    TextView chicun = new TextView(this);
+                    //通过给textView设置 selector背景来选择
+                    chicun.setBackgroundResource(R.drawable.item_filter_selector);
+                    chicun.setText("" + list.get(j));
+                    chicun.setPadding(10, 10, 10, 10);
+                    chicun.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //因为是单选 所以要先把状态初始化
+                            for (int j = 0; j < list.size(); j++) {
+                                chooseChicun.getChildAt(j).setSelected(false);
+                            }
+                            v.setSelected(!v.isSelected());
+                        }
+                    });
+                    chooseChicun.addView(chicun);
+                    /*if (j < 4) {
+
+                        chooseChicun.addView(chicun);
+                    } else {
+                        LinearLayout parent = (LinearLayout) chooseChicun.getParent();
+                        if (size2LL == null) {
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            size2LL = new LinearLayout(this);
+                        }
+                        size2LL.addView(chicun);
+                        if (j == list.size() - 1)
+                            parent.addView(chicun, 4);
+                    }*/
+
+
+                }
+            }
+        }
+    }
+
+    private void addColorChildView(int i, final List<String> list) {
+        if (i == 1 && list != null) {//颜色分类
+            for (int j = 0, sizej = list.size(); j < sizej; j++) {
+                if (!TextUtils.isEmpty(list.get(j))) {
+                    // TODO: 2016/4/1 添加颜色view
+                    TextView color = new TextView(this);
+                    color.setBackgroundResource(R.drawable.item_filter_selector);
+                    color.setPadding(10, 10, 10, 10);
+                    color.setText(list.get(j));
+                    color.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //因为是单选 所以要先把状态初始化
+                            for (int j = 0; j < list.size(); j++) {
+                                chooseColor.getChildAt(j).setSelected(false);
+                            }
+
+                            v.setSelected(!v.isSelected());
+                        }
+                    });
+                    chooseColor.addView(color);
+                }
+            }
+
+        }
+    }
+
+    /**
+     * 没有选项的加入购物车
+     */
     private void addToShopCar() {
+        //接口访问 操作购物车数据
+        //to-do
+        switch (kind) {
+            case "fx":
+                if (fxModel == null) {
+                    return;
+                }
+                int goods_id = fxModel.getGoods_id();
+                int id = fxModel.getOptions_id().get(0).getId();
+                addCart(goods_id, id,1);
+                break;
+            case "tk":
+                if (tkModel == null) {
+                    return;
+                }
+
+                break;
+            case "fsyp":
+                if (fsypModel == null) {
+                    return;
+                }
+
+                break;
+            case "xd":
+                if (xdModel == null) {
+                    return;
+                }
+
+                break;
+        }
+    }
+
+    /**
+     * 加入购物车
+     * @param goods_id
+     * @param id
+     * @param count
+     */
+    private void addCart(int goods_id, int id,int count) {
+        RequestParams params = new RequestParams(Net.URL_GOODS_CARTS);
+        params.addBodyParameter("goods_id",goods_id+"");
+        params.addBodyParameter("count",""+count);
+        params.addBodyParameter("option_id",id+"");
+        HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
+            @Override
+            public boolean onCache(String s) {
+                return false;
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "add cart onSuccess = "+ s);
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "add cart onError = "+ throwable.toString());
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+    }
+
+
+    /**
+     * 有选项的购物车
+     *
+     * @param count
+     * @param size
+     * @param color
+     */
+    private void addToShopCar(String count, String size, String color) {
         //接口访问 操作购物车数据
         //to-do
     }
 
+    /**
+     * 确定选择的内容
+     */
     private void toShopCar() {
 //         startActivity(new Intent(this, ShopCarActivity.class));
         Map<String, String> map = new HashMap<String, String>();
@@ -418,4 +639,21 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             }
         }
     };
+
+    /**
+     * 判断商品是否有特殊选项
+     *
+     * @return
+     */
+    public boolean isHaveChooesOption() {
+
+        List<List<String>> specs_array = fsypModel.getSpecs_array();
+        Log.i(TAG, "specs_array = " + specs_array);
+        if (specs_array == null)
+            return false;
+        if (TextUtils.isEmpty(specs_array.get(0).get(0)) && TextUtils.isEmpty(specs_array.get(1).get(0))) {
+            return false;
+        }
+        return true;
+    }
 }
