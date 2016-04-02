@@ -334,7 +334,7 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
 		Intent intent = new Intent(TkActivity.this,DetailActivity.class);
 		intent.putExtra("tk", (Serializable)mDefautDatas.get(position));
 		intent.putExtra("kind", "tk");
-		startActivity(intent);		
+		startActivity(intent);
 		
 	}
 

@@ -66,6 +66,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         String pwd = DictionaryTool.getPWD(getApplicationContext());
         if (!TextUtils.isEmpty(user)  && !TextUtils.isEmpty(pwd)){
             isLogin = true;
+            login(user,pwd);
         }
     }
 

@@ -162,7 +162,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         if (kind == null) {
             return;
         }
-        fxModel = (FxModel) getIntent().getSerializableExtra("fx");
+        fxModel = (FxModel) getIntent().getSerializableExtra(kind);
         if (fxModel == null) {
             return;
         }
@@ -261,6 +261,10 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 toShopCar();
                 break;
             case R.id.add_to_shopcar:
+                if (TextUtils.isEmpty(DictionaryTool.getToken(getApplicationContext()))){
+                    ToastUtils.show(getApplication(),"请先登录",true);
+                    return;
+                }
                 if (isHaveChooesOption()) {
 //                    addToShopCar();
                     chooseOption();
@@ -279,7 +283,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 break;
         }
     }
-
+    boolean isCanSure = false;
     /**
      * 如果特殊商品有选择种类选项
      */
@@ -329,6 +333,25 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             addColorChildView(i, list);
         }
 
+        btn_sure.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCanSure =false;
+                if (isHaveChooesOption(0)){//判断是否有尺寸
+                    int childCount = chooseChicun.getChildCount();
+                    for (int i = 0;i < childCount; i++){
+                        View child = chooseChicun.getChildAt(i);
+                        if (child.isSelected()){
+                            isCanSure = true;
+                        }
+                    }
+                }
+                if (isHaveChooesOption(1)){//判断是否有颜色
+
+                }
+            }
+        });
+
         //测试用
         for (List<String> list : specs_array) {
             Log.i(TAG, "list = " + list.size());
@@ -336,74 +359,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 Log.i(TAG, "s = " + s);
             }
         }
-        /*switch (kind) {
-            case "fx":
-                break;
-            case "tk":
-                if (tkModel == null) {
-                    return;
-                }
-                List<List<String>> specs_array2 = tkModel.getSpecs_array();
-                Log.i(TAG, "specs_array = " + specs_array2);
-                if (specs_array2 == null)
-                    return;
-                for (int i = 0, size = specs_array2.size(); i < size; i++) {
-                    List<String> list = specs_array2.get(i);
-                    addSizeChildView(i, list);
-                    addColorChildView(i, list);
-                }
-                //测试用
-                for (List<String> list : specs_array2) {
-                    Log.i(TAG, "list = " + list.size());
-                    for (String s : list) {
-                        Log.i(TAG, "s = " + s);
-                    }
-                }
-                break;
-            case "fsyp":
-                if (fsypModel == null) {
-                    return;
-                }
-                List<List<String>> specs_array3 = fsypModel.getSpecs_array();
-                Log.i(TAG, "specs_array = " + specs_array3);
-                if (specs_array3 == null)
-                    return;
-                for (int i = 0, size = specs_array3.size(); i < size; i++) {
-                    List<String> list = specs_array3.get(i);
-                    addSizeChildView(i, list);
-                    addColorChildView(i, list);
-                }
-                //测试用
-                for (List<String> list : specs_array3) {
-                    Log.i(TAG, "list = " + list.size());
-                    for (String s : list) {
-                        Log.i(TAG, "s = " + s);
-                    }
-                }
-                break;
-            case "xd":
-                if (xdModel == null) {
-                    return;
-                }
-                List<List<String>> specs_array4 = xdModel.getSpecs_array();
-                Log.i(TAG, "specs_array = " + specs_array4);
-                if (specs_array4 == null)
-                    return;
-                for (int i = 0, size = specs_array4.size(); i < size; i++) {
-                    List<String> list = specs_array4.get(i);
-                    addSizeChildView(i, list);
-                    addColorChildView(i, list);
-                }
-                //测试用
-                for (List<String> list : specs_array4) {
-                    Log.i(TAG, "list = " + list.size());
-                    for (String s : list) {
-                        Log.i(TAG, "s = " + s);
-                    }
-                }
 
-                break;
-        }*/
         //显示PopupWindow
         View rootview = LayoutInflater.from(this).inflate(R.layout.dialog_choosekind, null);
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
@@ -522,10 +478,11 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
      */
     private void addCart(int goods_id, int id,int count) {
         RequestParams params = new RequestParams(Net.URL_GOODS_CARTS);
-        params.addBodyParameter("goods_id",goods_id+"");
+        params.addBodyParameter("good_id",goods_id+"");
         params.addBodyParameter("count",""+count);
         params.addBodyParameter("option_id",id+"");
         // TODO: 2016/4/1 处理没有用户的情况
+//        Log.i(TAG, "token = "+ DictionaryTool.getToken(getApplicationContext()));
         params.addHeader("AUTHORIZATION", DictionaryTool.getToken(getApplicationContext()));
         HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
             @Override
@@ -536,6 +493,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             @Override
             public void onSuccess(String s) {
                 Log.i(TAG, "add cart onSuccess = "+ s);
+                ToastUtils.show(DetailActivity.this,"加入购物车成功",true);
             }
 
             @Override
@@ -657,6 +615,23 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         if (specs_array == null)
             return false;
         if (TextUtils.isEmpty(specs_array.get(0).get(0)) && TextUtils.isEmpty(specs_array.get(1).get(0))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 判断商品尺寸或者颜色选项
+     * @param i
+     * @return
+     */
+    public boolean isHaveChooesOption(int i) {
+
+        List<List<String>> specs_array = fxModel.getSpecs_array();
+        Log.i(TAG, "specs_array = " + specs_array);
+        if (specs_array == null)
+            return false;
+        if (TextUtils.isEmpty(specs_array.get(i).get(0))) {
             return false;
         }
         return true;
