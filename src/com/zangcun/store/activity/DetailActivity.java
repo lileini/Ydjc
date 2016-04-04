@@ -172,46 +172,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         mGoodUrls = fxModel.getGood_image_urls();
         mGoodContentUrls = fxModel.getContents();
         addGoodsContent();
-        /*switch (kind) {
-            case "fx":
-                break;
-            case "tk":
-                tkModel = (TkModel) getIntent().getSerializableExtra("tk");
-                if (tkModel == null) {
-                    return;
-                }
-                mGoodsDesc.setText(tkModel.getGoods_name());
-                mPrice.setText("¥" + tkModel.getPrice());
-                mMarketPrice.setText("市场价：" + "¥" + tkModel.getMarket_price());
-                mGoodUrls = tkModel.getGood_image_urls();
-                mGoodContentUrls = tkModel.getContents();
-                addGoodsContent();
-                break;
-            case "fsyp":
-                fsypModel = (FsypModel) getIntent().getSerializableExtra("fsyp");
-                if (fsypModel == null) {
-                    return;
-                }
-                mGoodsDesc.setText(fsypModel.getGoods_name());
-                mPrice.setText("¥" + fsypModel.getPrice());
-                mMarketPrice.setText("市场价：" + "¥" + fsypModel.getMarket_price());
-                mGoodUrls = fsypModel.getGood_image_urls();
-                mGoodContentUrls = fsypModel.getContents();
-                addGoodsContent();
-                break;
-            case "xd":
-                xdModel = (XdModel) getIntent().getSerializableExtra("xd");
-                if (xdModel == null) {
-                    return;
-                }
-                mGoodsDesc.setText(xdModel.getGoods_name());
-                mPrice.setText("¥" + xdModel.getPrice());
-                mMarketPrice.setText("市场价：" + "¥" + xdModel.getMarket_price());
-                mGoodUrls = xdModel.getGood_image_urls();
-                mGoodContentUrls = xdModel.getContents();
-                addGoodsContent();
-                break;
-        }*/
 
         mIndicator.bindViewPager(mViewPager);
         mIndicator.setPointCount(mGoodUrls.size());
@@ -283,7 +243,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 break;
         }
     }
-    boolean isCanSure = false;
+    boolean isCanColorSure = false;
+    boolean isCanSizeSure = false;
     /**
      * 如果特殊商品有选择种类选项
      */
@@ -336,18 +297,56 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         btn_sure.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                isCanSure =false;
-                if (isHaveChooesOption(0)){//判断是否有尺寸
+                isCanColorSure =false;
+                isCanSizeSure =false;
+                String size = "",color = "";
+                if (isHaveChooesOption(0)){//判断是颜色
+                    // TODO: 2016/4/3 尺寸颜色有问题
+                    int childCount = chooseColor.getChildCount();
+                    for (int i = 0;i < childCount; i++){
+                        View child = chooseColor.getChildAt(i);
+                        if (child.isSelected()){
+                            isCanColorSure = true;
+                            color =  ((TextView)child).getText().toString();
+                        }
+                    }
+                }else{
+                    isCanColorSure = true;
+                }
+
+                if (isHaveChooesOption(1)){//判断是否尺寸
                     int childCount = chooseChicun.getChildCount();
                     for (int i = 0;i < childCount; i++){
                         View child = chooseChicun.getChildAt(i);
                         if (child.isSelected()){
-                            isCanSure = true;
+                            isCanSizeSure = true;
+                            size =  ((TextView)child).getText().toString();
                         }
                     }
-                }
-                if (isHaveChooesOption(1)){//判断是否有颜色
 
+                }else {
+
+                    isCanSizeSure = true;
+                }
+
+                if (isCanColorSure && isCanSizeSure){
+                    List<FxModel.OptionsIdEntity> options_id = fxModel.getOptions_id();
+                    for (FxModel.OptionsIdEntity entity : options_id){
+                        String spec_1 = entity.getSpec_1();
+                        String spec_2 = entity.getSpec_2();
+                        Log.i(TAG, "spec_1 = "+spec_1);
+                        Log.i(TAG, "spec_2 = "+spec_2);
+                        Log.i(TAG, "color = "+color);
+                        Log.i(TAG, "size = "+size);
+                        if (color.equals(spec_1) && size.equals(spec_2)){
+                            addCart(fxModel.getGoods_id(),entity.getId(),Integer.getInteger(count.getText().toString()));
+                            mPopWindow.dismiss();
+                            Log.i(TAG, "entity.toString() = "+entity.toString());
+                        }
+                    }
+
+                }else {
+                    ToastUtils.show(DetailActivity.this.getApplication(),"请选择商品属性",true);
                 }
             }
         });
@@ -388,20 +387,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                         }
                     });
                     chooseChicun.addView(chicun);
-                    /*if (j < 4) {
-
-                        chooseChicun.addView(chicun);
-                    } else {
-                        LinearLayout parent = (LinearLayout) chooseChicun.getParent();
-                        if (size2LL == null) {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            size2LL = new LinearLayout(this);
-                        }
-                        size2LL.addView(chicun);
-                        if (j == list.size() - 1)
-                            parent.addView(chicun, 4);
-                    }*/
-
 
                 }
             }
