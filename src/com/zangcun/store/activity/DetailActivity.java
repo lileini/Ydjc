@@ -72,6 +72,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     private String kind;
 
     private PopupWindow mPopWindow;
+    private TextView count;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -264,7 +265,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         ImageView del = (ImageView) contentView.findViewById(R.id.goods_choose_del);
         Button btn_sure = (Button) contentView.findViewById(R.id.btn_sure);
         del.setOnClickListener(this);
-        final TextView count = (TextView) contentView.findViewById(R.id.choose_count);
+        count = (TextView) contentView.findViewById(R.id.choose_count);
         less.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,8 +291,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             return;
         for (int i = 0, size = specs_array.size(); i < size; i++) {
             List<String> list = specs_array.get(i);
-            addSizeChildView(i, list);
             addColorChildView(i, list);
+            addSizeChildView(i, list);
         }
 
         btn_sure.setOnClickListener(new OnClickListener() {
@@ -339,9 +340,14 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                         Log.i(TAG, "color = "+color);
                         Log.i(TAG, "size = "+size);
                         if (color.equals(spec_1) && size.equals(spec_2)){
-                            addCart(fxModel.getGoods_id(),entity.getId(),Integer.getInteger(count.getText().toString()));
+                            Log.i(TAG, "fxModel.getGoods_id() = "+ fxModel.getGoods_id());
+                            Log.i(TAG, "entity.getId()"+ entity.getId());
+                            Log.i(TAG, "count.getText().toString() = "+ count.getText().toString());
+                            Log.i(TAG, "Integer.getInteger(count.getText().toString()) = "+ Integer.valueOf(count.getText().toString()));
+                            addCart(fxModel.getGoods_id(),entity.getId(),Integer.valueOf(count.getText().toString()));
                             mPopWindow.dismiss();
                             Log.i(TAG, "entity.toString() = "+entity.toString());
+                            return;
                         }
                     }
 
@@ -365,7 +371,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     }
 
     private void addSizeChildView(int i, final List<String> list) {
-        if (i == 0 && list != null) {//尺寸分类
+        if (i == 1 && list != null) {//尺寸分类
 
             for (int j = 0, sizej = list.size(); j < sizej; j++) {
                 if (!TextUtils.isEmpty(list.get(j))) {
@@ -394,7 +400,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     }
 
     private void addColorChildView(int i, final List<String> list) {
-        if (i == 1 && list != null) {//颜色分类
+        if (i == 0 && list != null) {//颜色分类
             for (int j = 0, sizej = list.size(); j < sizej; j++) {
                 if (!TextUtils.isEmpty(list.get(j))) {
                     // TODO: 2016/4/1 添加颜色view

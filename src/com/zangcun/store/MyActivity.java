@@ -86,6 +86,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
                 try {
                     JSONObject obj = new JSONObject(s);
                     String token = obj.getString("token");
+//                    Log.i(TAG, "onSuccess = " + token);
                     if (TextUtils.isEmpty(token)){
                         return;
                     }
