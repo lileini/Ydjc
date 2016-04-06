@@ -7,19 +7,19 @@
 
 
 
-    <ImageView android:layout_width="0dp"
-               android:layout_weight="1"
+    <ImageView android:layout_width="15dp"
+
                android:layout_marginLeft="10dp"
                android:id="@+id/item_gwc_ischecked"
                android:src="@drawable/item_shopcar_selector"
-               android:layout_marginRight="7dp"
+               android:layout_marginRight="2dp"
                android:layout_gravity="center_vertical"
-               android:layout_height="15dp"/>
+               android:layout_height="30dp"/>
 
 
     <ImageView android:layout_width="0dp"
-               android:layout_weight="3"
-               android:layout_marginLeft="7dp"
+               android:layout_weight="2.7"
+               android:layout_marginLeft="5dp"
                android:id="@+id/item_gwc_img"
                android:src="@drawable/sp_icon_zw"
                android:layout_marginRight="7dp"
@@ -89,8 +89,8 @@
 
     <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_marginRight="10dp"
+            android:layout_weight="2.5"
+            android:layout_marginRight="5dp"
             android:layout_height="match_parent"
             android:padding="5dp"
             android:gravity="right"
@@ -102,8 +102,7 @@
                   android:layout_height="wrap_content"
                   android:text="40"
                   android:id="@+id/item_gwc_price"
-                  android:layout_marginRight="2dp"
-                  android:textSize="16sp"
+                  android:textSize="14sp"
                   android:textColor="@color/red"
 
         />
@@ -122,7 +121,6 @@
                    android:layout_height="wrap_content"
                    android:id="@+id/item_gwc_del"
                    android:src="@drawable/gwc_del"
-                   android:padding="5dp"
-        />
+                   android:padding="5dp"/>
     </LinearLayout>
 </LinearLayout>

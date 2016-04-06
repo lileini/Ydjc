@@ -1,6 +1,7 @@
 package com.zangcun.store.utils;
 
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -19,6 +20,12 @@ public class HttpUtils {
     public static Callback.Cancelable HttpPostMethod(Callback.CommonCallback<String> requestCallBack,RequestParams params){
 
         Callback.Cancelable cancelable = x.http().post(params, requestCallBack);
+
+        return  cancelable;
+    }
+    public static Callback.Cancelable HttpDeleteMethod(Callback.CommonCallback<String> requestCallBack,RequestParams params){
+
+        Callback.Cancelable cancelable = x.http().request(HttpMethod.DELETE,params,requestCallBack);
 
         return  cancelable;
     }

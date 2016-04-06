@@ -203,4 +203,13 @@ public class ShopFragment extends BaseFragment implements
         this.count = count;
         mToPay.setText("去结算(" + count + ")");
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden){
+            requestCart();
+        }
+    }
+
 }

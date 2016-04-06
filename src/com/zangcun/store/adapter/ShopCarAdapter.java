@@ -4,11 +4,18 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.zangcun.store.R;
 import com.zangcun.store.holder.ViewHolder;
 import com.zangcun.store.model.ShopCarModel;
+import com.zangcun.store.net.Net;
+import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.Log;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.util.List;
 
@@ -27,34 +34,55 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
     public void convert(ViewHolder holder, final ShopCarModel shopCarModel) {
 
         holder.getView(R.id.item_gwc_ischecked).setSelected(shopCarModel.getIschecked() == 1);
-        holder.setText(R.id.item_gwc_title, shopCarModel.getGoods_name());
-        getPrice(shopCarModel);
+
+        holder.setText(R.id.item_gwc_title, shopCarModel.getGoods_name());//设置商品标题
+        String[] colorSize =  shopCarModel.getColorSize();
+        if (colorSize == null){
+            colorSize = getColorSize(shopCarModel);
+            shopCarModel.setColorSize(colorSize);
+        }
+        holder.setText(R.id.item_gwc_desc,shopCarModel.getGood_option());//设置商品描述
+        ShopCarModel.GoodBean.OptionsIdBean optionsIdBean = shopCarModel.getOptionsIdBean();
+        if (optionsIdBean == null){
+            for (ShopCarModel.GoodBean.OptionsIdBean optionsIdBean2 : shopCarModel.getGood().getOptions_id()) {
+                if (optionsIdBean2.getSpec_1().equals(colorSize[0]) && optionsIdBean2.getSpec_2().equals(colorSize[1])) {
+                    optionsIdBean = optionsIdBean2;
+                    shopCarModel.setOptionsIdBean(optionsIdBean2);
+                }
+            }
+        }
         holder.setText(R.id.item_gwc_market_price,
-                "¥" + shopCarModel.getGood().getOptions_id().get(0).getMarket_price());
+                "¥" + optionsIdBean.getMarket_price());
         //中间画横线
         TextView textView = holder.getView(R.id.item_gwc_market_price);
         textView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.setText(R.id.item_gwc_price, "¥" + shopCarModel.getPrice());
+        holder.setText(R.id.item_gwc_price, "¥" + optionsIdBean.getPrice());
 
         holder.setText(R.id.item_gwc_count, shopCarModel.getQuantity() + "");
-//		ImageLoader imageLoader = ImageLoader.getInstance();
-//    	imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
-//    	imageLoader.displayImage(shopCarModel.getImgUrl(),
-//				(ImageView) holder.getView(R.id.item_gwc_img));
+        // TODO: 2016/4/6 三级缓存
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
+        imageLoader.displayImage(Net.DOMAIN + shopCarModel.getGoods_image(),//    sss
+                (ImageView) holder.getView(R.id.item_gwc_img));
+
+
         holder.setOnClickListener(R.id.item_gwc_ischecked, new OnClickListener() {
             @Override
             public void onClick(View v) {
-                shopCarModel.setIschecked(shopCarModel.getIschecked() == 0 ? 1:0);
+                shopCarModel.setIschecked(shopCarModel.getIschecked() == 1 ? 0 : 1);
                 calCount();
                 calMoney();
                 notifyDataSetChanged();
             }
         });
-
+        if (shopCarModel.getQuantity() == 1){
+            holder.setEnable(R.id.item_gwc_ischecked,false);
+        }
         holder.setOnClickListener(R.id.item_gwc_less, new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (shopCarModel.getQuantity() == 0) {
+                if (shopCarModel.getQuantity() == 1) {
+                    holder.setEnable(R.id.item_gwc_ischecked,false);
                     return;
                 }
                 shopCarModel.setQuantity(shopCarModel.getQuantity() - 1);
@@ -68,6 +96,9 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
         holder.setOnClickListener(R.id.item_gwc_more, new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (shopCarModel.getQuantity() == 1) {
+                    holder.setEnable(R.id.item_gwc_ischecked,true);
+                }
                 shopCarModel.setQuantity(shopCarModel.getQuantity() + 1);
                 calCount();
                 calMoney();
@@ -79,24 +110,54 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
         holder.setOnClickListener(R.id.item_gwc_del, new OnClickListener() {
             @Override
             public void onClick(View v) {
+                RequestParams params = new RequestParams(Net.HOST+"carts/:"+shopCarModel.getRec_id()+".json");
+                HttpUtils.HttpDeleteMethod(new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.i(TAG, "onSuccess = "+ s);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable, boolean b) {
+                        Log.i(TAG, "onError = "+throwable.toString());
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException e) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                },params);
                 mDatas.remove(shopCarModel);
                 calCount();
                 calMoney();
                 notifyDataSetChanged();
             }
         });
+        calCount();
+        calMoney();
+        notifyDataSetChanged();
 
     }
 
-    private String[] getPrice(ShopCarModel shopCarModel) {
+    /**
+     * 获得商品颜色和尺寸
+     * @param shopCarModel
+     * @return
+     */
+    private String[] getColorSize(ShopCarModel shopCarModel) {
         String good_option = shopCarModel.getGood_option();
         String[] split = good_option.split(",");
         String color = split[0].substring(3);
         String size = split[1].substring(3);
-        Log.i(TAG, "color = "+ color);
-        Log.i(TAG, "size = "+ size);
+        Log.i(TAG, "color = " + color);
+        Log.i(TAG, "size = " + size);
 
-        return new String[]{color,size};
+        return new String[]{color, size};
     }
 
 
@@ -104,10 +165,11 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
         int money = 0;
         for (int i = 0; i < mDatas.size(); i++) {
             if (mDatas.get(i).getIschecked() == 1) {
-                money += Integer.valueOf(mDatas.get(i).getPrice()) * mDatas.get(i).getQuantity();
+                money += Double.valueOf(mDatas.get(i).getPrice()) * mDatas.get(i).getQuantity();
             }
         }
-        listener.onPriceChanged(money);
+        if (listener != null)
+            listener.onPriceChanged(money);
     }
 
     protected void calCount() {
@@ -117,7 +179,8 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
                 count += mDatas.get(i).getQuantity();
             }
         }
-        listener.onCountCHanged(count);
+        if (listener != null)
+            listener.onCountCHanged(count);
     }
 
 

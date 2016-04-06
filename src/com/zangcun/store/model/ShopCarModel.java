@@ -22,7 +22,27 @@ public class ShopCarModel implements Serializable{
     private String goods_image;
     private int quantity;
     private int ischecked;
+    private GoodBean.OptionsIdBean optionsIdBean;
+
     private String price;
+
+    public GoodBean.OptionsIdBean getOptionsIdBean() {
+        return optionsIdBean;
+    }
+
+    public void setOptionsIdBean(GoodBean.OptionsIdBean optionsIdBean) {
+        this.optionsIdBean = optionsIdBean;
+    }
+
+    public String[] getColorSize() {
+        return colorSize;
+    }
+
+    public void setColorSize(String[] colorSize) {
+        this.colorSize = colorSize;
+    }
+
+    private String[] colorSize;
     /**
      * goods_id : 224
      * updated_at : null

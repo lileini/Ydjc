@@ -146,6 +146,11 @@ public class ViewHolder {
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
         return this;
     }
+    public ViewHolder setEnable(int viewId, boolean enable) {
+        View view = getView(viewId);
+        view.setEnabled(enable);
+        return this;
+    }
 
     public ViewHolder linkify(int viewId) {
         TextView view = getView(viewId);
