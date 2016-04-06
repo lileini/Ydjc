@@ -93,7 +93,9 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-				//刷新
+                if (mDefautDatas == null )
+                    return;
+                //刷新
 				if(mDefautDatas != null){
 					mDefautDatas.clear();
 				}
@@ -102,6 +104,8 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+                if (mDefautDatas == null )
+                    return;
 				loadMoreDatas();
 			}
 

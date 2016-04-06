@@ -12,8 +12,8 @@ import com.zangcun.store.R;
 import com.zangcun.store.holder.ViewHolder;
 import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.Net;
-import com.zangcun.store.utils.HttpUtils;
-import com.zangcun.store.utils.Log;
+import com.zangcun.store.other.MyApplication;
+import com.zangcun.store.utils.*;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
@@ -69,6 +69,7 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
         holder.setOnClickListener(R.id.item_gwc_ischecked, new OnClickListener() {
             @Override
             public void onClick(View v) {
+                isCheckedGood(shopCarModel);
                 shopCarModel.setIschecked(shopCarModel.getIschecked() == 1 ? 0 : 1);
                 calCount();
                 calMoney();
@@ -85,12 +86,13 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
                     holder.setEnable(R.id.item_gwc_ischecked,false);
                     return;
                 }
+                incrementGood(shopCarModel,"-");
                 shopCarModel.setQuantity(shopCarModel.getQuantity() - 1);
                 calCount();
                 calMoney();
                 notifyDataSetChanged();
-            }
 
+            }
 
         });
         holder.setOnClickListener(R.id.item_gwc_more, new OnClickListener() {
@@ -99,6 +101,7 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
                 if (shopCarModel.getQuantity() == 1) {
                     holder.setEnable(R.id.item_gwc_ischecked,true);
                 }
+                incrementGood(shopCarModel,"+");
                 shopCarModel.setQuantity(shopCarModel.getQuantity() + 1);
                 calCount();
                 calMoney();
@@ -110,33 +113,15 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
         holder.setOnClickListener(R.id.item_gwc_del, new OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestParams params = new RequestParams(Net.HOST+"carts/:"+shopCarModel.getRec_id()+".json");
-                HttpUtils.HttpDeleteMethod(new Callback.CommonCallback<String>() {
-                    @Override
-                    public void onSuccess(String s) {
-                        Log.i(TAG, "onSuccess = "+ s);
-                    }
+                if (!HttpUtils.isHaveNetwork()){
+                    return;
+                }
+//                DialogUtil.showDialog(mContext);
+                deleteGood(shopCarModel);
 
-                    @Override
-                    public void onError(Throwable throwable, boolean b) {
-                        Log.i(TAG, "onError = "+throwable.toString());
-                    }
-
-                    @Override
-                    public void onCancelled(CancelledException e) {
-
-                    }
-
-                    @Override
-                    public void onFinished() {
-
-                    }
-                },params);
-                mDatas.remove(shopCarModel);
-                calCount();
-                calMoney();
-                notifyDataSetChanged();
             }
+
+
         });
         calCount();
         calMoney();
@@ -144,6 +129,107 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
 
     }
 
+    private void incrementGood(ShopCarModel shopCarModel,String methed) {
+        if (methed == null)
+            return;
+        String url = "";
+        if ("+".equals(methed)){
+            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/increment.json";
+        }
+        if ("-".equals(methed)){
+            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/decrement.json";
+        }
+        RequestParams params = new RequestParams(url);
+        params.addHeader("AUTHORIZATION", DictionaryTool.getToken(mContext.getApplicationContext()));
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "onError = "+throwable.toString());
+                ToastUtils.show(MyApplication.instance,"系统繁忙，请稍后再试");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+    }
+    private void isCheckedGood(ShopCarModel shopCarModel) {
+
+        String url = "";
+        if (shopCarModel.getIschecked() == 1){
+            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_checked.json";
+        }else{
+            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_unchecked.json";
+        }
+        RequestParams params = new RequestParams(url);
+        params.addHeader("AUTHORIZATION", DictionaryTool.getToken(mContext.getApplicationContext()));
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "onError = "+throwable.toString());
+                ToastUtils.show(MyApplication.instance,"系统繁忙，请稍后再试");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+    }
+
+    private void deleteGood(ShopCarModel shopCarModel ) {
+        RequestParams params = new RequestParams(Net.HOST+"carts/"+shopCarModel.getRec_id()+".json");
+        params.addHeader("AUTHORIZATION", DictionaryTool.getToken(mContext.getApplicationContext()));
+        HttpUtils.HttpDeleteMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                mDatas.remove(shopCarModel);
+                calCount();
+                calMoney();
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "onError = "+throwable.toString());
+                ToastUtils.show(MyApplication.instance,"系统繁忙，请稍后再试");
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+//                        DialogUtil.dissmissDialog();
+            }
+        },params);
+    }
     /**
      * 获得商品颜色和尺寸
      * @param shopCarModel

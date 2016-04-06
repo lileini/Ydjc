@@ -10,7 +10,7 @@ import org.xutils.x;
 //图片加载器
 public class MyApplication extends Application {
     public static DisplayImageOptions sImageNoRoundOptions;
-
+    public static MyApplication instance;
 
     @Override
     public void onCreate() {
@@ -34,5 +34,6 @@ public class MyApplication extends Application {
                 .build();
         x.Ext.init(this);
         x.Ext.setDebug(true);
+        instance = this;
     }
 }

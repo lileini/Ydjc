@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromDegrees="0"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:toDegrees="360" >
+    <!-- 内圆环半径 和外圆环半径-->
+    <shape
+        android:innerRadiusRatio="3"
+        android:shape="ring"
+        android:thicknessRatio="12"
+        android:useLevel="true" >
+        <solid
+            android:color="@color/loess"/>
+        <!--<gradient
+            android:centerColor="#FFFFFF"
+            android:centerX="0"
+            android:centerY="0"
+            android:endColor="@color/progress_second"
+            android:startColor="@color/progress_primary"
+            android:type="sweep"
+            android:useLevel="true" />-->
+    </shape>
+
+</rotate>

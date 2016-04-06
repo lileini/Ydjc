@@ -108,6 +108,8 @@ public class FxActivity extends BaseActivity implements View.OnClickListener,
 					@Override
 					public void onPullDownToRefresh(
 							PullToRefreshBase<GridView> refreshView) {
+						if (mDefautDatas == null )
+							return;
 						//刷新
 						if(mDefautDatas != null){
 							mDefautDatas.clear();
@@ -118,6 +120,8 @@ public class FxActivity extends BaseActivity implements View.OnClickListener,
 					@Override
 					public void onPullUpToRefresh(
 							PullToRefreshBase<GridView> refreshView) {
+						if (mDefautDatas == null )
+							return;
 						//加载更多
 						loadMoreDatas();
 					}

@@ -93,6 +93,8 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+                if (mDefautDatas == null )
+                    return;
 				//刷新
 				if(mDefautDatas != null){
 					mDefautDatas.clear();
@@ -138,6 +140,8 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
     }
     
     private void loadMoreDatas() {
+        if (mDefautDatas == null )
+            return;
 		double page = (double) mDefautDatas.size() / 10;
 		page += 1.9; // 因为服务器返回的可能会少于10条，所以采用小数进一法加载下一页
 		mHttp.get(Net.URL_TK, this, (int) page, Const.REQUEST_TK);
