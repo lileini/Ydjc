@@ -82,6 +82,6 @@
         <activity android:name=".person.LinPayActivity"/>
         <activity android:name=".person.LinPJActivity"/>
         <activity android:name=".activity.RegisterCordActivity"/>
-        <activity android:name=".person.AddAddress"/>
+        <activity android:name=".person.AddAddressActivity"/>
     </application>
 </manifest>

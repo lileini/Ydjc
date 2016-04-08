@@ -6,9 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.zangcun.store.dao.CityDao;
 import com.zangcun.store.fragment.*;
+import com.zangcun.store.model.CityModel;
+import com.zangcun.store.net.Http;
+import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.DictionaryTool;
+import com.zangcun.store.utils.GsonUtil;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.TabLayout;
@@ -16,6 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyActivity extends BaseActivity implements TabLayout.ITabClick, UserFragment.ILoginClick, PersonalFragment.PersionILoginClick {
     public static String[] mTabs = new String[]{"专题", "分类", "购物车", "登录"};
@@ -27,6 +37,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
     private String mCurrFragmentTag;
     private boolean isLogin;
     private String strFlag = null;
+    private Object adressId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,9 +75,10 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
     private void autoLogin() {
         String user = DictionaryTool.getUser(getApplicationContext());
         String pwd = DictionaryTool.getPWD(getApplicationContext());
-        if (!TextUtils.isEmpty(user)  && !TextUtils.isEmpty(pwd)){
+        if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(pwd)) {
             isLogin = true;
-            login(user,pwd);
+            login(user, pwd);
+            getAdressId();
         }
     }
 
@@ -227,5 +239,48 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         mTitleText.setText(text);
         switchFragment(text);
         isLogin = true;
+        Log.i(TAG, "onPersionLoginClick ");
+    }
+
+    /**
+     * 获取收货地址id存进数据库
+     * @return
+     */
+    public void getAdressId() {
+        RequestParams params = new RequestParams(Net.URL_ADDRESSES);
+        params.addHeader("Authorization",DictionaryTool.getToken(getApplicationContext()));
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+                List<CityModel> cityList = new Gson().fromJson(s,new TypeToken<ArrayList<CityModel>>(){}.getType());
+                Log.i(TAG, "cityList= "+ cityList);
+                if(cityList == null){
+                    return;
+                }
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        CityDao.saveCityList(cityList);
+                    }
+                }.start();
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
     }
 }

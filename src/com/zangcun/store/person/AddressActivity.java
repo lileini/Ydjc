@@ -57,7 +57,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 this.finish();
                 break;
             case R.id.add_address:
-                startActivity(new Intent(this, AddAddress.class));
+                startActivity(new Intent(this, AddAddressActivity.class));
                 break;
         }
     }
