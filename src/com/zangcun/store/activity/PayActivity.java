@@ -11,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.zangcun.store.BaseActivity;
+import com.zangcun.store.model.FxModel;
 import com.zangcun.store.person.AddressActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,8 +37,9 @@ public class PayActivity extends BaseActivity implements OnClickListener {
 	private TextView mAddAddress;
 	private TextView mSubmit;
 	private TextView mTip;
-	
-	
+	private FxModel fxModel;
+
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,8 +78,14 @@ public class PayActivity extends BaseActivity implements OnClickListener {
 	private void initData() {
 		mTitle.setText("支付中心");
 		mTitle.setTextSize(16);
-		
-		
+		fxModel = (FxModel) getIntent().getSerializableExtra("fxModel");
+		String count = getIntent().getStringExtra("count");
+		String options_id = getIntent().getStringExtra("options_id");
+		if (fxModel == null)
+			return;
+		mName.setText(fxModel.getGoods_name());
+//		shopCarModel.getGood_option()
+
 		//网络接口获取数据
 		//展示数据
 	}

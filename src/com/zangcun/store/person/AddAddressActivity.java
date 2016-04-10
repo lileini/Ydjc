@@ -368,7 +368,13 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String json = GsonUtil.toJson(addressModel);
         Log.i(TAG, "json =  "+ json);
         RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
+        Log.i(TAG, "params.toString() = "+ params.toString());
         params.addBodyParameter("address",json);
+//        params.addBodyParameter("address",addressModel.getAddress());
+//        params.addBodyParameter("mobile",addressModel.getMobile());
+//        params.addBodyParameter("region_id",addressModel.getRegion_id());
+//        params.addBodyParameter("consignee",addressModel.getConsignee());
+//        params.addBodyParameter("address",);
         params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
 
         HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {

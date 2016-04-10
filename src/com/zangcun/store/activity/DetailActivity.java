@@ -206,7 +206,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
             case R.id.detail_choose_option:
                 //如果有选择种类 选项
-                chooseOption();
+                chooseOption("add");
                 break;
             case R.id.collection:
                 collect();
@@ -228,16 +228,15 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 }
                 if (isHaveChooesOption()) {
 //                    addToShopCar();
-                    chooseOption();
+                    chooseOption("add");
                 } else {
                     addToShopCar();
                 }
 //                ToastUtils.show(this, "加入购物车成功~");
                 break;
             case R.id.add_to_gopay:
-//                chooseOption();//选择尺寸颜色后购买
-                Intent intent = new Intent(getApplication(), PayActivity.class);
-                startActivity(intent);
+                chooseOption("pay");//选择尺寸颜色后购买
+
                 break;
             case R.id.goods_choose_del://pupup弹窗内的"x"
                 mPopWindow.dismiss();
@@ -249,7 +248,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     /**
      * 如果特殊商品有选择种类选项
      */
-    private void chooseOption() {
+    private void chooseOption(String type) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_choosekind, null);
         mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
@@ -344,7 +343,19 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                             Log.i(TAG, "entity.getId()"+ entity.getId());
                             Log.i(TAG, "count.getText().toString() = "+ count.getText().toString());
                             Log.i(TAG, "Integer.getInteger(count.getText().toString()) = "+ Integer.valueOf(count.getText().toString()));
-                            addCart(fxModel.getGoods_id(),entity.getId(),Integer.valueOf(count.getText().toString()));
+                            if ("add".equals(type)){
+                                addCart(fxModel.getGoods_id(),entity.getId(),Integer.valueOf(count.getText().toString()));
+                            }
+                            if ("pay".equals(type)){
+//                                params.addBodyParameter("good_id",goods_id+"");
+//                                params.addBodyParameter("count",""+count);
+//                                params.addBodyParameter("option_id",id+"");
+                                Intent intent = new Intent(getApplication(), PayActivity.class);
+                                intent.putExtra("fxModel",fxModel);
+                                intent.putExtra("count",count.getText());
+                                intent.putExtra("options_id",entity.getId());
+                                startActivity(intent);
+                            }
                             mPopWindow.dismiss();
                             Log.i(TAG, "entity.toString() = "+entity.toString());
                             return;
