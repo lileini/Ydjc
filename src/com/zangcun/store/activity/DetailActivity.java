@@ -352,8 +352,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 //                                params.addBodyParameter("option_id",id+"");
                                 Intent intent = new Intent(getApplication(), PayActivity.class);
                                 intent.putExtra("fxModel",fxModel);
-                                intent.putExtra("count",count.getText());
-                                intent.putExtra("options_id",entity.getId());
+                                intent.putExtra("count",count.getText().toString());
+                                intent.putExtra("OptionsIdEntity",entity);
                                 startActivity(intent);
                             }
                             mPopWindow.dismiss();

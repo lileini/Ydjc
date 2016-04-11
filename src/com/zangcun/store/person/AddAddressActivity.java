@@ -20,8 +20,13 @@ import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.GsonUtil;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 //添加地址
@@ -34,7 +39,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private Spinner city_spinner;//市
     private Spinner county_spinner;//县
 
-    private int[] city = {R.array.beijin_province_item, R.array.tianjin_province_item, R.array.heibei_province_item, R.array.shanxi1_province_item, R.array.neimenggu_province_item, R.array.liaoning_province_item, R.array.jilin_province_item, R.array.heilongjiang_province_item, R.array.shanghai_province_item, R.array.jiangsu_province_item, R.array.zhejiang_province_item, R.array.anhui_province_item, R.array.fujian_province_item, R.array.jiangxi_province_item, R.array.shandong_province_item, R.array.henan_province_item, R.array.hubei_province_item, R.array.hunan_province_item, R.array.guangdong_province_item,  R.array.guangxi_province_item, R.array.hainan_province_item, R.array.chongqing_province_item, R.array.sichuan_province_item, R.array.guizhou_province_item, R.array.yunnan_province_item, R.array.xizang_province_item, R.array.shanxi2_province_item, R.array.gansu_province_item, R.array.qinghai_province_item, R.array.linxia_province_item, R.array.xinjiang_province_item, R.array.hongkong_province_item, R.array.aomen_province_item, R.array.taiwan_province_item};
+    private int[] city = {R.array.beijin_province_item, R.array.tianjin_province_item, R.array.heibei_province_item, R.array.shanxi1_province_item, R.array.neimenggu_province_item, R.array.liaoning_province_item, R.array.jilin_province_item, R.array.heilongjiang_province_item, R.array.shanghai_province_item, R.array.jiangsu_province_item, R.array.zhejiang_province_item, R.array.anhui_province_item, R.array.fujian_province_item, R.array.jiangxi_province_item, R.array.shandong_province_item, R.array.henan_province_item, R.array.hubei_province_item, R.array.hunan_province_item, R.array.guangdong_province_item, R.array.guangxi_province_item, R.array.hainan_province_item, R.array.chongqing_province_item, R.array.sichuan_province_item, R.array.guizhou_province_item, R.array.yunnan_province_item, R.array.xizang_province_item, R.array.shanxi2_province_item, R.array.gansu_province_item, R.array.qinghai_province_item, R.array.linxia_province_item, R.array.xinjiang_province_item, R.array.hongkong_province_item, R.array.aomen_province_item, R.array.taiwan_province_item};
     private int[] countyOfBeiJing = {R.array.beijin_city_item};
     private int[] countyOfTianJing = {R.array.tianjin_city_item};
     private int[] countyOfHeBei = {R.array.shijiazhuang_city_item, R.array.tangshan_city_item, R.array.qinghuangdao_city_item, R.array.handan_city_item, R.array.xingtai_city_item, R.array.baoding_city_item, R.array.zhangjiakou_city_item, R.array.chengde_city_item, R.array.cangzhou_city_item, R.array.langfang_city_item, R.array.hengshui_city_item};
@@ -91,9 +96,10 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.item_address);
         init();
     }
-    private void popupChoose(){
+
+    private void popupChoose() {
         View contentView = LayoutInflater.from(this).inflate(R.layout.popupwindow_week, null);
-        mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT,true);
+        mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
         mPopWindow.setFocusable(true);
         mPopWindow.setOutsideTouchable(true);
@@ -119,7 +125,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         mTitleRight.setOnClickListener(this);
         mBack = (ImageView) findViewById(R.id.personal_back);
         mBack.setOnClickListener(this);
-        week = (TextView)findViewById(R.id.tv_week);
+        week = (TextView) findViewById(R.id.tv_week);
         week.setOnClickListener(this);
         etName = (EditText) findViewById(R.id.et_shouhuoren);
         etMobile = (EditText) findViewById(R.id.et_Mobile);
@@ -336,8 +342,8 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String name = etName.getText().toString();
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)){
-            ToastUtils.show(getApplication(),"请填写完信息");
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
+            ToastUtils.show(getApplication(), "请填写完信息");
             return;
         }
         StringBuilder region_id = new StringBuilder();
@@ -345,47 +351,70 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         Log.i(TAG, "strCity " + strCity);
         Log.i(TAG, "strCounty " + strCounty);
         CityModel province = CityDao.findCity(strProvince);
-        CityModel city = CityDao.findCity(strCity,province.getId());
-        CityModel county = CityDao.findCity(strCounty,city.getId());
+        CityModel city = CityDao.findCity(strCity, province.getId());
+        CityModel county = CityDao.findCity(strCounty, city.getId());
 
-        if (province != null){
+        if (province != null) {
             region_id.append(province.getId());
         }
-        if (city != null){
+        if (city != null) {
             region_id.append(city.getId());
         }
-        if (county != null){
+        if (county != null) {
             region_id.append(county.getId());
         }
-        Log.i(TAG, "province =  "+province);
-        Log.i(TAG, "city =  "+city);
-        Log.i(TAG, "county =  "+county);
-        AddressModel addressModel = new AddressModel(strProvince+strCity+strCounty+detialedAddress,mobile,region_id.toString(),name);
+        Log.i(TAG, "province =  " + province);
+        Log.i(TAG, "city =  " + city);
+        Log.i(TAG, "county =  " + county);
+        AddressModel addressModel = new AddressModel(strProvince + strCity + strCounty + detialedAddress, mobile, region_id.toString(), name);
         requestAddAddress(addressModel);
     }
 
     private void requestAddAddress(AddressModel addressModel) {
         String json = GsonUtil.toJson(addressModel);
-        Log.i(TAG, "json =  "+ json);
+        Log.i(TAG, "json =  " + json);
+        List<AddressModel> addressModels = new ArrayList<>();
+        addressModels.add(addressModel);
+        String s = GsonUtil.toJson(addressModels);
         RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
-        Log.i(TAG, "params.toString() = "+ params.toString());
-        params.addBodyParameter("address",json);
-//        params.addBodyParameter("address",addressModel.getAddress());
-//        params.addBodyParameter("mobile",addressModel.getMobile());
-//        params.addBodyParameter("region_id",addressModel.getRegion_id());
-//        params.addBodyParameter("consignee",addressModel.getConsignee());
-//        params.addBodyParameter("address",);
+        Log.i(TAG, "json s =  " + s);
+//        params.addBodyParameter("address",s);
+//        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//        nameValuePairs.add(new BasicNameValuePair("address",addressModel.getAddress()));
+//        nameValuePairs.add(new BasicNameValuePair("mobile",addressModel.getMobile()));
+//        nameValuePairs.add(new BasicNameValuePair("region_id",addressModel.getRegion_id()));
+//        nameValuePairs.add(new BasicNameValuePair("consignee",addressModel.getConsignee()));
+//        params.addBodyParameter("address",nameValuePairs.toString());
+//        RequestParams params1 = new RequestParams();
+//        params1.addBodyParameter("address",addressModel.getAddress());
+//        params1.addBodyParameter("mobile",addressModel.getMobile());
+//        params1.addBodyParameter("region_id",addressModel.getRegion_id());
+//        params1.addBodyParameter("consignee",addressModel.getConsignee());
+//        params.addParameter("address",params1);
+//        params.addBodyParameter("address", addressModel.getAddress());
+//        params.addBodyParameter("mobile", addressModel.getMobile());
+//        params.addBodyParameter("region_id", addressModel.getRegion_id());
+//        params.addBodyParameter("consignee", addressModel.getConsignee());
+        params.addBodyParameter("address[address]", addressModel.getAddress());
+        params.addBodyParameter("mobile[mobile]", addressModel.getMobile());
+        params.addBodyParameter("region_id[region_id]", addressModel.getRegion_id());
+        params.addBodyParameter("consignee[consignee]", addressModel.getConsignee());
+//        params.addBodyParameter("address","{:address => 地址, :mobile => 18780221, :region_id => 2222, :consignee => 收件人姓名}");
+//        params.addBodyParameter("address['address']",addressModel.getAddress());
+//        params.addBodyParameter("address['mobile']",addressModel.getMobile());
+//        params.addBodyParameter("address['region_id']",addressModel.getRegion_id());
+//        params.addBodyParameter("address['consignee']",addressModel.getConsignee());
         params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
 
         HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "requestAddAddress onSuccess = "+ s);
+                Log.i(TAG, "requestAddAddress onSuccess = " + s);
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                Log.i(TAG, "requestAddAddress onError = "+throwable.toString());
+                Log.i(TAG, "requestAddAddress onError = " + throwable.toString());
             }
 
             @Override
@@ -397,6 +426,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 }
