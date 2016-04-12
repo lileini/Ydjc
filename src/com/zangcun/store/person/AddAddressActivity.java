@@ -352,7 +352,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         Log.i(TAG, "strCounty " + strCounty);
         CityModel province = CityDao.findCity(strProvince);
         CityModel city = CityDao.findCity(strCity, province.getId());
-        CityModel county = CityDao.findCity(strCounty, city.getId());
+        CityModel county = CityDao.findCity(strCounty);
 
         if (province != null) {
             region_id.append(province.getId());
@@ -366,7 +366,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         Log.i(TAG, "province =  " + province);
         Log.i(TAG, "city =  " + city);
         Log.i(TAG, "county =  " + county);
-        AddressModel addressModel = new AddressModel(strProvince + strCity + strCounty + detialedAddress, mobile, region_id.toString(), name);
+        AddressModel addressModel = new AddressModel(strProvince + strCity + strCounty + detialedAddress, mobile, county.getId()+"", name);
         requestAddAddress(addressModel);
     }
 
@@ -378,27 +378,15 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String s = GsonUtil.toJson(addressModels);
         RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
         Log.i(TAG, "json s =  " + s);
-//        params.addBodyParameter("address",s);
-//        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-//        nameValuePairs.add(new BasicNameValuePair("address",addressModel.getAddress()));
-//        nameValuePairs.add(new BasicNameValuePair("mobile",addressModel.getMobile()));
-//        nameValuePairs.add(new BasicNameValuePair("region_id",addressModel.getRegion_id()));
-//        nameValuePairs.add(new BasicNameValuePair("consignee",addressModel.getConsignee()));
-//        params.addBodyParameter("address",nameValuePairs.toString());
-//        RequestParams params1 = new RequestParams();
-//        params1.addBodyParameter("address",addressModel.getAddress());
-//        params1.addBodyParameter("mobile",addressModel.getMobile());
-//        params1.addBodyParameter("region_id",addressModel.getRegion_id());
-//        params1.addBodyParameter("consignee",addressModel.getConsignee());
-//        params.addParameter("address",params1);
-//        params.addBodyParameter("address", addressModel.getAddress());
-//        params.addBodyParameter("mobile", addressModel.getMobile());
-//        params.addBodyParameter("region_id", addressModel.getRegion_id());
-//        params.addBodyParameter("consignee", addressModel.getConsignee());
-        params.addBodyParameter("address[address]", addressModel.getAddress());
-        params.addBodyParameter("mobile[mobile]", addressModel.getMobile());
-        params.addBodyParameter("region_id[region_id]", addressModel.getRegion_id());
-        params.addBodyParameter("consignee[consignee]", addressModel.getConsignee());
+        params.addBodyParameter("address", addressModel.getAddress());
+        params.addBodyParameter("mobile", addressModel.getMobile());
+        params.addBodyParameter("region_id", addressModel.getRegion_id());
+        params.addBodyParameter("consignee", addressModel.getConsignee());
+//        params.addBodyParameter("is_default",false);
+//        params.addBodyParameter("address.address", addressModel.getAddress());
+//        params.addBodyParameter("mobile.mobile", addressModel.getMobile());
+//        params.addBodyParameter("region_id.region_id", addressModel.getRegion_id());
+//        params.addBodyParameter("consignee.consignee", addressModel.getConsignee());
 //        params.addBodyParameter("address","{:address => 地址, :mobile => 18780221, :region_id => 2222, :consignee => 收件人姓名}");
 //        params.addBodyParameter("address['address']",addressModel.getAddress());
 //        params.addBodyParameter("address['mobile']",addressModel.getMobile());

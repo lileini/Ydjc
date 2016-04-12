@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.login.demo.R;
 
 /** 此页面时注册页面，需要的话可以不要这个改成您自己的注册页面 */
 public class RegisterPage extends Activity implements OnClickListener, Callback{
@@ -66,7 +65,7 @@ public class RegisterPage extends Activity implements OnClickListener, Callback{
 		tmpPlatform = null;
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.register_page);
+		/*setContentView(R.layout.register_page);
 		tvUserName = (EditText)findViewById(R.id.tv_user_name);
 		tvUserNote = (TextView)findViewById(R.id.tv_user_note);
 		ivUserIcon = (ImageView)findViewById(R.id.iv_user_icon);
@@ -78,7 +77,7 @@ public class RegisterPage extends Activity implements OnClickListener, Callback{
 		tvUserNote.setOnClickListener(this);
 		findViewById(R.id.layout_boy).setOnClickListener(this);
 		findViewById(R.id.layout_gril).setOnClickListener(this);
-		findViewById(R.id.ll_back).setOnClickListener(this);
+		findViewById(R.id.ll_back).setOnClickListener(this);*/
 
 		initData();
 	}
@@ -132,7 +131,7 @@ public class RegisterPage extends Activity implements OnClickListener, Callback{
 	}
 
 	public void onClick(View v) {
-		switch (v.getId()) {
+		/*switch (v.getId()) {
 		case R.id.ll_back:
 			finish();
 			break;
@@ -156,7 +155,7 @@ public class RegisterPage extends Activity implements OnClickListener, Callback{
 			ivGril.setVisibility(View.VISIBLE);
 			ivBoy.setVisibility(View.INVISIBLE);
 			break;
-		}
+		}*/
 	}
 
 	public boolean handleMessage(Message msg) {

@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.android.volley.VolleyError;
 import com.zangcun.store.BaseActivity;
@@ -28,6 +29,7 @@ import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.AdapterIndicator;
+import com.zangcun.store.widget.FlowLayout;
 import com.zangcun.store.widget.MyScrollView;
 import com.zangcun.store.widget.MyScrollView.RealScrollView.OnScroll;
 import com.squareup.picasso.Picasso;
@@ -64,8 +66,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     private RelativeLayout mChooseKindOption;
     private LinearLayout mGoodShowLayout;
-    private LinearLayout chooseChicun;
-    private LinearLayout chooseColor;
+    private FlowLayout chooseChicun;
+    private FlowLayout chooseColor;
     private LinearLayout mRightLayout;
 
     private MyScrollView mScrollView;
@@ -257,8 +259,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
         mPopWindow.setFocusable(true);
         mPopWindow.setOutsideTouchable(true);
-        chooseChicun = (LinearLayout) contentView.findViewById(R.id.choose_chicun_layout);
-        chooseColor = (LinearLayout) contentView.findViewById(R.id.choose_color_layout);
+        chooseChicun = (FlowLayout) contentView.findViewById(R.id.choose_chicun_layout);
+        chooseColor = (FlowLayout) contentView.findViewById(R.id.choose_color_layout);
         ImageView less = (ImageView) contentView.findViewById(R.id.choose_less);
         ImageView more = (ImageView) contentView.findViewById(R.id.choose_more);
         ImageView del = (ImageView) contentView.findViewById(R.id.goods_choose_del);
@@ -390,9 +392,14 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                     LinearLayout size2LL = null;
                     TextView chicun = new TextView(this);
                     //通过给textView设置 selector背景来选择
-                    chicun.setBackgroundResource(R.drawable.item_filter_selector);
+//                    chicun.setBackgroundResource(R.drawable.item_filter_selector);
                     chicun.setText("" + list.get(j));
-                    chicun.setPadding(10, 10, 10, 10);
+                    chicun.setTextAppearance(this,R.style.text_flag);
+                    ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    marginLayoutParams.setMargins(10,10,10,10);
+                    chicun.setLayoutParams(marginLayoutParams);
+                    chicun.setBackgroundResource(R.drawable.text_selector_shape);
+//                    chicun.setPadding(10, 10, 10, 10);
                     chicun.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -407,6 +414,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
                 }
             }
+            chooseChicun.requestLayout();
+            chooseChicun.invalidate();
         }
     }
 
@@ -416,8 +425,12 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                 if (!TextUtils.isEmpty(list.get(j))) {
                     // TODO: 2016/4/1 添加颜色view
                     TextView color = new TextView(this);
-                    color.setBackgroundResource(R.drawable.item_filter_selector);
-                    color.setPadding(10, 10, 10, 10);
+
+                    color.setTextAppearance(this,R.style.text_flag);
+                    ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    marginLayoutParams.setMargins(10,10,10,10);
+                    color.setLayoutParams(marginLayoutParams);
+                    color.setBackgroundResource(R.drawable.text_selector_shape);
                     color.setText(list.get(j));
                     color.setOnClickListener(new OnClickListener() {
                         @Override
@@ -433,6 +446,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                     chooseColor.addView(color);
                 }
             }
+            chooseColor.requestLayout();
+            chooseColor.invalidate();
 
         }
     }
