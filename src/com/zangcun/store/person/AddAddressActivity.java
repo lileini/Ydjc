@@ -373,11 +373,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private void requestAddAddress(AddressModel addressModel) {
         String json = GsonUtil.toJson(addressModel);
         Log.i(TAG, "json =  " + json);
-        List<AddressModel> addressModels = new ArrayList<>();
-        addressModels.add(addressModel);
-        String s = GsonUtil.toJson(addressModels);
         RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
-        Log.i(TAG, "json s =  " + s);
         params.addBodyParameter("address", addressModel.getAddress());
         params.addBodyParameter("mobile", addressModel.getMobile());
         params.addBodyParameter("region_id", addressModel.getRegion_id());
@@ -392,8 +388,10 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
 //        params.addBodyParameter("address['mobile']",addressModel.getMobile());
 //        params.addBodyParameter("address['region_id']",addressModel.getRegion_id());
 //        params.addBodyParameter("address['consignee']",addressModel.getConsignee());
-        params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
 
+        params.setAsJsonContent(true);
+        params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
+        params.addHeader("Content-Type","application/json");
         HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
