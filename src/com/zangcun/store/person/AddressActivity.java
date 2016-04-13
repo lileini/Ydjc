@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,8 +14,16 @@ import android.widget.TextView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.AddressAdapter;
+import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.net.CommandBase;
+import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DictionaryTool;
+import com.zangcun.store.utils.GsonUtil;
+import com.zangcun.store.utils.HttpUtils;
+import com.zangcun.store.utils.Log;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +43,11 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.personal_address);
         init();
+        initDate();
+    }
+
+    private void initDate() {
+        requestAddress();
     }
 
     private void init() {
@@ -47,7 +61,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mAddCity.setOnClickListener(this);
 
         mListView = (ListView) findViewById(R.id.lv_address);
-        mListView.setAdapter(mAdapter);
+//        mListView.setAdapter(mAdapter);
     }
 
     @Override
@@ -57,7 +71,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 this.finish();
                 break;
             case R.id.add_address:
-                startActivity(new Intent(this, AddAddressActivity.class));
+                startActivityForResult(new Intent(this, AddAddressActivity.class),100);
                 break;
         }
     }
@@ -82,4 +96,49 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode ==100){
+            requestAddress();
+        }
+    }
+
+    private void requestAddress() {
+        RequestParams params = new RequestParams(Net.URL_GET_ADDRESSES);
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess  = "+ s);
+                if (TextUtils.isEmpty(s))
+                    return;
+                GetAddressResultModel result = GsonUtil.getResult(s, GetAddressResultModel.class);
+                if (result.getAddress() == null)
+                    return;
+                if (mAdapter == null){
+                    mAdapter = new AddressAdapter(AddressActivity.this,result.getAddress());
+                    mListView.setAdapter(mAdapter);
+                }else {
+                    mAdapter.setmDataList(result.getAddress());
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "onError  = "+ throwable.toString());
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+    }
 }

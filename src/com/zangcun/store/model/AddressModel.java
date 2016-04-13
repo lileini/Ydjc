@@ -7,9 +7,10 @@ public class AddressModel {
     private String region_id;//区域id
     private String consignee;//收件人姓名
 
+    private boolean is_default = false;
+
     public AddressModel() {
     }
-
     public AddressModel(String address, String mobile, String region_id, String consignee) {
         this.address = address;
         this.mobile = mobile;
@@ -23,6 +24,14 @@ public class AddressModel {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean is_default() {
+        return is_default;
+    }
+
+    public void setIs_default(boolean is_default) {
+        this.is_default = is_default;
     }
 
     public String getMobile() {

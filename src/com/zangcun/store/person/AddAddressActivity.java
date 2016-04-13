@@ -374,28 +374,15 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String json = GsonUtil.toJson(addressModel);
         Log.i(TAG, "json =  " + json);
         RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
-        params.addBodyParameter("address", addressModel.getAddress());
-        params.addBodyParameter("mobile", addressModel.getMobile());
-        params.addBodyParameter("region_id", addressModel.getRegion_id());
-        params.addBodyParameter("consignee", addressModel.getConsignee());
-//        params.addBodyParameter("is_default",false);
-//        params.addBodyParameter("address.address", addressModel.getAddress());
-//        params.addBodyParameter("mobile.mobile", addressModel.getMobile());
-//        params.addBodyParameter("region_id.region_id", addressModel.getRegion_id());
-//        params.addBodyParameter("consignee.consignee", addressModel.getConsignee());
-//        params.addBodyParameter("address","{:address => 地址, :mobile => 18780221, :region_id => 2222, :consignee => 收件人姓名}");
-//        params.addBodyParameter("address['address']",addressModel.getAddress());
-//        params.addBodyParameter("address['mobile']",addressModel.getMobile());
-//        params.addBodyParameter("address['region_id']",addressModel.getRegion_id());
-//        params.addBodyParameter("address['consignee']",addressModel.getConsignee());
-
-        params.setAsJsonContent(true);
+        params.addBodyParameter("address",json);
         params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
         params.addHeader("Content-Type","application/json");
         HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
                 Log.i(TAG, "requestAddAddress onSuccess = " + s);
+                setResult(100);
+                finish();
             }
 
             @Override
