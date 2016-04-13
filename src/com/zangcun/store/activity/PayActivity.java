@@ -11,10 +11,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,6 +20,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.adapter.ShopCarAdapter;
 import com.zangcun.store.model.FxModel;
+import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.person.AddressActivity;
@@ -96,8 +94,35 @@ public class PayActivity extends BaseActivity implements OnClickListener,ShopCar
 		mSubmit = (TextView) findViewById(R.id.pay_submit);
 		mTip = (TextView) findViewById(R.id.pay_tip);
 
-		
+		assignViews();
 	}
+	private LinearLayout itemLayout;
+	private LinearLayout addressLy1;
+	private TextView addressName;
+	private TextView addressMr;
+	private TextView addressPhone;
+	private TextView addressCity;
+	private LinearLayout addressLy2;
+	private TextView addressSzMr;
+	private LinearLayout addressBj;
+	private LinearLayout addressDel;
+
+	private void assignViews() {
+		itemLayout = (LinearLayout) findViewById(R.id.item_layout);
+		addressLy1 = (LinearLayout) findViewById(R.id.address_ly1);
+		addressName = (TextView) findViewById(R.id.address_name);
+		addressMr = (TextView) findViewById(R.id.address_mr);
+		addressPhone = (TextView) findViewById(R.id.address_phone);
+		addressCity = (TextView) findViewById(R.id.address_city);
+		addressLy2 = (LinearLayout) findViewById(R.id.address_ly2);
+		addressSzMr = (TextView) findViewById(R.id.address_sz_mr);
+		addressBj = (LinearLayout) findViewById(R.id.address_bj);
+		addressDel = (LinearLayout) findViewById(R.id.address_del);
+		itemLayout.setVisibility(View.GONE);
+		addressLy2.setVisibility(View.GONE);
+		addressMr.setVisibility(View.GONE);
+	}
+
 	private void requestCart() {
 		if (TextUtils.isEmpty(DictionaryTool.getUser(this)) || TextUtils.isEmpty(DictionaryTool.getToken(this))){
 			ToastUtils.show(getApplication(),"请先登录");
@@ -215,16 +240,17 @@ public class PayActivity extends BaseActivity implements OnClickListener,ShopCar
 		case R.id.pay_add_address:
 			//选择地址
 			Intent intent = new Intent(getApplication(),AddressActivity.class);
-			startActivity(intent);
+			intent.putExtra("isChooseAddress",true);
+			startActivityForResult(intent,200);
 			break;
 
 		case R.id.pay_submit:
 			//订单详情
 			//如果没有选择地址
-			if(mAddAddress.equals("添加收货地址")){
+			/*if(mAddAddress.equals("添加收货地址")){
 				Toast.makeText(PayActivity.this, "请添加收获地址",Toast.LENGTH_SHORT).show();
-//				return;
-			}
+				return;
+			}*/
 			//到订单详情
 			Intent intent1 = new Intent(PayActivity.this, OrderActivity.class);
 			intent1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -242,8 +268,22 @@ public class PayActivity extends BaseActivity implements OnClickListener,ShopCar
 	}
 
 
-
-
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 200 && requestCode == 200){
+			GetAddressResultModel.AddressBean addressBean = (GetAddressResultModel.AddressBean) data.getSerializableExtra("addressBean");
+			if (addressBean == null)
+				return;
+			Log.i(TAG,"addressBean.getMobile()2 = "+addressBean.getMobile());
+			addressName.setText(addressBean.getConsignee());
+			addressPhone.setText(addressBean.getMobile());
+			addressCity.setText(addressBean.getAddress());
+			mAddAddress.setVisibility(View.GONE);
+			itemLayout.setVisibility(View.VISIBLE);
+			addressPhone.setVisibility(View.VISIBLE);
+		}
+	}
 
 	/**
 	 * 封装请求参数

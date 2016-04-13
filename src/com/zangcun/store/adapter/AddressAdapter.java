@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.zangcun.store.R;
-import com.zangcun.store.model.AddressModel;
 import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.person.AddAddressActivity;
@@ -24,16 +23,18 @@ import java.util.List;
 public class AddressAdapter extends BaseAdapter {
     private Context mContext;
     private List<GetAddressResultModel.AddressBean> mDataList;
-    private String TAG= "AddressAdapter";
+    private String TAG = "AddressAdapter";
 
     public AddressAdapter(Context mContext, List<GetAddressResultModel.AddressBean> mDataList) {
         this.mContext = mContext;
         this.mDataList = mDataList;
     }
-    public void setmDataList(List<GetAddressResultModel.AddressBean> mDataList){
+
+    public void setmDataList(List<GetAddressResultModel.AddressBean> mDataList) {
         this.mDataList = mDataList;
         notifyDataSetChanged();
     }
+
     @Override
     public int getCount() {
         return mDataList.size();
@@ -52,7 +53,7 @@ public class AddressAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         GetAddressResultModel.AddressBean addressBean = mDataList.get(position);
-        Log.i(TAG, "addressBean = "+ addressBean.toString());
+        Log.i(TAG, "addressBean = " + addressBean.toString());
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_address_add, null);
@@ -68,7 +69,7 @@ public class AddressAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        if (addressBean != null){
+        if (addressBean != null) {
 
             holder.address_name.setText(addressBean.getConsignee());
             holder.address_phone.setText(addressBean.getMobile());
@@ -78,8 +79,8 @@ public class AddressAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, AddAddressActivity.class);
-                    intent.putExtra("addressBean",addressBean);
-                    ((AddressActivity)mContext).startActivityForResult(intent,101);
+                    intent.putExtra("addressBean", addressBean);
+                    ((AddressActivity) mContext).startActivityForResult(intent, 101);
                 }
             });
             //设置删除事件
@@ -96,31 +97,37 @@ public class AddressAdapter extends BaseAdapter {
                     requestAddressDefault(addressBean);
                 }
             });
-            if (addressBean.isIs_default()){
+            if (addressBean.isIs_default()) {
                 holder.address_mr.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 holder.address_mr.setVisibility(View.GONE);
             }
         }
         return convertView;
     }
 
+    public GetAddressResultModel.AddressBean getOnclickDate(int postion) {
+        if (mDataList != null)
+            return mDataList.get(postion);
+        return null;
+    }
+
     private void requestAddressDelete(GetAddressResultModel.AddressBean addressBean) {
-        RequestParams params = new RequestParams(Net.HOST+"addresses/"+addressBean.getId()+".json");
+        RequestParams params = new RequestParams(Net.HOST + "addresses/" + addressBean.getId() + ".json");
         params.addHeader("Authorization", DictionaryTool.getToken(mContext));
         addressBean.setIs_default(true);
         params.addBodyParameter("address", GsonUtil.toJson(addressBean));
         HttpUtils.HttpDeleteMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                ToastUtils.show(mContext.getApplicationContext(),"删除成功");
+                ToastUtils.show(mContext.getApplicationContext(), "删除成功");
                 mDataList.remove(addressBean);
                 notifyDataSetChanged();
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(mContext.getApplicationContext(),"删除失败");
+                ToastUtils.show(mContext.getApplicationContext(), "删除失败");
             }
 
             @Override
@@ -132,26 +139,26 @@ public class AddressAdapter extends BaseAdapter {
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     private void requestAddressDefault(GetAddressResultModel.AddressBean addressBean) {
-        RequestParams params = new RequestParams(Net.HOST+"addresses/"+addressBean.getId()+".json");
+        RequestParams params = new RequestParams(Net.HOST + "addresses/" + addressBean.getId() + ".json");
         params.addHeader("Authorization", DictionaryTool.getToken(mContext));
         addressBean.setIs_default(true);
         String json = GsonUtil.toJson(addressBean);
-        Log.i(TAG,"json = "+ json);
+        Log.i(TAG, "json = " + json);
         params.addBodyParameter("address", json);
         HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                ToastUtils.show(mContext.getApplicationContext(),"设置成功");
-                ((AddressActivity)mContext).requestAddress();
+                ToastUtils.show(mContext.getApplicationContext(), "设置成功");
+                ((AddressActivity) mContext).requestAddress();
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(mContext.getApplicationContext(),"设置失败");
+                ToastUtils.show(mContext.getApplicationContext(), "设置失败");
             }
 
             @Override
@@ -163,7 +170,7 @@ public class AddressAdapter extends BaseAdapter {
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     static class ViewHolder {

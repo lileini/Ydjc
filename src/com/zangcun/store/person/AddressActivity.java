@@ -7,10 +7,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.AddressAdapter;
@@ -29,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //个人中心--收货地址
-public class AddressActivity extends BaseActivity implements View.OnClickListener {
+public class AddressActivity extends BaseActivity implements View.OnClickListener,AdapterView.OnItemClickListener {
     private ImageView mBack;
     private TextView mTitle;
     private TextView mTitleRight;
@@ -61,6 +58,8 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mAddCity.setOnClickListener(this);
 
         mListView = (ListView) findViewById(R.id.lv_address);
+        if (getIntent().getBooleanExtra("isChooseAddress",false))
+            mListView.setOnItemClickListener(this);
 //        mListView.setAdapter(mAdapter);
     }
 
@@ -135,5 +134,16 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
 
             }
         },params);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        GetAddressResultModel.AddressBean addressBean = mAdapter.getOnclickDate(position);
+        if (addressBean != null){
+            Intent intent = new Intent();
+            intent.putExtra("addressBean",addressBean);
+            setResult(200,intent);
+            finish();
+        }
     }
 }

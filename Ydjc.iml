@@ -17,9 +17,4 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="android-support-v4" level="project" />
   </component>
-  <dependency>
-    <groupId>com.jakewharton</groupId>
-    <artifactId>butterknife</artifactId>
-    <version>7.0.1</version>
-  </dependency>
 </module>
