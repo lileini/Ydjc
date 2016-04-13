@@ -76,14 +76,6 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    /**
-     * 封装请求参数
-     */
-    private void requestData() {
-        Map<String, String> map = new HashMap<>();
-        map.put("需要传递的key ", "需要传递的值");
-        CommandBase.requestDataMap(getApplicationContext(), Const.URL_USER, handler, null);
-    }
 
     private Handler handler = new Handler() {
         @Override
@@ -103,9 +95,12 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         if (requestCode == 100 && resultCode ==100){
             requestAddress();
         }
+        if (requestCode == 101 && resultCode ==101){
+            requestAddress();
+        }
     }
 
-    private void requestAddress() {
+    public void requestAddress() {
         RequestParams params = new RequestParams(Net.URL_GET_ADDRESSES);
         params.addHeader("Authorization", DictionaryTool.getToken(this));
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {

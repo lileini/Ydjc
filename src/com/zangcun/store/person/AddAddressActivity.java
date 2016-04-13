@@ -1,5 +1,6 @@
 package com.zangcun.store.person;
 
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.zangcun.store.R;
 import com.zangcun.store.dao.CityDao;
 import com.zangcun.store.model.AddressModel;
 import com.zangcun.store.model.CityModel;
+import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.GsonUtil;
@@ -89,12 +91,29 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private EditText etName;
     private EditText etMobile;
     private EditText etDetialedAddress;
+    private boolean isEdit =false;
+    private GetAddressResultModel.AddressBean addressBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_address);
         init();
+        initDate();
+    }
+
+    private void initDate() {
+        Intent intent = getIntent();
+        if (intent == null)
+            return;
+        addressBean = (GetAddressResultModel.AddressBean) intent.getSerializableExtra("addressBean");
+
+        if (addressBean == null)
+            return;
+        isEdit =true;
+       etName.setText(addressBean.getConsignee());
+         etMobile.setText(addressBean.getMobile());
+       etDetialedAddress.setText(addressBean.getAddress());
     }
 
     private void popupChoose() {
@@ -315,7 +334,12 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.pesonal_right:
                 //点击完成执行操作
-                addAddress();
+                if (isEdit){
+                    requestChangeAddress();
+                }else {
+
+                    addAddress();
+                }
                 break;
             case R.id.one_five:
                 mPopWindow.dismiss();
@@ -337,7 +361,53 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 break;
         }
     }
+    private void requestChangeAddress() {
+        RequestParams params = new RequestParams(Net.HOST+"addresses/"+addressBean.getId()+".json");
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
+        String name = etName.getText().toString();
+        String mobile = etMobile.getText().toString();
+        String detialedAddress = etDetialedAddress.getText().toString();
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
+            ToastUtils.show(getApplication(), "请填写完信息");
+            return;
+        }
+        Log.i(TAG, "strProvince " + strProvince);
+        Log.i(TAG, "strCity " + strCity);
+        Log.i(TAG, "strCounty " + strCounty);
+        CityModel province = CityDao.findCity(strProvince);
+        CityModel city = CityDao.findCity(strCity, province.getId());
+        CityModel county = CityDao.findCity(strCounty);
+        addressBean.setAddress(strProvince + strCity + strCounty + detialedAddress);
+        addressBean.setMobile(mobile);
+        addressBean.setConsignee(name);
+        addressBean.setRegion_id(county.getId());
+        String json = GsonUtil.toJson(addressBean);
+        com.zangcun.store.utils.Log.i(TAG,"json = "+ json);
+        params.addBodyParameter("address", json);
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                ToastUtils.show(getApplicationContext(),"修改成功");
+                setResult(101);
+                finish();
+            }
 
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                ToastUtils.show(getApplicationContext().getApplicationContext(),"修改失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+    }
     private void addAddress() {
         String name = etName.getText().toString();
         String mobile = etMobile.getText().toString();

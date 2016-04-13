@@ -96,6 +96,11 @@ public class AddressAdapter extends BaseAdapter {
                     requestAddressDefault(addressBean);
                 }
             });
+            if (addressBean.isIs_default()){
+                holder.address_mr.setVisibility(View.VISIBLE);
+            }else {
+                holder.address_mr.setVisibility(View.GONE);
+            }
         }
         return convertView;
     }
@@ -141,6 +146,7 @@ public class AddressAdapter extends BaseAdapter {
             @Override
             public void onSuccess(String s) {
                 ToastUtils.show(mContext.getApplicationContext(),"设置成功");
+                ((AddressActivity)mContext).requestAddress();
             }
 
             @Override
