@@ -174,6 +174,7 @@ public class ShopFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 if (count <= 0) {
+                    ToastUtils.show(getActivity(),"请选择商品");
                     return;
                 }
                 startActivity(new Intent(getContext(), PayActivity.class));

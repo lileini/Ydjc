@@ -77,7 +77,7 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
             }
         });
         if (shopCarModel.getQuantity() == 1){
-            holder.setEnable(R.id.item_gwc_ischecked,false);
+            holder.setEnable(R.id.item_gwc_less,false);
         }
         holder.setOnClickListener(R.id.item_gwc_less, new OnClickListener() {
             @Override
@@ -169,9 +169,9 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
 
         String url = "";
         if (shopCarModel.getIschecked() == 1){
-            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_checked.json";
-        }else{
             url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_unchecked.json";
+        }else{
+            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_checked.json";
         }
         RequestParams params = new RequestParams(url);
         params.addHeader("AUTHORIZATION", DictionaryTool.getToken(mContext.getApplicationContext()));

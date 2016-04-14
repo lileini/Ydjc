@@ -94,7 +94,7 @@ public class AddressAdapter extends BaseAdapter {
             holder.address_sz_mr.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    requestAddressDefault(addressBean);
+                    requestAddressDefault(addressBean,true);
                 }
             });
             if (addressBean.isIs_default()) {
@@ -142,18 +142,36 @@ public class AddressAdapter extends BaseAdapter {
         }, params);
     }
 
-    private void requestAddressDefault(GetAddressResultModel.AddressBean addressBean) {
+    private void requestAddressDefault(GetAddressResultModel.AddressBean addressBean,boolean isDefault) {
         RequestParams params = new RequestParams(Net.HOST + "addresses/" + addressBean.getId() + ".json");
         params.addHeader("Authorization", DictionaryTool.getToken(mContext));
-        addressBean.setIs_default(true);
+        addressBean.setIs_default(isDefault);
         String json = GsonUtil.toJson(addressBean);
         Log.i(TAG, "json = " + json);
         params.addBodyParameter("address", json);
         HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                ToastUtils.show(mContext.getApplicationContext(), "设置成功");
-                ((AddressActivity) mContext).requestAddress();
+                boolean isCompleted =false;
+                if (isDefault){
+                    for (GetAddressResultModel.AddressBean addressBean1: mDataList){
+                        if (addressBean.getId() == addressBean1.getId()){
+                            continue;
+                        }
+                        if (addressBean1.isIs_default()){
+                            requestAddressDefault(addressBean1,false);
+                            isCompleted = true;
+                        }
+                    }
+                    if (!isCompleted){
+                        ToastUtils.show(mContext.getApplicationContext(), "设置成功");
+                        ((AddressActivity) mContext).requestAddress();
+                    }
+                }else {
+
+                    ToastUtils.show(mContext.getApplicationContext(), "设置成功");
+                    ((AddressActivity) mContext).requestAddress();
+                }
             }
 
             @Override

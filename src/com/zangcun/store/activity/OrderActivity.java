@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -20,12 +21,19 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
+import com.zangcun.store.adapter.ChooseShopCarAdapter;
 import com.zangcun.store.model.FxModel;
+import com.zangcun.store.model.GetAddressResultModel;
+import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.widget.InnerListView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //订单中心
@@ -43,6 +51,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
     private LinearLayout mZFB;
     private LinearLayout mWeixin;
     private boolean isCheck = true;
+    private InnerListView mListView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,12 +91,6 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         orderPhone = (TextView) findViewById(R.id.order_phone);
         orderAddress = (TextView) findViewById(R.id.order_address);
         orderExpressTime = (TextView) findViewById(R.id.order_express_time);
-        orderGoodImg = (ImageView) findViewById(R.id.order_good_img);
-        orderGoodName = (TextView) findViewById(R.id.order_good_name);
-        orderGoodDesc = (TextView) findViewById(R.id.order_good_desc);
-        orderCailiao = (TextView) findViewById(R.id.order_cailiao);
-        orderGoodCount = (TextView) findViewById(R.id.order_good_count);
-        orderGoodPrice = (TextView) findViewById(R.id.order_good_price);
         orderPayWay = (TextView) findViewById(R.id.order_pay_way);
         orderPayMoney = (TextView) findViewById(R.id.order_pay_money);
         orderNumber = (TextView) findViewById(R.id.order_number);
@@ -109,6 +112,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         mOrderPay.setOnClickListener(this);
         mOrderDel = (TextView) findViewById(R.id.order_delete);
         mOrderDel.setOnClickListener(this);
+        mListView = (InnerListView) findViewById(R.id.listView);
 
     }
 
@@ -119,7 +123,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
     private void initData() {
         mTitle.setText("订单中心");
         mTitle.setTextSize(16);
-        Bundle bundle = getIntent().getBundleExtra("bundle");
+        /*Bundle bundle = getIntent().getBundleExtra("bundle");
         String color = bundle.getString("color");
         String size = bundle.getString("size");
         String count = bundle.getString("count");
@@ -139,12 +143,25 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         orderGoodCount.setText(count);
         orderGoodPrice.setText("¥"+optionsIdEntity.getPrice());
         double pay = Double.valueOf(optionsIdEntity.getPrice()) * Integer.valueOf(count.substring(1));
-        orderPayMoney.setText(pay+"");
+        orderPayMoney.setText(pay+"");*/
 //        bundle.putString("color",color);
 //        bundle.putString("size",size);
 //        bundle.putString("count",mCount.getText().toString());
 //        bundle.putSerializable("OptionsIdEntity",getIntent().getSerializableExtra("OptionsIdEntity"));
-
+        ArrayList<Parcelable> mDates = getIntent().getParcelableArrayListExtra("mDates");
+        if(mDates == null || mDates.size() == 0){
+            return;
+        }
+        List<ShopCarModel> list = new ArrayList<>(mDates.size());
+        for (Parcelable parcelable: mDates){
+            list.add((ShopCarModel)parcelable);
+        }
+        ChooseShopCarAdapter chooseShopCarAdapter = new ChooseShopCarAdapter(this, list, R.layout.item_pay);
+        mListView.setAdapter(chooseShopCarAdapter);
+        GetAddressResultModel.AddressBean addressBean = (GetAddressResultModel.AddressBean) getIntent().getSerializableExtra("addressBean");
+        orderUsername.setText(addressBean.getConsignee());
+        orderAddress.setText(addressBean.getAddress());
+        orderPhone.setText(addressBean.getMobile());
         //网络获取数据
         //初始化数据
 
