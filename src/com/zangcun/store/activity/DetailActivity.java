@@ -511,6 +511,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             public void onSuccess(String s) {
                 Log.i(TAG, "add cart onSuccess = "+ s);
                 ToastUtils.show(DetailActivity.this,"加入购物车成功",true);
+                sendBroadcast(new Intent(Const.SHOP_CAR_RECIEVER));//发送通知刷新购物车
             }
 
             @Override

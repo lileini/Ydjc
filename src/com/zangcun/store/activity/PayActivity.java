@@ -332,11 +332,13 @@ public class PayActivity extends BaseActivity implements OnClickListener{
 			@Override
 			public void onSuccess(String s) {
 				Log.i(TAG, "requestCreateOrder onSuccess = "+ s);
+				sendBroadcast(new Intent(Const.SHOP_CAR_RECIEVER));
 				Intent intent1 = new Intent(PayActivity.this, OrderActivity.class);
 				intent1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent1.putParcelableArrayListExtra("mDates",mDatas);
 				intent1.putExtra("addressBean",addressBean);
 				startActivity(intent1);
+				finish();
 			}
 
 			@Override

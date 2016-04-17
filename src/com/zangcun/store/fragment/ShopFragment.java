@@ -1,6 +1,9 @@
 package com.zangcun.store.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +18,7 @@ import com.zangcun.store.activity.PayActivity;
 import com.zangcun.store.adapter.ShopCarAdapter;
 import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.Net;
+import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.*;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -70,8 +74,15 @@ public class ShopFragment extends BaseFragment implements
 
         init();
         initData();
-
+        IntentFilter filter = new IntentFilter(Const.SHOP_CAR_RECIEVER);
+        getActivity().registerReceiver(shopCarReciever,filter);
     }
+    private BroadcastReceiver shopCarReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            requestCart();
+        }
+    };
 
     private void initData() {
 
@@ -206,11 +217,8 @@ public class ShopFragment extends BaseFragment implements
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (hidden){
-            requestCart();
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(shopCarReciever);
     }
-
 }

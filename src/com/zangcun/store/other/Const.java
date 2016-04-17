@@ -52,5 +52,7 @@ public class Const {
     public final static String URL_PRODUCTS_FS = BASE_URL + "/products/fsyp.json";
     public final static String URL_PRODUCTS_XD = BASE_URL + "/products/xianglu.json";
 
+    //广播接收
+    public final static String SHOP_CAR_RECIEVER = "shop_car_reciever";
 
 }
