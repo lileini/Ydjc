@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.adapter.ChooseShopCarAdapter;
 import com.zangcun.store.adapter.ShopCarAdapter;
+import com.zangcun.store.entity.OrderResultEntity;
 import com.zangcun.store.model.FxModel;
 import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.model.ShopCarModel;
@@ -29,6 +30,7 @@ import com.zangcun.store.R;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.DictionaryTool;
+import com.zangcun.store.utils.GsonUtil;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
 import org.xutils.common.Callback;
@@ -332,11 +334,15 @@ public class PayActivity extends BaseActivity implements OnClickListener{
 			@Override
 			public void onSuccess(String s) {
 				Log.i(TAG, "requestCreateOrder onSuccess = "+ s);
+				OrderResultEntity result = GsonUtil.getResult(s, OrderResultEntity.class);
+				int order_id = result.getOrder().getOrder_id();
+				Log.i(TAG, "order_id = "+ order_id);
 				sendBroadcast(new Intent(Const.SHOP_CAR_RECIEVER));
 				Intent intent1 = new Intent(PayActivity.this, OrderActivity.class);
 				intent1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent1.putParcelableArrayListExtra("mDates",mDatas);
 				intent1.putExtra("addressBean",addressBean);
+				intent1.putExtra("order_id",order_id);
 				startActivity(intent1);
 				finish();
 			}

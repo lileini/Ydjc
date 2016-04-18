@@ -142,13 +142,16 @@ public class ShopFragment extends BaseFragment implements
                     mEmptyLayout.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.GONE);
                     mToBuyLayout.setVisibility(View.GONE);
+                    mListView.setVisibility(View.GONE);
                     return;
                 }
+                mListView.setVisibility(View.VISIBLE);
                 if (mAdapter == null){
 
                     mAdapter = new ShopCarAdapter(getActivity(), mDatas,
                             R.layout.item_shop_car);
                     mAdapter.setListener(ShopFragment.this);
+
                     mListView.setDividerHeight(20);
                     mListView.setAdapter(mAdapter);
                 }else {

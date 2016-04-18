@@ -265,7 +265,7 @@ public class OrderResultEntity {
 
             public static class GoodBean {
                 private int goods_id;
-                private Object updated_at;
+                private String updated_at;
                 private String goods_name;
                 private int goods_number;
                 private int goods_type;
@@ -298,11 +298,11 @@ public class OrderResultEntity {
                     this.goods_id = goods_id;
                 }
 
-                public Object getUpdated_at() {
+                public String getUpdated_at() {
                     return updated_at;
                 }
 
-                public void setUpdated_at(Object updated_at) {
+                public void setUpdated_at(String updated_at) {
                     this.updated_at = updated_at;
                 }
 

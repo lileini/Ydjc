@@ -2,6 +2,7 @@ package com.zangcun.store.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +29,12 @@ import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DictionaryTool;
+import com.zangcun.store.utils.HttpUtils;
+import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.InnerListView;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -52,6 +58,8 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
     private LinearLayout mWeixin;
     private boolean isCheck = true;
     private InnerListView mListView;
+    //订单号
+    private int order_id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,6 +157,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
 //        bundle.putString("count",mCount.getText().toString());
 //        bundle.putSerializable("OptionsIdEntity",getIntent().getSerializableExtra("OptionsIdEntity"));
         ArrayList<Parcelable> mDates = getIntent().getParcelableArrayListExtra("mDates");
+        order_id = getIntent().getIntExtra("order_id",-1);
         if(mDates == null || mDates.size() == 0){
             return;
         }
@@ -174,6 +183,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                 this.finish();
                 break;
             case R.id.order_delete://取消支付
+                requestCancelOrder();
                 break;
             case R.id.order_to_pay://立即支付
                 popupPay();
@@ -199,6 +209,41 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                 }
                 break;
         }
+    }
+
+    /**
+     * 请求取消订单
+     */
+    private void requestCancelOrder() {
+        RequestParams params = new RequestParams(Net.HOST+"orders/"+order_id+"/cancel.json ");
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
+        HttpUtils.HttpPutMethod(new Callback.CacheCallback<String>() {
+            @Override
+            public boolean onCache(String s) {
+                return false;
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                ToastUtils.show(getApplication(),"取消订单成功");
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                ToastUtils.show(getApplication(),"网络异常,\n取消订单失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
     }
 
     @Override
