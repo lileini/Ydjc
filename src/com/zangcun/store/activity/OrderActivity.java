@@ -367,7 +367,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                 }
                 default:
                     break;
-            }
+            } 
         };
     };
 

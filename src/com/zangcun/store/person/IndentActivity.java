@@ -8,13 +8,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.IndentAdapter;
+import com.zangcun.store.entity.OrderResultEntity;
 import com.zangcun.store.net.CommandBase;
+import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DictionaryTool;
+import com.zangcun.store.utils.HttpUtils;
+import com.zangcun.store.utils.Log;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //个人中心--全部订单
@@ -30,6 +40,37 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.personal_indent);
         init();
+        initDate();
+    }
+
+    private void initDate() {
+        RequestParams params = new RequestParams(Net.URL_CEAT_ORDER);
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+s);
+                Gson gson = new Gson();
+                List<OrderResultEntity> orderList = gson.fromJson(s, new TypeToken<List<OrderResultEntity>>() {
+                }.getType());
+                Log.i(TAG, "orderList = "+orderList.toString());
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
     }
 
     private void init() {
