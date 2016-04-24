@@ -27,6 +27,7 @@ import com.zangcun.store.R;
 import com.zangcun.store.adapter.ChooseShopCarAdapter;
 import com.zangcun.store.alipay.AliPayUtil;
 import com.zangcun.store.alipay.PayResult;
+import com.zangcun.store.entity.OrderResultEntity;
 import com.zangcun.store.model.FxModel;
 import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.model.ShopCarModel;
@@ -41,10 +42,8 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 //订单中心
 public class OrderActivity extends BaseActivity implements OnClickListener {
@@ -162,6 +161,8 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
 //        bundle.putSerializable("OptionsIdEntity",getIntent().getSerializableExtra("OptionsIdEntity"));
         ArrayList<Parcelable> mDates = getIntent().getParcelableArrayListExtra("mDates");
         order_id = getIntent().getIntExtra("order_id",-1);
+        OrderResultEntity.OrderBean orderBean = getIntent().getParcelableExtra("OrderBean");
+
         if(mDates == null || mDates.size() == 0){
             return;
         }
@@ -175,9 +176,18 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         orderUsername.setText(addressBean.getConsignee());
         orderAddress.setText(addressBean.getAddress());
         orderPhone.setText(addressBean.getMobile());
+
         //网络获取数据
         //初始化数据
+        if (orderBean == null)
+            return;
+        orderNumber.setText(orderBean.getOrder_sn());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+        orderTime.setText(sdf.format(orderBean.getAdd_time()));
+        shoopingMoney.setText(orderBean.getGoods_amount());
+        allMoney.setText(orderBean.getOrder_amount());
+        orderPayMoney.setText(orderBean.getGoods_amount());
     }
 
     @Override

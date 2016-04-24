@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2016-03-30 16:45"
+                android:id="@+id/tv_date"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_state"
+                android:text="已取消"
+                android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+        android:paddingLeft="5dp"
+          android:paddingRight="5dp"
+          android:background="@color/line"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+        android:id="@+id/iv_default_image"
+        android:src="@drawable/btn_icon_kj"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:gravity="bottom"
+        android:id="@+id/tv_count"
+
+        android:text="x1"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:gravity="bottom"
+                  android:text="订单金额"/>
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:gravity="bottom"
+                  android:id="@+id/tv_order_account"
+                  android:text="xx"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,5 +1,9 @@
 package com.zangcun.store.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +40,7 @@ public class OrderResultEntity {
         this.order = order;
     }
 
-    public static class OrderBean {
+    public static class OrderBean implements Parcelable {
         private int order_id;
         private String order_sn;
         private int order_status;
@@ -50,7 +54,7 @@ public class OrderResultEntity {
         private String invoice_no;
         private int pay_time;
         private int shipping_time;
-        private Object message;
+        private String message;
         private int region_id;
         /**
          * id : 521
@@ -166,11 +170,11 @@ public class OrderResultEntity {
             this.shipping_time = shipping_time;
         }
 
-        public Object getMessage() {
+        public String getMessage() {
             return message;
         }
 
-        public void setMessage(Object message) {
+        public void setMessage(String message) {
             this.message = message;
         }
 
@@ -190,7 +194,7 @@ public class OrderResultEntity {
             this.order_goods = order_goods;
         }
 
-        public static class OrderGoodsBean {
+        public static class OrderGoodsBean implements Parcelable {
             private int id;
             private String goods_sn;
             /**
@@ -263,7 +267,7 @@ public class OrderResultEntity {
 
             private GoodBean.OptionsIdBean optionsIdBean;
 
-            public static class GoodBean {
+            public static class GoodBean implements Parcelable {
                 private int goods_id;
                 private String updated_at;
                 private String goods_name;
@@ -468,7 +472,155 @@ public class OrderResultEntity {
                         this.image_url = image_url;
                     }
                 }
+
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel dest, int flags) {
+                    dest.writeInt(this.goods_id);
+                    dest.writeString(this.updated_at);
+                    dest.writeString(this.goods_name);
+                    dest.writeInt(this.goods_number);
+                    dest.writeInt(this.goods_type);
+                    dest.writeString(this.market_price);
+                    dest.writeString(this.price);
+                    dest.writeString(this.default_image);
+                    dest.writeByte(is_shipping ? (byte) 1 : (byte) 0);
+                    dest.writeStringList(this.contents);
+                    dest.writeStringList(this.good_image_urls);
+                }
+
+                public GoodBean() {
+                }
+
+                protected GoodBean(Parcel in) {
+                    this.goods_id = in.readInt();
+                    this.updated_at = in.readString();
+                    this.goods_name = in.readString();
+                    this.goods_number = in.readInt();
+                    this.goods_type = in.readInt();
+                    this.market_price = in.readString();
+                    this.price = in.readString();
+                    this.default_image = in.readString();
+                    this.is_shipping = in.readByte() != 0;
+                    this.contents = in.createStringArrayList();
+                    this.good_image_urls = in.createStringArrayList();
+
+                }
+
+                public static final Creator<GoodBean> CREATOR = new Creator<GoodBean>() {
+                    @Override
+                    public GoodBean createFromParcel(Parcel source) {
+                        return new GoodBean(source);
+                    }
+
+                    @Override
+                    public GoodBean[] newArray(int size) {
+                        return new GoodBean[size];
+                    }
+                };
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.id);
+                dest.writeString(this.goods_sn);
+                dest.writeParcelable(this.good, flags);
+                dest.writeInt(this.goods_numbers);
+                dest.writeString(this.goods_attr);
+
+            }
+
+            public OrderGoodsBean() {
+            }
+
+            protected OrderGoodsBean(Parcel in) {
+                this.id = in.readInt();
+                this.goods_sn = in.readString();
+                this.good = in.readParcelable(GoodBean.class.getClassLoader());
+                this.goods_numbers = in.readInt();
+                this.goods_attr = in.readString();
+            }
+
+            public static final Creator<OrderGoodsBean> CREATOR = new Creator<OrderGoodsBean>() {
+                @Override
+                public OrderGoodsBean createFromParcel(Parcel source) {
+                    return new OrderGoodsBean(source);
+                }
+
+                @Override
+                public OrderGoodsBean[] newArray(int size) {
+                    return new OrderGoodsBean[size];
+                }
+            };
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.order_id);
+            dest.writeString(this.order_sn);
+            dest.writeInt(this.order_status);
+            dest.writeString(this.order_amount);
+            dest.writeString(this.goods_amount);
+            dest.writeInt(this.add_time);
+            dest.writeInt(this.user_id);
+            dest.writeString(this.consignee);
+            dest.writeString(this.address);
+            dest.writeString(this.mobile);
+            dest.writeString(this.invoice_no);
+            dest.writeInt(this.pay_time);
+            dest.writeInt(this.shipping_time);
+            dest.writeString(this.message);
+            dest.writeInt(this.region_id);
+            dest.writeList(this.order_goods);
+        }
+
+        public OrderBean() {
+        }
+
+        protected OrderBean(Parcel in) {
+            this.order_id = in.readInt();
+            this.order_sn = in.readString();
+            this.order_status = in.readInt();
+            this.order_amount = in.readString();
+            this.goods_amount = in.readString();
+            this.add_time = in.readInt();
+            this.user_id = in.readInt();
+            this.consignee = in.readString();
+            this.address = in.readString();
+            this.mobile = in.readString();
+            this.invoice_no = in.readString();
+            this.pay_time = in.readInt();
+            this.shipping_time = in.readInt();
+            this.message = in.readString();
+            this.region_id = in.readInt();
+            this.order_goods = new ArrayList<OrderGoodsBean>();
+            in.readList(this.order_goods, OrderGoodsBean.class.getClassLoader());
+        }
+
+        public static final Parcelable.Creator<OrderBean> CREATOR = new Parcelable.Creator<OrderBean>() {
+            @Override
+            public OrderBean createFromParcel(Parcel source) {
+                return new OrderBean(source);
+            }
+
+            @Override
+            public OrderBean[] newArray(int size) {
+                return new OrderBean[size];
+            }
+        };
     }
 }

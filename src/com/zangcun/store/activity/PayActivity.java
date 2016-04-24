@@ -343,6 +343,7 @@ public class PayActivity extends BaseActivity implements OnClickListener{
 				intent1.putParcelableArrayListExtra("mDates",mDatas);
 				intent1.putExtra("addressBean",addressBean);
 				intent1.putExtra("order_id",order_id);
+				intent1.putExtra("OrderBean",result.getOrder());
 				startActivity(intent1);
 				finish();
 			}
