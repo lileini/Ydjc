@@ -22,7 +22,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private LinearLayout mLinPay;//待付款
     private LinearLayout mLinDiliver;//待发货
     private LinearLayout mLinCollection;//待收货
-    private LinearLayout mLinPJ;
+    //    private LinearLayout mLinPJ;//待评价
     private TextView tvPhone;
 
     public static PersonalFragment getInstance() {
@@ -52,7 +52,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mLinPay = (LinearLayout) mView.findViewById(R.id.lin_pay);
         mLinDiliver = (LinearLayout) mView.findViewById(R.id.lin_deliver);
         mLinCollection = (LinearLayout) mView.findViewById(R.id.lin_collection);
-        mLinPJ = (LinearLayout) mView.findViewById(R.id.lin_pj);
+//        mLinPJ = (LinearLayout) mView.findViewById(R.id.lin_pj);
         tvPhone = (TextView) mView.findViewById(R.id.fragment_dsx_username_text);
         mIndent.setOnClickListener(this);
         mCollect.setOnClickListener(this);
@@ -64,7 +64,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mLinPay.setOnClickListener(this);
         mLinDiliver.setOnClickListener(this);
         mLinCollection.setOnClickListener(this);
-        mLinPJ.setOnClickListener(this);
+//        mLinPJ.setOnClickListener(this);
     }
 
     private void intentData() {
@@ -110,7 +110,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.exit://退出
                 if (listener != null)
-                    listener.onPersionLoginClick("个人中心");
+                    listener.onPersionLoginClick("登录");
                 break;
             case R.id.about://关于我们
                 startActivity(new Intent(mThis, AboutActivity.class));
@@ -124,9 +124,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             case R.id.lin_collection://待收货
                 startActivity(new Intent(mThis, LinCollectionActivity.class));
                 break;
-            case R.id.lin_pj://待评价
-                startActivity(new Intent(mThis, LinPJActivity.class));
-                break;
+//            case R.id.lin_pj://待评价
+//                startActivity(new Intent(mThis, LinPJActivity.class));
+//                break;
         }
     }
 

@@ -4,13 +4,12 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
     <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="70dp"
-                  android:padding="5dp"
+                  android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:background="#fff"
     >
         <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
+                      android:layout_height="match_parent"
                       android:layout_weight="1"
                       android:background="@drawable/personal_detail"
                       android:gravity="center"
@@ -18,19 +17,21 @@
                       android:id="@+id/lin_pay"
         >
             <ImageView android:layout_width="wrap_content"
-                       android:layout_height="40dp"
+                       android:layout_height="wrap_content"
                        android:src="@drawable/icon_daifukuan"
                        android:layout_marginTop="10dp"
             />
             <TextView android:layout_width="wrap_content"
-                      android:layout_height="30dp"
+                      android:layout_height="wrap_content"
                       android:text="待付款"
                       android:textColor="#000"
-                      android:textSize="12sp"
+                      android:textSize="13sp"
+                      android:layout_marginTop="5dp"
+                      android:layout_marginBottom="5dp"
             />
         </LinearLayout>
         <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
+                      android:layout_height="match_parent"
                       android:orientation="vertical"
                       android:layout_weight="1"
                       android:background="@drawable/personal_detail"
@@ -38,19 +39,21 @@
                       android:id="@+id/lin_deliver"
         >
             <ImageView android:layout_width="wrap_content"
-                       android:layout_height="40dp"
+                       android:layout_height="wrap_content"
                        android:layout_marginTop="10dp"
                        android:src="@drawable/icon_fahuoicon"
             />
             <TextView android:layout_width="wrap_content"
-                      android:layout_height="30dp"
+                      android:layout_height="wrap_content"
                       android:text="待发货"
                       android:textColor="#000"
-                      android:textSize="12sp"
+                      android:textSize="13sp"
+                      android:layout_marginTop="5dp"
+                      android:layout_marginBottom="5dp"
             />
         </LinearLayout>
         <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
+                      android:layout_height="match_parent"
                       android:orientation="vertical"
                       android:layout_weight="1"
                       android:gravity="center"
@@ -58,40 +61,42 @@
                       android:id="@+id/lin_collection"
         >
             <ImageView android:layout_width="wrap_content"
-                       android:layout_height="40dp"
+                       android:layout_height="wrap_content"
                        android:layout_marginTop="10dp"
                        android:src="@drawable/icon_daishouhuo"
             />
             <TextView android:layout_width="wrap_content"
-                      android:layout_height="30dp"
+                      android:layout_height="wrap_content"
                       android:text="待收货"
                       android:textColor="#000"
-                      android:textSize="12sp"
+                      android:textSize="13sp"
+                      android:layout_marginTop="5dp"
+                      android:layout_marginBottom="5dp"
             />
         </LinearLayout>
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:layout_weight="1"
-                      android:gravity="center"
-                      android:background="@drawable/personal_detail"
-                      android:id="@+id/lin_pj"
-        >
-            <ImageView android:layout_width="wrap_content"
-                       android:layout_height="40dp"
-                       android:layout_marginTop="10dp"
-                       android:src="@drawable/icon_daipingjia"
-            />
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="30dp"
-                      android:text="待评价"
-                      android:textColor="#000"
-                      android:textSize="12sp"
-            />
-        </LinearLayout>
+        <!--<LinearLayout android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:background="@drawable/personal_detail"-->
+        <!--android:id="@+id/lin_pj"-->
+        <!--&gt;-->
+        <!--<ImageView android:layout_width="wrap_content"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:src="@drawable/icon_daipingjia"-->
+        <!--/>-->
+        <!--<TextView android:layout_width="wrap_content"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:text="待评价"-->
+        <!--android:textColor="#000"-->
+        <!--android:textSize="12sp"-->
+        <!--/>-->
+        <!--</LinearLayout>-->
     </LinearLayout>
     <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/divider"/>
+            android:background="@color/divideres"/>
 </LinearLayout>

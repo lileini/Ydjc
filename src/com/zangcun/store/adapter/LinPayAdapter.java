@@ -9,16 +9,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.zangcun.store.R;
-import com.zangcun.store.model.LinPayModel;
 
 import java.util.List;
 
-//待付款适配器
+/**
+ * 待付款
+ * */
 public class LinPayAdapter extends BaseAdapter {
     private Context mContext;
-    private List<LinPayModel> mDataList;
+    private List<String> mDataList;
 
-    public LinPayAdapter(Context mContext, List<LinPayModel> mDataList) {
+    public LinPayAdapter(Context mContext, List<String> mDataList) {
         this.mContext = mContext;
         this.mDataList = mDataList;
     }
@@ -29,7 +30,7 @@ public class LinPayAdapter extends BaseAdapter {
     }
 
     @Override
-    public LinPayModel getItem(int position) {
+    public Object getItem(int position) {
         return mDataList.get(position);
     }
 
@@ -45,9 +46,11 @@ public class LinPayAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_lindo, null);
             holder = new ViewHolder();
             holder.tv_lin_time = (TextView) convertView.findViewById(R.id.tv_lin_time);
+            holder.tv_lin_zt = (TextView) convertView.findViewById(R.id.tv_lin_zt);
             holder.lin_img = (ImageView) convertView.findViewById(R.id.lin_img);
             holder.lin_number = (TextView) convertView.findViewById(R.id.lin_number);
             holder.money = (TextView) convertView.findViewById(R.id.money);
+            holder.btn_lin_cancle = (Button) convertView.findViewById(R.id.btn_lin_cancle);
             holder.btn_go_pay = (Button) convertView.findViewById(R.id.btn_go_pay);
             convertView.setTag(holder);
         } else {
@@ -58,9 +61,11 @@ public class LinPayAdapter extends BaseAdapter {
 
     static class ViewHolder {
         private TextView tv_lin_time;//下单时间
+        private TextView tv_lin_zt;//付款状态
         private ImageView lin_img;//商品图片
         private TextView lin_number;//商品数量
-        private TextView money;//总价
-        private Button btn_go_pay;//去支付按钮
+        private TextView money;//商品总价
+        private Button btn_lin_cancle;//取消订单
+        private Button btn_go_pay;//去支付
     }
 }

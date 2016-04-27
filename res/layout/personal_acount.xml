@@ -3,15 +3,15 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/clouds"
+              android:background="@color/dividers"
 >
     <include layout="@layout/personal_title"/>
 
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
-                  android:background="@color/white"
-                  android:padding="10dp"
+                  android:background="@drawable/personal_detail"
+                  android:padding="5dp"
                   android:id="@+id/connetion_xinlang"
     >
         <ImageView android:layout_width="wrap_content"
@@ -23,6 +23,7 @@
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="点击绑定"
+                  android:layout_weight="1"
                   android:layout_gravity="center"
                   android:layout_marginLeft="10dp"
                   android:textSize="16sp"
@@ -30,14 +31,13 @@
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="解除绑定"
-                  android:layout_weight="1"
-                  android:gravity="center"
+                  android:layout_marginRight="10dp"
                   android:textColor="@color/loess"
                   android:layout_gravity="center"
                   android:layout_marginLeft="10dp"
                   android:textSize="12sp"
-                  android:visibility="gone"
                   android:id="@+id/cancle_xinlang"
+                  android:visibility="gone"
         />
     </LinearLayout>
     <View
@@ -48,8 +48,8 @@
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
-                  android:background="@color/white"
-                  android:padding="10dp"
+                  android:background="@drawable/personal_detail"
+                  android:padding="5dp"
                   android:id="@+id/connetion_weixin"
     >
         <ImageView android:layout_width="wrap_content"
@@ -61,6 +61,7 @@
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="点击绑定"
+                  android:layout_weight="1"
                   android:layout_gravity="center"
                   android:layout_marginLeft="10dp"
                   android:textSize="16sp"
@@ -68,14 +69,13 @@
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="解除绑定"
-                  android:layout_weight="1"
-                  android:gravity="center"
                   android:textColor="@color/loess"
                   android:layout_gravity="center"
                   android:layout_marginLeft="10dp"
+                  android:layout_marginRight="10dp"
                   android:textSize="12sp"
-                  android:visibility="gone"
                   android:id="@+id/cancle_weixin"
+                  android:visibility="gone"
         />
 
     </LinearLayout>
@@ -87,8 +87,8 @@
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
-                  android:background="@color/white"
-                  android:padding="10dp"
+                  android:background="@drawable/personal_detail"
+                  android:padding="5dp"
                   android:id="@+id/connetion_qq"
     >
         <ImageView android:layout_width="wrap_content"
@@ -100,6 +100,7 @@
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="点击绑定"
+                  android:layout_weight="1"
                   android:layout_gravity="center"
                   android:layout_marginLeft="10dp"
                   android:textSize="16sp"
@@ -107,16 +108,18 @@
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="解除绑定"
-                  android:layout_weight="1"
                   android:gravity="center"
                   android:textColor="@color/loess"
                   android:layout_gravity="center"
                   android:layout_marginLeft="10dp"
                   android:textSize="12sp"
-                  android:visibility="gone"
                   android:id="@+id/cancle_qq"
+                  android:layout_marginRight="10dp"
+                  android:visibility="gone"
         />
-
     </LinearLayout>
-
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
 </LinearLayout>

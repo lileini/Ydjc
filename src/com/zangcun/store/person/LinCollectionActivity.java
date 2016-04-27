@@ -1,35 +1,45 @@
 package com.zangcun.store.person;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
+import com.zangcun.store.activity.DetailActivity;
 import com.zangcun.store.adapter.LinCollectionAdapter;
+import com.zangcun.store.adapter.LinDeLiverAdapter;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-//个人中心--待收货
-public class LinCollectionActivity extends BaseActivity implements View.OnClickListener {
+/**
+ * 待收货
+ * */
+public class LinCollectionActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     private ImageView mBack;
     private TextView mTitle;
 
     private ListView mListView;
     private LinCollectionAdapter mAdapter;
+    private List<String> mDatas = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.personal_collection);
         init();
+        requestData();
     }
 
     private void init() {
@@ -38,8 +48,10 @@ public class LinCollectionActivity extends BaseActivity implements View.OnClickL
         mBack = (ImageView) findViewById(R.id.personal_back);
         mBack.setOnClickListener(this);
 
-        mListView = (ListView) findViewById(R.id.lv_collection);
+        mListView= (ListView) findViewById(R.id.lv_collection);
+        mAdapter = new LinCollectionAdapter(this, mDatas);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
     }
 
     @Override
@@ -55,8 +67,6 @@ public class LinCollectionActivity extends BaseActivity implements View.OnClickL
      * 封装请求参数
      */
     private void requestData() {
-        Map<String, String> map = new HashMap<>();
-//        map.put("需要传递的key ", "需要传递的值");
         CommandBase.requestDataNoGet(getApplicationContext(), Const.URL_WAITING_FOR_RECEIVE, handler, null);
     }
 
@@ -71,4 +81,12 @@ public class LinCollectionActivity extends BaseActivity implements View.OnClickL
             }
         }
     };
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(LinCollectionActivity.this, DetailActivity.class);
+        intent.putExtra("lincollection", mDatas.get(position));
+        intent.putExtra("kind", "lincollection");
+        startActivity(intent);
+    }
 }

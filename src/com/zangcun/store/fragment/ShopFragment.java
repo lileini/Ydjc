@@ -7,35 +7,36 @@ import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.R;
+import com.zangcun.store.activity.DetailActivity;
 import com.zangcun.store.activity.PayActivity;
+import com.zangcun.store.adapter.FxGridAdapter;
 import com.zangcun.store.adapter.ShopCarAdapter;
+import com.zangcun.store.model.FxModel;
 import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.*;
+import com.zangcun.store.widget.BaseListview;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 // 购物车
-public class ShopFragment extends BaseFragment implements
-        ShopCarAdapter.PriceAndCountChangeListener {
+public class ShopFragment extends BaseFragment implements ShopCarAdapter.PriceAndCountChangeListener {
     public static ShopFragment getInstance() {
         ShopFragment fragment = new ShopFragment();
         return fragment;
     }
 
-    private ListView mListView;
+    private BaseListview mListView;
     private TextView mShoudPay;
     private TextView mToPay;
     private LinearLayout mEmptyLayout;
@@ -44,6 +45,7 @@ public class ShopFragment extends BaseFragment implements
     private List<ShopCarModel> mDatas;
     private ShopCarAdapter mAdapter;
     private int count;
+    private List<FxModel> mDefautDatas;
 
     @Override
     protected int contentViewId() {
@@ -75,8 +77,9 @@ public class ShopFragment extends BaseFragment implements
         init();
         initData();
         IntentFilter filter = new IntentFilter(Const.SHOP_CAR_RECIEVER);
-        getActivity().registerReceiver(shopCarReciever,filter);
+        getActivity().registerReceiver(shopCarReciever, filter);
     }
+
     private BroadcastReceiver shopCarReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -96,27 +99,27 @@ public class ShopFragment extends BaseFragment implements
         /*for (int i = 0; i < 5; i++) {
             mDatas.add(new ShopCarModel());
         }
+        */
         // 如果没有数据则显示为空
-        if (mDatas == null || mDatas.size() == 0) {
-            mEmptyLayout.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
-            mToBuyLayout.setVisibility(View.GONE);
-        } else {
-            mAdapter = new ShopCarAdapter(getActivity(), mDatas,
-                    R.layout.item_shop_car);
-            mAdapter.setListener(this);
-            mListView.setDividerHeight(20);
-            mListView.setAdapter(mAdapter);
-        }*/
-
+//        if (mDatas == null || mDatas.size() == 0) {
+//            mEmptyLayout.setVisibility(View.VISIBLE);
+//            mListView.setVisibility(View.GONE);
+//            mToBuyLayout.setVisibility(View.GONE);
+//        } else {
+//            mAdapter = new ShopCarAdapter(getActivity(), mDatas,
+//                    R.layout.item_shop_car);
+//            mAdapter.setListener(this);
+//            mListView.setDividerHeight(20);
+//            mListView.setAdapter(mAdapter);
+//        }
     }
 
     /**
      * 请求数据
      */
     private void requestCart() {
-        if (TextUtils.isEmpty(DictionaryTool.getUser(getActivity())) || TextUtils.isEmpty(DictionaryTool.getToken(getActivity()))){
-            ToastUtils.show(getActivity().getApplication(),"请先登录");
+        if (TextUtils.isEmpty(DictionaryTool.getUser(getActivity())) || TextUtils.isEmpty(DictionaryTool.getToken(getActivity()))) {
+            ToastUtils.show(getActivity().getApplication(), "请先登录");
             return;
         }
         RequestParams params = new RequestParams(Net.URL_CARTS);
@@ -129,12 +132,13 @@ public class ShopFragment extends BaseFragment implements
 
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "onSuccess = "+ s);
-                mDatas =  new Gson().fromJson(s,new TypeToken<List<ShopCarModel>>(){}.getType());
+                Log.i(TAG, "onSuccess = " + s);
+                mDatas = new Gson().fromJson(s, new TypeToken<List<ShopCarModel>>() {
+                }.getType());
 //                mDatas = GsonUtil.getResult2(s, ShopCarModel.class);
-                Log.i(TAG, "result2 = "+ mDatas.toString());
-                Log.i(TAG, "result2.size = "+ mDatas.size());
-                Log.i(TAG, "model = "+ mDatas.get(0));
+                Log.i(TAG, "result2 = " + mDatas.toString());
+                Log.i(TAG, "result2.size = " + mDatas.size());
+                Log.i(TAG, "model = " + mDatas.get(0));
                 /*for (ShopCarModel model :mDatas){
                     Log.i(TAG, "model = "+ model);
                 }*/
@@ -146,7 +150,7 @@ public class ShopFragment extends BaseFragment implements
                     return;
                 }
                 mListView.setVisibility(View.VISIBLE);
-                if (mAdapter == null){
+                if (mAdapter == null) {
 
                     mAdapter = new ShopCarAdapter(getActivity(), mDatas,
                             R.layout.item_shop_car);
@@ -154,11 +158,9 @@ public class ShopFragment extends BaseFragment implements
 
                     mListView.setDividerHeight(20);
                     mListView.setAdapter(mAdapter);
-                }else {
+                } else {
                     mAdapter.setData(mDatas);
                 }
-
-
             }
 
             @Override
@@ -175,23 +177,30 @@ public class ShopFragment extends BaseFragment implements
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     private void init() {
-
-        mListView = (ListView) mView.findViewById(R.id.gwc_listview);
+        mListView = (BaseListview) mView.findViewById(R.id.gwc_listview);
         mToPay = (TextView) mView.findViewById(R.id.gwc_to_pay);
         mShoudPay = (TextView) mView.findViewById(R.id.gwc_should_pay);
         mToPay.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (count <= 0) {
-                    ToastUtils.show(getActivity(),"请选择商品");
+                    ToastUtils.show(getActivity(), "请选择商品");
                     return;
                 }
                 startActivity(new Intent(getContext(), PayActivity.class));
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mThis, DetailActivity.class);
+                //购物车传数据到详情页面
+                startActivity(intent);
             }
         });
 

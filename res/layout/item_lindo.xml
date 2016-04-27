@@ -27,7 +27,7 @@
                   android:text="等待付款"
                   android:textSize="14sp"
                   android:layout_marginRight="10dp"
-                  android:id="@+id/tv_lin_pay"
+                  android:id="@+id/tv_lin_zt"
         />
     </LinearLayout>
     <View android:layout_width="match_parent"
@@ -35,43 +35,83 @@
           android:background="@color/divider"
           android:layout_marginTop="10dp"
     />
-    <RelativeLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-    >
-        <ImageView android:layout_width="80dp"
-                   android:layout_height="80dp"
-                   android:id="@+id/lin_img"
-                   android:src="@drawable/sp_icon_zw"
-                   android:layout_marginLeft="10dp"
-        />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="x"
-                  android:layout_toRightOf="@+id/lin_img"
-                  android:layout_alignBottom="@+id/lin_img"
-                  android:layout_marginLeft="6dp"
-                  android:textSize="12sp"
-                  android:id="@+id/linpay_chen"
-        />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="1"
-                  android:layout_toRightOf="@+id/linpay_chen"
-                  android:layout_alignBottom="@+id/linpay_chen"
-                  android:textSize="16sp"
-                  android:layout_marginLeft="2dp"
-                  android:id="@+id/lin_number"
-        />
-    </RelativeLayout>
+    <HorizontalScrollView android:layout_width="match_parent"
+                          android:layout_height="wrap_content">
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+        >
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+            >
+                <ImageView android:layout_width="80dp"
+                           android:layout_height="80dp"
+                           android:id="@+id/lin_img"
+                           android:src="@drawable/sp_icon_zw"
+                           android:layout_marginLeft="10dp"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="x"
+                          android:layout_toRightOf="@+id/lin_img"
+                          android:layout_alignBottom="@+id/lin_img"
+                          android:layout_marginLeft="6dp"
+                          android:textSize="12sp"
+                          android:id="@+id/linpay_chen"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="1"
+                          android:layout_toRightOf="@+id/linpay_chen"
+                          android:layout_alignBottom="@+id/linpay_chen"
+                          android:textSize="16sp"
+                          android:layout_marginLeft="2dp"
+                          android:id="@+id/lin_number"
+                />
+            </RelativeLayout>
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+            >
+                <ImageView android:layout_width="80dp"
+                           android:layout_height="80dp"
+                           android:id="@+id/lin_img1"
+                           android:src="@drawable/sp_icon_zw"
+                           android:layout_marginLeft="10dp"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="x"
+                          android:layout_toRightOf="@+id/lin_img1"
+                          android:layout_alignBottom="@+id/lin_img1"
+                          android:layout_marginLeft="6dp"
+                          android:textSize="12sp"
+                          android:id="@+id/linpay_chen1"
+                />
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="1"
+                          android:layout_toRightOf="@+id/linpay_chen1"
+                          android:layout_alignBottom="@+id/linpay_chen1"
+                          android:textSize="16sp"
+                          android:layout_marginLeft="2dp"
+                          android:id="@+id/lin_number1"
+                />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
     <View android:layout_width="match_parent"
           android:layout_height="1dp"
           android:background="@color/divider"
-          android:layout_marginTop="10dp"
+          android:layout_marginTop="5dp"
     />
-    <RelativeLayout android:layout_width="match_parent"
+    <RelativeLayout android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
     >
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -113,6 +153,4 @@
                 android:background="@drawable/dtk_btn_wl"
         />
     </RelativeLayout>
-
-
 </LinearLayout>

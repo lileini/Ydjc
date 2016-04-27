@@ -4,11 +4,17 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:id="@+id/fragment_container"
-              android:background="@color/white"
+              android:background="@color/dividers"
 >
-    <!--<ScrollView android:layout_width="match_parent" -->
-                <!--android:layout_height="match_parent">-->
-        <LinearLayout android:layout_width="match_parent" 
+    <!--<ListView android:layout_width="match_parent" -->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@+id/sort"-->
+    <!--&gt;-->
+    <!--</ListView>-->
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent"
                       android:layout_height="match_parent"
                       android:orientation="vertical"
         >
@@ -39,8 +45,22 @@
                     android:id="@+id/activity_xd"
                     android:layout_weight="1"
                     android:layout_marginTop="4dp"
+            />
+            <Button android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/img_zzyp"
+                    android:id="@+id/activity_zzyp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+            />
+            <Button android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/img_fzps"
+                    android:id="@+id/activity_fzps"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
                     android:layout_marginBottom="4dp"
             />
         </LinearLayout>
-    <!--</ScrollView>-->
+    </ScrollView>
 </LinearLayout>

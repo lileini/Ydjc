@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,7 +49,6 @@ import java.util.*;
 //订单中心
 public class OrderActivity extends BaseActivity implements OnClickListener {
 
-
     private ImageView mBack;
     private TextView mTitle;
     private TextView mOrderPay;
@@ -76,6 +76,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         initData();
 
     }
+
     private TextView orderUsername;
     private TextView orderPhone;
     private TextView orderAddress;
@@ -87,6 +88,8 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
     private TextView orderGoodCount;
     private TextView orderGoodPrice;
     private TextView orderPayWay;
+    private TextView orderGfQQ;
+    private TextView orderGfKf;
     private TextView orderPayMoney;
     private TextView orderNumber;
     private TextView orderTime;
@@ -112,6 +115,8 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         dindanBottom = (LinearLayout) findViewById(R.id.dindan_bottom);
         orderDelete = (TextView) findViewById(R.id.order_delete);
         orderToPay = (TextView) findViewById(R.id.order_to_pay);
+        orderGfQQ = (TextView) findViewById(R.id.order_gf_qq);
+        orderGfKf= (TextView) findViewById(R.id.order_gf_phone);
     }
 
     private void init() {
@@ -124,7 +129,6 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         mOrderDel = (TextView) findViewById(R.id.order_delete);
         mOrderDel.setOnClickListener(this);
         mListView = (InnerListView) findViewById(R.id.listView);
-
     }
 
     private void initEvent() {
@@ -160,15 +164,15 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
 //        bundle.putString("count",mCount.getText().toString());
 //        bundle.putSerializable("OptionsIdEntity",getIntent().getSerializableExtra("OptionsIdEntity"));
         ArrayList<Parcelable> mDates = getIntent().getParcelableArrayListExtra("mDates");
-        order_id = getIntent().getIntExtra("order_id",-1);
+        order_id = getIntent().getIntExtra("order_id", -1);
         OrderResultEntity.OrderBean orderBean = getIntent().getParcelableExtra("OrderBean");
 
-        if(mDates == null || mDates.size() == 0){
+        if (mDates == null || mDates.size() == 0) {
             return;
         }
         List<ShopCarModel> list = new ArrayList<>(mDates.size());
-        for (Parcelable parcelable: mDates){
-            list.add((ShopCarModel)parcelable);
+        for (Parcelable parcelable : mDates) {
+            list.add((ShopCarModel) parcelable);
         }
         ChooseShopCarAdapter chooseShopCarAdapter = new ChooseShopCarAdapter(this, list, R.layout.item_pay);
         mListView.setAdapter(chooseShopCarAdapter);
@@ -201,6 +205,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                 break;
             case R.id.order_to_pay://立即支付
                 popupPay();
+                mZFB.setSelected(true);
                 break;
             case R.id.popup_del:
                 mPopWindow.dismiss();
@@ -218,7 +223,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
             case R.id.pup_go_pay://去支付
                 if (mZFB.isSelected()) {//支付宝支付
                     try {
-                        AliPayUtil aliPayUtil = new AliPayUtil(this,mHandler);
+                        AliPayUtil aliPayUtil = new AliPayUtil(this, mHandler);
                         aliPayUtil.pay(0.01);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -228,9 +233,6 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                 if (mWeixin.isSelected()) {//微信支付
                     return;
                 }
-
-                    payDialog();
-
                 break;
         }
     }
@@ -239,7 +241,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
      * 请求取消订单
      */
     private void requestCancelOrder() {
-        RequestParams params = new RequestParams(Net.HOST+"orders/"+order_id+"/cancel.json ");
+        RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/cancel.json ");
         params.addHeader("Authorization", DictionaryTool.getToken(this));
         HttpUtils.HttpPutMethod(new Callback.CacheCallback<String>() {
             @Override
@@ -249,13 +251,13 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
 
             @Override
             public void onSuccess(String s) {
-                ToastUtils.show(getApplication(),"取消订单成功");
+                ToastUtils.show(getApplication(), "取消订单成功");
                 finish();
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(getApplication(),"网络异常,\n取消订单失败");
+                ToastUtils.show(getApplication(), "网络异常,\n取消订单失败");
             }
 
             @Override
@@ -267,7 +269,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     @Override
@@ -287,6 +289,9 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         View contentView = LayoutInflater.from(this).inflate(R.layout.popupwindow_pay, null);
         mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
+        mPopWindow.setFocusable(true);
+        mPopWindow.setOutsideTouchable(true);
+        mPopWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopWindow.setAnimationStyle(R.style.popwin_anim_style);
         mZFB = (LinearLayout) contentView.findViewById(R.id.pay_zhifubao);
         mWeixin = (LinearLayout) contentView.findViewById(R.id.pay_weixin);
@@ -300,45 +305,26 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
-    //提示框
-    private void payDialog() {
-        LayoutInflater inflaterDl = LayoutInflater.from(this);
-        RelativeLayout layout = (RelativeLayout) inflaterDl.inflate(R.layout.showdialog, null);
-        final Dialog dialog = new AlertDialog.Builder(this).create();
-        dialog.show();
-        dialog.getWindow().setContentView(layout);
-        TextView tv = (TextView) layout.findViewById(R.id.dialog_text);
-        tv.setText("请先选择支付方式~");
-        Button btnCancel = (Button) layout.findViewById(R.id.dialog_sure);
-        btnCancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
+//    /**
+//     * 封装请求参数
+//     */
+//    private void requestData() {
+//        Map<String, String> map = new HashMap<>();
+////        map.put("需要传递的key ", "需要传递的值");
+//        CommandBase.requestDataNoGet(getApplicationContext(), Const.URL_WAITING_FOR_PAY, handler, null);
+//    }
 
-
-    /**
-     * 封装请求参数
-     */
-    private void requestData() {
-        Map<String, String> map = new HashMap<>();
-//        map.put("需要传递的key ", "需要传递的值");
-        CommandBase.requestDataNoGet(getApplicationContext(), Const.URL_WAITING_FOR_PAY, handler, null);
-    }
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == Const.SUCCESS) {
-                //做逻辑处理
-            } else if (msg.what == Const.ERROR) {
-
-            }
-        }
-    };
+//    private Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            if (msg.what == Const.SUCCESS) {
+//                //做逻辑处理
+//            } else if (msg.what == Const.ERROR) {
+//
+//            }
+//        }
+//    };
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -377,8 +363,10 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                 }
                 default:
                     break;
-            } 
-        };
+            }
+        }
+
+        ;
     };
 
 }

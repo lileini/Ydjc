@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:textSize="13sp"
+                android:singleLine="true"
                 android:padding="10dp"/>
     </LinearLayout>
     <View
@@ -50,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:textSize="13sp"
+                android:singleLine="true"
                 android:inputType="number"
                 android:padding="10dp"/>
     </LinearLayout>
@@ -77,7 +79,7 @@
                   android:id="@+id/tv_week"
                   android:text="星期一~星期五（工作日）"
                   android:gravity="center_vertical"
-                  android:textSize="13sp"
+                  android:textSize="14sp"
         />
         <ListView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -88,7 +90,7 @@
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="13dp"
+            android:layout_height="10dp"
             android:background="@color/divider"/>
     <LinearLayout
             android:background="#ffffff"
@@ -121,30 +123,29 @@
                   android:layout_weight="1"
                   android:visibility="gone"
         />
-                <Spinner android:layout_width="80dp"
-                         android:layout_height="40dp "
-                         android:id="@+id/province"
-                         android:background="@color/white"/>
-                <Spinner android:layout_width="80dp"
-                         android:layout_height="40dp "
-                         android:id="@+id/city"
-                         android:background="@color/white"/>
-                <Spinner android:layout_width="80dp"
-                         android:layout_height="40dp "
-                         android:id="@+id/county"
-                         android:background="@color/white"/>
+        <Spinner android:layout_width="80dp"
+                 android:layout_height="40dp "
+                 android:id="@+id/province"
+                 android:background="@color/white"/>
+        <Spinner android:layout_width="80dp"
+                 android:layout_height="40dp "
+                 android:id="@+id/city"
+                 android:background="@color/white"/>
+        <Spinner android:layout_width="80dp"
+                 android:layout_height="40dp "
+                 android:id="@+id/county"
+                 android:background="@color/white"/>
     </LinearLayout>
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#F6F5F4"
-    />
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:background="#F6F5F4"-->
+    <!--/>-->
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
     >
-
         <TextView
 
                 android:padding="10dp"
@@ -152,7 +153,7 @@
                 android:background="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="详细地址："
+                android:text="街道地址："
                 android:layout_alignParentLeft="true"
         />
         <EditText
@@ -162,12 +163,12 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:textSize="13sp"
+                android:singleLine="true"
                 android:padding="10dp"/>
     </LinearLayout>
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/divider"/>
-
 
 </LinearLayout>

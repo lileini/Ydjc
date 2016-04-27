@@ -9,20 +9,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.zangcun.store.R;
-import com.zangcun.store.model.LinDeliverModel;
 
 import java.util.List;
 
-
-//待发货适配器
+/**
+ * 待发货
+ * */
 public class LinDeLiverAdapter extends BaseAdapter {
-    LayoutInflater inflater;
-    private List<LinDeliverModel> mDataList;
+    private List<String> mDataList;
     private Context mContext;
 
-    public LinDeLiverAdapter(Context mContext, List<LinDeliverModel> strings) {
-        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mDataList = strings;
+    public LinDeLiverAdapter(Context mContext, List<String> mDataList) {
+        this.mContext = mContext;
+        this.mDataList = mDataList;
     }
 
     @Override
@@ -31,7 +30,7 @@ public class LinDeLiverAdapter extends BaseAdapter {
     }
 
     @Override
-    public LinDeliverModel getItem(int position) {
+    public Object getItem(int position) {
         return mDataList.get(position);
     }
 
@@ -55,9 +54,6 @@ public class LinDeLiverAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-//        OnClick aa=new OnClick(position);
-        //holder.textViewl.setOnClickListener(aa);
-        //
         return convertView;
     }
 
@@ -65,19 +61,8 @@ public class LinDeLiverAdapter extends BaseAdapter {
         private TextView tv_lin_time;//下单时间
         private ImageView lin_img;//商品图片
         private TextView lin_number;//商品数量
-        private TextView money;//总价
-        private Button btn_send;//提醒发货按钮
+        private TextView money;//商品总价
+        private Button btn_lin_cancle;//申请退款
+        private Button btn_send;//提醒发货
     }
-//
-//    class OnClick implements View.OnClickListener {
-//        int positon;
-//        OnClick(int positon) {
-//            this.positon=positon;
-//        }
-//
-//        @Override
-//        public void onClick(View v) {
-//
-//        }
-//    }
 }

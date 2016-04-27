@@ -22,6 +22,7 @@ public class CommandBase {
 
     /**
      * POST请求带参数（map）
+     *
      * @param context
      * @param URL
      * @param handler
@@ -38,7 +39,7 @@ public class CommandBase {
                         message.what = Const.SUCCESS;
                         message.obj = response;
                         handler.sendMessage(message);
-                        Log.i(TAG,"response = "+ response.toString());
+                        Log.i(TAG, "response = " + response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -46,7 +47,7 @@ public class CommandBase {
                 message.what = Const.ERROR;
                 message.obj = error;
                 handler.sendMessage(message);
-                Log.i(TAG,"error.toString() = "+ error.getMessage());
+                Log.i(TAG, error.toString());
 
             }
 
@@ -62,6 +63,7 @@ public class CommandBase {
 
     /**
      * PUT请求带参数
+     *
      * @param context
      * @param URL
      * @param handler
@@ -78,7 +80,7 @@ public class CommandBase {
                         message.what = Const.SUCCESS;
                         message.obj = response;
                         handler.sendMessage(message);
-                        Log.i(TAG,"response = "+ response.toString());
+                        Log.i(TAG, "response = " + response.toString());
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -86,7 +88,7 @@ public class CommandBase {
                 message.what = Const.ERROR;
                 message.obj = error;
                 handler.sendMessage(message);
-                Log.i(TAG,"error.toString() = "+ error.toString());
+                Log.i(TAG, "error.toString() = " + error.toString());
             }
 
         }) {
@@ -102,6 +104,7 @@ public class CommandBase {
 
     /**
      * POST JSON
+     *
      * @param context
      * @param URL
      * @param handler
@@ -136,7 +139,7 @@ public class CommandBase {
                 headers.put("Accept", "*/*");
                 headers.put("Content-Type", "application/json");
                 headers.put("AUTHORIZATION", DictionaryTool.get(context, "strToken", "").toString());
-                Log.e("请求的header",headers.toString());
+                Log.e("请求的header", headers.toString());
                 return headers;
             }
         };
@@ -145,6 +148,7 @@ public class CommandBase {
 
     /**
      * 不带参数的POST 修改了heard
+     *
      * @param context
      * @param URL
      * @param handler
@@ -176,7 +180,7 @@ public class CommandBase {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("AUTHORIZATION", DictionaryTool.get(context, "strToken", "").toString());
-                Log.e("请求的header",headers.toString());
+                Log.e("请求的header", headers.toString());
                 return headers;
             }
         };
@@ -185,6 +189,7 @@ public class CommandBase {
 
     /**
      * 不带参数的GET
+     *
      * @param context
      * @param URL
      * @param handler
@@ -216,13 +221,157 @@ public class CommandBase {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("AUTHORIZATION", DictionaryTool.get(context, "strToken", "").toString());
-                Log.e("请求的header",headers.toString());
+                Log.e("请求的header", headers.toString());
                 return headers;
             }
         };
         requestQueue.add(stringRequest);
     }
 
+    /**
+     * POST请求带参数（map）,heared 为token
+     *
+     * @param context
+     * @param URL
+     * @param handler
+     * @param map
+     */
 
+    public static void requestDataMapToken(Context context, String URL, final Handler handler, Map<String, String> map) {
+        final Message message = new Message();
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        message.what = Const.SUCCESS;
+                        message.obj = response;
+                        handler.sendMessage(message);
+                        Log.i(TAG, "response = " + response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                message.what = Const.ERROR;
+                message.obj = error;
+                handler.sendMessage(message);
+                Log.i(TAG, error.toString());
+
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //to-do
+                return map;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", DictionaryTool.getToken(context));
+                Log.e("token", map.toString());
+                return headers;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    /**
+     * DELETE请求带参数（map）,heared 为token
+     *
+     * @param context
+     * @param URL
+     * @param handler
+     * @param map
+     */
+
+    public static void requestDataMapDel(Context context, String URL, final Handler handler, Map<String, String> map) {
+        final Message message = new Message();
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        message.what = Const.SUCCESS;
+                        message.obj = response;
+                        handler.sendMessage(message);
+                        Log.i(TAG, "response = " + response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                message.what = Const.ERROR;
+                message.obj = error;
+                handler.sendMessage(message);
+                Log.i(TAG, error.toString());
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //to-do
+                return map;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", DictionaryTool.getToken(context));
+                Log.e("token", map.toString());
+                return headers;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    /**
+     * PUT请求带参数（map）,heared 为token
+     *
+     * @param context
+     * @param URL
+     * @param handler
+     * @param map
+     */
+
+    public static void requestDataMapPass(Context context, String URL, final Handler handler, Map<String, String> map) {
+        final Message message = new Message();
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        message.what = Const.SUCCESS;
+                        message.obj = response;
+                        handler.sendMessage(message);
+                        Log.i(TAG, "response = " + response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                message.what = Const.ERROR;
+                message.obj = error;
+                handler.sendMessage(message);
+                Log.i(TAG, error.toString());
+
+            }
+
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //to-do
+                return map;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", DictionaryTool.getToken(context));
+                Log.e("token", map.toString());
+                return headers;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
 
 }

@@ -62,10 +62,9 @@ public class GetCordActivity extends BaseActivity implements View.OnClickListene
             case R.id.yanzheng:
 //               yanZheng();
                 //验证之前需要判断用户输入的信息是否为空
-                if (user_phone.getText().toString().trim().equals(""))
-                {
-                    Toast.makeText(getApplicationContext(),"请输入有效的电话号码", Toast.LENGTH_SHORT).show();
-                }else{
+                if (user_phone.getText().toString().trim().equals("")) {
+                    Toast.makeText(getApplicationContext(), "请输入有效的电话号码", Toast.LENGTH_SHORT).show();
+                } else {
                     requestData();
                 }
 

@@ -9,16 +9,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.zangcun.store.R;
-import com.zangcun.store.model.LinCollectionModel;
 
 import java.util.List;
 
-//待收货适配器
+/**
+ * 待收货
+ */
 public class LinCollectionAdapter extends BaseAdapter {
     private Context mContext;
-    private List<LinCollectionModel> mDataList;
+    private List<String> mDataList;
 
-    public LinCollectionAdapter(Context mContext, List<LinCollectionModel> mDataList) {
+    public LinCollectionAdapter(Context mContext, List<String> mDataList) {
         this.mContext = mContext;
         this.mDataList = mDataList;
     }
@@ -29,7 +30,7 @@ public class LinCollectionAdapter extends BaseAdapter {
     }
 
     @Override
-    public LinCollectionModel getItem(int position) {
+    public Object getItem(int position) {
         return mDataList.get(position);
     }
 
@@ -48,8 +49,8 @@ public class LinCollectionAdapter extends BaseAdapter {
             holder.lin_img = (ImageView) convertView.findViewById(R.id.lin_img);
             holder.lin_number = (TextView) convertView.findViewById(R.id.lin_number);
             holder.money = (TextView) convertView.findViewById(R.id.money);
-            holder.btn_wuliu = (Button) convertView.findViewById(R.id.btn_go_pay);
             holder.btn_tuikuan = (Button) convertView.findViewById(R.id.btn_lin_cancle);
+            holder.btn_wuliu = (Button) convertView.findViewById(R.id.btn_go_pay);
 
             convertView.setTag(holder);
         } else {
@@ -62,8 +63,8 @@ public class LinCollectionAdapter extends BaseAdapter {
         private TextView tv_lin_time;//下单时间
         private ImageView lin_img;//商品图片
         private TextView lin_number;//商品数量
-        private TextView money;//总价
-        private Button btn_wuliu;//查看物流按钮
-        private Button btn_tuikuan;//申请退款按钮
+        private TextView money;//商品总价
+        private Button btn_tuikuan;//申请退款
+        private Button btn_wuliu;//查看物流
     }
 }

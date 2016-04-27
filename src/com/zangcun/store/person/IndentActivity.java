@@ -1,10 +1,12 @@
 package com.zangcun.store.person;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,7 +14,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
+import com.zangcun.store.activity.DetailActivity;
+import com.zangcun.store.activity.OrderActivity;
 import com.zangcun.store.adapter.IndentAdapter;
+import com.zangcun.store.adapter.LinDeLiverAdapter;
 import com.zangcun.store.entity.OrderResultEntity;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Net;
@@ -23,17 +28,21 @@ import com.zangcun.store.utils.Log;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//个人中心--全部订单
-public class IndentActivity extends BaseActivity implements View.OnClickListener {
+/**
+ * 全部订单
+ * */
+public class IndentActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     private ImageView mBack;
     private TextView mTitle;
 
     private ListView mListView;
     private IndentAdapter mAdapter;
+    private List<String> mDatas = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +89,9 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         mBack.setOnClickListener(this);
 
         mListView= (ListView) findViewById(R.id.lv_indent);
+        mAdapter = new IndentAdapter(this, mDatas);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
 
     }
 
@@ -93,24 +104,32 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    /**
-     * 封装请求参数
-     */
-    private void requestData() {
-        Map<String, String> map = new HashMap<>();
-        map.put("需要传递的key ", "需要传递的值");
-        CommandBase.requestDataMap(getApplicationContext(), Const.URL_USER, handler, null);
+//    /**
+//     * 封装请求参数
+//     */
+//    private void requestData() {
+//        Map<String, String> map = new HashMap<>();
+//        map.put("需要传递的key ", "需要传递的值");
+//        CommandBase.requestDataMap(getApplicationContext(), Const.URL_USER, handler, null);
+//    }
+
+//    private Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            if (msg.what == Const.SUCCESS) {
+//                //做逻辑处理
+//            } else if (msg.what == Const.ERROR) {
+//
+//            }
+//        }
+//    };
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(IndentActivity.this, OrderActivity.class);
+//        intent.putExtra("indent", mDatas.get(position));
+//        intent.putExtra("kind", "indent");
+        startActivity(intent);
     }
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == Const.SUCCESS) {
-                //做逻辑处理
-            } else if (msg.what == Const.ERROR) {
-
-            }
-        }
-    };
 }

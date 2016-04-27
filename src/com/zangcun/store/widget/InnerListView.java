@@ -24,7 +24,7 @@ public class InnerListView extends ListView {
         switch (ev.getAction()) {
             // 当手指触摸listview时，让父控件交出ontouch权限,不能滚动
             case MotionEvent.ACTION_DOWN:
-                setParentScrollAble(false);
+                setParentScrollAble(true);
             case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:

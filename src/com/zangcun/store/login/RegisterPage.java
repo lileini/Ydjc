@@ -29,7 +29,7 @@ import android.widget.Toast;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 
-/** 此页面时注册页面，需要的话可以不要这个改成您自己的注册页面 */
+/** 注册页面 */
 public class RegisterPage extends Activity implements OnClickListener, Callback{
 
 	private static final int INTENT_ACTION_PICTURE = 0;

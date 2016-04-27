@@ -28,8 +28,6 @@ public class ShopCarActivity extends BaseActivity {
 		initData();
 	}
 
-	
-
 	private void init() {
 		mTitleText = (TextView) findViewById(R.id.title);
 		mBack =  (ImageView) findViewById(R.id.left);
@@ -43,8 +41,6 @@ public class ShopCarActivity extends BaseActivity {
 		});
 		mShopFragment = ShopFragment.getInstance();
 		getSupportFragmentManager().beginTransaction().replace(R.id.container, mShopFragment).commit();
-		
-		
 	}
 	
 	private void initData() {

@@ -3,9 +3,6 @@ package com.zangcun.store.model;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Administrator on 2016/4/13.
- */
 public class GetAddressResultModel implements Serializable {
 
 

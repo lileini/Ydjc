@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Administrator on 2016/4/17.
- */
 public class OrderResultEntity {
 
     /**
