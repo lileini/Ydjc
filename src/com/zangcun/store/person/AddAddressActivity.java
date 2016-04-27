@@ -91,7 +91,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private EditText etName;
     private EditText etMobile;
     private EditText etDetialedAddress;
-    private boolean isEdit =false;
+    private boolean isEdit = false;
     private GetAddressResultModel.AddressBean addressBean;
 
     @Override
@@ -110,10 +110,10 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
 
         if (addressBean == null)
             return;
-        isEdit =true;
-       etName.setText(addressBean.getConsignee());
-         etMobile.setText(addressBean.getMobile());
-       etDetialedAddress.setText(addressBean.getAddress());
+        isEdit = true;
+        etName.setText(addressBean.getConsignee());
+        etMobile.setText(addressBean.getMobile());
+        etDetialedAddress.setText(addressBean.getAddress());
     }
 
     private void popupChoose() {
@@ -127,7 +127,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         TextView tv1 = (TextView) contentView.findViewById(R.id.one_five);
         TextView tv2 = (TextView) contentView.findViewById(R.id.six_seven);
         TextView tv3 = (TextView) contentView.findViewById(R.id.one_seven);
-
         tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
         tv3.setOnClickListener(this);
@@ -334,9 +333,9 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.pesonal_right:
                 //点击完成执行操作
-                if (isEdit){
+                if (isEdit) {
                     requestChangeAddress();
-                }else {
+                } else {
 
                     addAddress();
                 }
@@ -361,14 +360,15 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 break;
         }
     }
+
     private void requestChangeAddress() {
-        RequestParams params = new RequestParams(Net.HOST+"addresses/"+addressBean.getId()+".json");
+        RequestParams params = new RequestParams(Net.HOST + "addresses/" + addressBean.getId() + ".json");
         params.addHeader("Authorization", DictionaryTool.getToken(this));
         String name = etName.getText().toString();
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
-            ToastUtils.show(getApplication(), "请填写完信息");
+            ToastUtils.show(getApplication(), "请填写完整信息");
             return;
         }
         Log.i(TAG, "strProvince " + strProvince);
@@ -382,19 +382,19 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         addressBean.setConsignee(name);
         addressBean.setRegion_id(county.getId());
         String json = GsonUtil.toJson(addressBean);
-        com.zangcun.store.utils.Log.i(TAG,"json = "+ json);
+        com.zangcun.store.utils.Log.i(TAG, "json = " + json);
         params.addBodyParameter("address", json);
         HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                ToastUtils.show(getApplicationContext(),"修改成功");
+                ToastUtils.show(getApplicationContext(), "修改成功");
                 setResult(101);
                 finish();
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(getApplicationContext().getApplicationContext(),"修改失败");
+                ToastUtils.show(getApplicationContext().getApplicationContext(), "修改失败");
             }
 
             @Override
@@ -406,14 +406,15 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
+
     private void addAddress() {
         String name = etName.getText().toString();
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
-            ToastUtils.show(getApplication(), "请填写完信息");
+            ToastUtils.show(getApplication(), "请填写完整信息");
             return;
         }
         StringBuilder region_id = new StringBuilder();
@@ -436,17 +437,17 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         Log.i(TAG, "province =  " + province);
         Log.i(TAG, "city =  " + city);
         Log.i(TAG, "county =  " + county);
-        AddressModel addressModel = new AddressModel(strProvince + strCity + strCounty + detialedAddress, mobile, county.getId()+"", name);
+        AddressModel addressModel = new AddressModel(strProvince + strCity + strCounty +detialedAddress, mobile, county.getId() + "", name);
         requestAddAddress(addressModel);
     }
 
     private void requestAddAddress(AddressModel addressModel) {
         String json = GsonUtil.toJson(addressModel);
-        Log.i(TAG, "json =  " + json);
+        Log.i(TAG, "json =" + json);
         RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
-        params.addBodyParameter("address",json);
+        params.addBodyParameter("address", json);
         params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
-        params.addHeader("Content-Type","application/json");
+        params.addHeader("Content-Type", "application/json");
         HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {

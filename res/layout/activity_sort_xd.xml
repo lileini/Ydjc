@@ -77,37 +77,41 @@
                     android:id="@+id/xd_num_order"
             />
         </LinearLayout>
-        <LinearLayout android:layout_width="0dp"
-                      android:layout_weight="1"
-                      android:orientation="horizontal"
-                      android:gravity="center"
-                      android:layout_height="match_parent">
-            <TextView android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:gravity="center"
-                      android:id="@+id/root_choose"
-                      android:text="筛选"
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:id="@+id/root_choose"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="筛选"
+                    android:gravity="center"
+                    android:id="@+id/xd_tv_choose"
             />
-            <com.zangcun.store.widget.MultImageVIew
+            <ImageView
+                    android:id="@+id/xd_choose_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
-                    android:id="@+id/xd_choose_order"
             />
         </LinearLayout>
     </LinearLayout>
-    
+
     <com.handmark.pulltorefresh.library.PullToRefreshGridView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/gv"
-        android:layout_width="fill_parent"
-       android:layout_height="match_parent"
-        android:columnWidth="100dp"
-        android:gravity="fill"
-        android:horizontalSpacing="6dp"
-        android:numColumns="2"
-        android:padding="3dp"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="6dp"
-        ptr:ptrMode="both" />
+            xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/gv"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="100dp"
+            android:gravity="fill"
+            android:horizontalSpacing="6dp"
+            android:numColumns="2"
+            android:padding="3dp"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="6dp"
+            ptr:ptrMode="both"/>
 </LinearLayout>

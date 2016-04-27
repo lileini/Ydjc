@@ -1,26 +1,6 @@
 <component name="libraryTable">
   <library name="android-support-v4">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/fastjson-1.1.33.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/httpclient-4.5.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/httpcore-4.4.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/MobCommons-2016.0301.1053.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/MobTools-2016.0301.1053.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/picasso-2.5.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/ShareSDK-Core-2.7.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/ShareSDK-QQ-2.7.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/ShareSDK-SinaWeibo-2.7.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/ShareSDK-Wechat-2.7.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/ShareSDK-Wechat-Core-2.7.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/ShareSDK-Wechat-Moments-2.7.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/universal-image-loader-1.9.4.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/xUtils-2.3.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/xutils3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/gson-2.6.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/alipaySdk-20160223.jar!/" />
-      <root url="jar://$PROJECT_DIR$/libs/butterknife-7.0.1.jar!/" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
     <SOURCES />
   </library>

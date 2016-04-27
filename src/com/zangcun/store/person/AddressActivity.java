@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //个人中心--收货地址
-public class AddressActivity extends BaseActivity implements View.OnClickListener,AdapterView.OnItemClickListener {
+public class AddressActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     private ImageView mBack;
     private TextView mTitle;
     private TextView mTitleRight;
@@ -34,6 +34,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
 
     private ListView mListView;
     private AddressAdapter mAdapter;
+    private boolean isok = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,13 +53,14 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mTitle.setText("收货地址");
         mTitleRight = (TextView) findViewById(R.id.pesonal_right);
         mTitleRight.setText("编辑");
+        mTitleRight.setOnClickListener(this);
         mBack = (ImageView) findViewById(R.id.personal_back);
         mBack.setOnClickListener(this);
         mAddCity = (LinearLayout) findViewById(R.id.add_address);
         mAddCity.setOnClickListener(this);
 
         mListView = (ListView) findViewById(R.id.lv_address);
-        if (getIntent().getBooleanExtra("isChooseAddress",false))
+        if (getIntent().getBooleanExtra("isChooseAddress", false))
             mListView.setOnItemClickListener(this);
 //        mListView.setAdapter(mAdapter);
     }
@@ -70,31 +72,41 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 this.finish();
                 break;
             case R.id.add_address:
-                startActivityForResult(new Intent(this, AddAddressActivity.class),100);
+                startActivityForResult(new Intent(this, AddAddressActivity.class), 100);
+                break;
+            case R.id.pesonal_right:
+                mAdapter.viewDel();
+                if (isok) {
+                    this.isok = false;
+                    mTitleRight.setText("编辑");
+                } else {
+                    this.isok = true;
+                    mTitleRight.setText("完成");
+                }
                 break;
         }
     }
 
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == Const.SUCCESS) {
-                //做逻辑处理
-            } else if (msg.what == Const.ERROR) {
-
-            }
-        }
-    };
+//    private Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            if (msg.what == Const.SUCCESS) {
+//                //做逻辑处理
+//            } else if (msg.what == Const.ERROR) {
+//
+//            }
+//        }
+//    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode ==100){
+        if (requestCode == 100 && resultCode == 100) {
             requestAddress();
         }
-        if (requestCode == 101 && resultCode ==101){
+        if (requestCode == 101 && resultCode == 101) {
             requestAddress();
         }
     }
@@ -105,23 +117,23 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "onSuccess  = "+ s);
+                Log.i(TAG, "onSuccess  = " + s);
                 if (TextUtils.isEmpty(s))
                     return;
                 GetAddressResultModel result = GsonUtil.getResult(s, GetAddressResultModel.class);
                 if (result.getAddress() == null)
                     return;
-                if (mAdapter == null){
-                    mAdapter = new AddressAdapter(AddressActivity.this,result.getAddress());
+                if (mAdapter == null) {
+                    mAdapter = new AddressAdapter(AddressActivity.this, result.getAddress());
                     mListView.setAdapter(mAdapter);
-                }else {
+                } else {
                     mAdapter.setmDataList(result.getAddress());
                 }
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                Log.i(TAG, "onError  = "+ throwable.toString());
+                Log.i(TAG, "onError  = " + throwable.toString());
             }
 
             @Override
@@ -133,16 +145,16 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         GetAddressResultModel.AddressBean addressBean = mAdapter.getOnclickDate(position);
-        if (addressBean != null){
+        if (addressBean != null) {
             Intent intent = new Intent();
-            intent.putExtra("addressBean",addressBean);
-            setResult(200,intent);
+            intent.putExtra("addressBean", addressBean);
+            setResult(200, intent);
             finish();
         }
     }

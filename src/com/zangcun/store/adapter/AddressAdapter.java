@@ -24,6 +24,7 @@ public class AddressAdapter extends BaseAdapter {
     private Context mContext;
     private List<GetAddressResultModel.AddressBean> mDataList;
     private String TAG = "AddressAdapter";
+    private boolean isok = false;
 
     public AddressAdapter(Context mContext, List<GetAddressResultModel.AddressBean> mDataList) {
         this.mContext = mContext;
@@ -65,9 +66,15 @@ public class AddressAdapter extends BaseAdapter {
             holder.address_sz_mr = (TextView) convertView.findViewById(R.id.address_sz_mr);
             holder.address_bj = (LinearLayout) convertView.findViewById(R.id.address_bj);
             holder.address_del = (LinearLayout) convertView.findViewById(R.id.address_del);
+            holder.address_layout2 = (LinearLayout) convertView.findViewById(R.id.address_ly2);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
+        }
+        if (isok) {
+            holder.address_layout2.setVisibility(View.VISIBLE);
+        } else {
+            holder.address_layout2.setVisibility(View.INVISIBLE);
         }
         if (addressBean != null) {
 
@@ -199,6 +206,15 @@ public class AddressAdapter extends BaseAdapter {
         private TextView address_sz_mr;//设为默认
         private LinearLayout address_bj;//编辑
         private LinearLayout address_del;//删除
+        private LinearLayout address_layout2;
+    }
 
+    public void viewDel() {
+        if (isok) {
+            this.isok = false;
+        } else {
+            this.isok = true;
+        }
+        this.notifyDataSetChanged();
     }
 }
