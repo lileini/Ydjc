@@ -1,10 +1,14 @@
 package com.zangcun.store.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ShopCarModel implements Serializable{
+public class ShopCarModel implements Parcelable {
 
     /**
      * rec_id : 923
@@ -126,9 +130,9 @@ public class ShopCarModel implements Serializable{
         this.good_option = good_option;
     }
 
-    public static class GoodBean implements Serializable{
+    public static class GoodBean implements Parcelable {
         private int goods_id;
-        private Object updated_at;
+        private String updated_at;
         private String goods_name;
         private int goods_number;
         private int goods_type;
@@ -138,7 +142,7 @@ public class ShopCarModel implements Serializable{
         private boolean is_shipping;
         private List<String> contents;
         private List<String> good_image_urls;
-        private List<List<String>> specs_array;
+        private ArrayList<ArrayList<String>> specs_array;
         /**
          * id : 7822
          * spec_1 :
@@ -160,11 +164,11 @@ public class ShopCarModel implements Serializable{
             this.goods_id = goods_id;
         }
 
-        public Object getUpdated_at() {
+        public String getUpdated_at() {
             return updated_at;
         }
 
-        public void setUpdated_at(Object updated_at) {
+        public void setUpdated_at(String updated_at) {
             this.updated_at = updated_at;
         }
 
@@ -240,11 +244,11 @@ public class ShopCarModel implements Serializable{
             this.good_image_urls = good_image_urls;
         }
 
-        public List<List<String>> getSpecs_array() {
+        public ArrayList<ArrayList<String>> getSpecs_array() {
             return specs_array;
         }
 
-        public void setSpecs_array(List<List<String>> specs_array) {
+        public void setSpecs_array(ArrayList<ArrayList<String>> specs_array) {
             this.specs_array = specs_array;
         }
 
@@ -256,7 +260,7 @@ public class ShopCarModel implements Serializable{
             this.options_id = options_id;
         }
 
-        public static class OptionsIdBean implements Serializable{
+        public static class OptionsIdBean implements Parcelable{
             private int id;
             private String spec_1;
             private String spec_2;
@@ -264,7 +268,7 @@ public class ShopCarModel implements Serializable{
             private String price;
             private int stock;
             private String sku;
-            private Object image_url;
+            private String image_url;
 
             public int getId() {
                 return id;
@@ -322,13 +326,156 @@ public class ShopCarModel implements Serializable{
                 this.sku = sku;
             }
 
-            public Object getImage_url() {
+            public String getImage_url() {
                 return image_url;
             }
 
-            public void setImage_url(Object image_url) {
+            public void setImage_url(String image_url) {
                 this.image_url = image_url;
             }
+
+            public OptionsIdBean() {
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.id);
+                dest.writeString(this.spec_1);
+                dest.writeString(this.spec_2);
+                dest.writeString(this.market_price);
+                dest.writeString(this.price);
+                dest.writeInt(this.stock);
+                dest.writeString(this.sku);
+                dest.writeString(this.image_url);
+            }
+
+            protected OptionsIdBean(Parcel in) {
+                this.id = in.readInt();
+                this.spec_1 = in.readString();
+                this.spec_2 = in.readString();
+                this.market_price = in.readString();
+                this.price = in.readString();
+                this.stock = in.readInt();
+                this.sku = in.readString();
+                this.image_url = in.readString();
+            }
+
+            public static final Creator<OptionsIdBean> CREATOR = new Creator<OptionsIdBean>() {
+                @Override
+                public OptionsIdBean createFromParcel(Parcel source) {
+                    return new OptionsIdBean(source);
+                }
+
+                @Override
+                public OptionsIdBean[] newArray(int size) {
+                    return new OptionsIdBean[size];
+                }
+            };
         }
+
+        public GoodBean() {
+        }
+
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.goods_id);
+            dest.writeString(this.updated_at);
+            dest.writeString(this.goods_name);
+            dest.writeInt(this.goods_number);
+            dest.writeInt(this.goods_type);
+            dest.writeString(this.market_price);
+            dest.writeString(this.price);
+            dest.writeString(this.default_image);
+            dest.writeByte(is_shipping ? (byte) 1 : (byte) 0);
+            dest.writeStringList(this.contents);
+            dest.writeStringList(this.good_image_urls);
+            dest.writeTypedList(options_id);
+        }
+
+        protected GoodBean(Parcel in) {
+            this.goods_id = in.readInt();
+            this.updated_at = in.readString();
+            this.goods_name = in.readString();
+            this.goods_number = in.readInt();
+            this.goods_type = in.readInt();
+            this.market_price = in.readString();
+            this.price = in.readString();
+            this.default_image = in.readString();
+            this.is_shipping = in.readByte() != 0;
+            this.contents = in.createStringArrayList();
+            this.good_image_urls = in.createStringArrayList();
+            this.options_id = in.createTypedArrayList(OptionsIdBean.CREATOR);
+        }
+
+        public static final Creator<GoodBean> CREATOR = new Creator<GoodBean>() {
+            @Override
+            public GoodBean createFromParcel(Parcel source) {
+                return new GoodBean(source);
+            }
+
+            @Override
+            public GoodBean[] newArray(int size) {
+                return new GoodBean[size];
+            }
+        };
     }
+
+
+    public ShopCarModel() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.rec_id);
+        dest.writeString(this.goods_name);
+        dest.writeString(this.goods_image);
+        dest.writeInt(this.quantity);
+        dest.writeInt(this.ischecked);
+        dest.writeParcelable(this.optionsIdBean, flags);
+        dest.writeString(this.price);
+        dest.writeStringArray(this.colorSize);
+        dest.writeParcelable(this.good, flags);
+        dest.writeString(this.good_option);
+    }
+
+    protected ShopCarModel(Parcel in) {
+        this.rec_id = in.readInt();
+        this.goods_name = in.readString();
+        this.goods_image = in.readString();
+        this.quantity = in.readInt();
+        this.ischecked = in.readInt();
+        this.optionsIdBean = in.readParcelable(GoodBean.OptionsIdBean.class.getClassLoader());
+        this.price = in.readString();
+        this.colorSize = in.createStringArray();
+        this.good = in.readParcelable(GoodBean.class.getClassLoader());
+        this.good_option = in.readString();
+    }
+
+    public static final Creator<ShopCarModel> CREATOR = new Creator<ShopCarModel>() {
+        @Override
+        public ShopCarModel createFromParcel(Parcel source) {
+            return new ShopCarModel(source);
+        }
+
+        @Override
+        public ShopCarModel[] newArray(int size) {
+            return new ShopCarModel[size];
+        }
+    };
 }

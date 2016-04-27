@@ -14,11 +14,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.android.volley.VolleyError;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.GoodsViewPagerAdapter;
+import com.zangcun.store.fragment.UserFragment;
 import com.zangcun.store.model.FxModel;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Http;
@@ -26,8 +28,10 @@ import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.HttpUtils;
+import com.zangcun.store.utils.ToastHelper;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.AdapterIndicator;
+import com.zangcun.store.widget.FlowLayout;
 import com.zangcun.store.widget.MyScrollView;
 import com.zangcun.store.widget.MyScrollView.RealScrollView.OnScroll;
 import com.squareup.picasso.Picasso;
@@ -44,7 +48,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     private ImageView mBack;
     private TextView mTitle;
-
     private ViewPager mViewPager;
     private AdapterIndicator mIndicator;
     private TextView mPrice;
@@ -64,8 +67,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     private RelativeLayout mChooseKindOption;
     private LinearLayout mGoodShowLayout;
-    private LinearLayout chooseChicun;
-    private LinearLayout chooseColor;
+    private FlowLayout chooseChicun;
+    private FlowLayout chooseColor;
     private LinearLayout mRightLayout;
 
     private MyScrollView mScrollView;
@@ -73,6 +76,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     private PopupWindow mPopWindow;
     private TextView count;
+    private boolean isdel = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,25 +110,14 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     }
 
     private void initEvent() {
-//		// 模拟数据
-//		mGoodUrls
-//				.add("http://h.hiphotos.baidu.com/image/h%3D360/sign=4882823172c6a7efa626ae20cdfbafe9/f9dcd100baa1cd11dd1855cebd12c8fcc2ce2db5.jpg");
-//		mGoodUrls
-//				.add("http://d.hiphotos.baidu.com/image/h%3D360/sign=e0a211de5eafa40f23c6c8db9b65038c/562c11dfa9ec8a13f075f10cf303918fa1ecc0eb.jpg");
-//		mGoodUrls
-//				.add("http://e.hiphotos.baidu.com/image/h%3D360/sign=ea96ce4c0e7b020813c939e752d8f25f/14ce36d3d539b600be63e95eed50352ac75cb7ae.jpg");
-//		mGoodUrls
-//				.add("http://b.hiphotos.baidu.com/image/h%3D360/sign=4966caee48086e0675a8394d320a7b5a/023b5bb5c9ea15cec72cb6d6b2003af33b87b22b.jpg");
-//		mGoodUrls
-//				.add("http://a.hiphotos.baidu.com/image/h%3D360/sign=0acd05e7552c11dfc1d1b92553276255/e850352ac65c10383b570cc6b0119313b07e898d.jpg");
-
-
+        /**
+         * 滑动显示title图标
+         * */
         mScrollView.setOnScroll(new OnScroll() {
             @Override
             public void onScrollY(int y) {
-                //如果滑动出 收藏图标之外 则 显示titlebar的图标
-                Log.d("debug", "y:" + y);
-                if (y > 650) {
+//                Log.d("debug", "y:" + y);
+                if (y > 740) {
                     mRightLayout.setVisibility(View.VISIBLE);
                 } else {
                     mRightLayout.setVisibility(View.INVISIBLE);
@@ -144,19 +137,17 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     }
 
-    private void addShop() {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("good_id", fxModel.getGoods_id() + "");
-        map.put("count", "1");
-        map.put("option_id ", fxModel.getOptions_id() + "");
-        CommandBase.requestDataMap(getApplicationContext(), Const.URL_CARTS, handler, map);
-
-    }
+//    private void addShop() {
+//        Map<String, String> map = new HashMap<String, String>();
+//        map.put("good_id", fxModel.getGoods_id() + "");
+//        map.put("count", "1");
+//        map.put("option_id ", fxModel.getOptions_id() + "");
+//        CommandBase.requestDataMap(getApplicationContext(), Const.URL_CARTS, handler, map);
+//
+//    }
 
 
     private void initData() {
-
-
         //根据不同的activity进入
         //设置不同种类的数据
         kind = getIntent().getStringExtra("kind");
@@ -176,9 +167,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
         mIndicator.bindViewPager(mViewPager);
         mIndicator.setPointCount(mGoodUrls.size());
-        mViewPager.setAdapter(new GoodsViewPagerAdapter(mGoodUrls));
-
-
+        mViewPager.setAdapter(new GoodsViewPagerAdapter(this, mGoodUrls, null));
         if (mHttp == null) {
             mHttp = new Http(this);
         }
@@ -187,12 +176,13 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         // to do
     }
 
-
+    /**
+     * 商品展示
+     * */
     private void addGoodsContent() {
-//		for (int i = 0; i < mGoodContentUrls.size(); i++) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < mGoodContentUrls.size(); i++) {
             ImageView imageView = new ImageView(this);
-            Picasso.with(this).load(Net.DOMAIN + mGoodContentUrls.get(i)).into(imageView);
+            Picasso.with(this).load(Net.DOMAIN + mGoodContentUrls.get(i)).error(R.drawable.sp_icon_zw).placeholder(R.drawable.sp_icon_zw).into(imageView);
             mGoodShowLayout.addView(imageView);
         }
     }
@@ -203,53 +193,71 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             case R.id.goods_back:
                 finish();
                 break;
-
             case R.id.detail_choose_option:
                 //如果有选择种类 选项
-                chooseOption();
+                chooseOption("add");
                 break;
             case R.id.collection:
-                collect();
+                if (TextUtils.isEmpty(DictionaryTool.getToken(getApplicationContext()))) {
+                    ToastUtils.show(getApplication(), "请先登录", true);
+                    return;
+                }
+                if (isdel) {
+                    collect();
+                } else {
+                    delCollect();
+                }
                 break;
             case R.id.to_shop_car:
                 toShopCar();
                 startActivity(new Intent(getApplicationContext(), ShopCarActivity.class));
                 break;
             case R.id.title_collection://标题栏的收藏按钮
-                collect();
+                if (TextUtils.isEmpty(DictionaryTool.getToken(getApplicationContext()))) {
+                    ToastUtils.show(getApplication(), "请先登录", true);
+                    return;
+                }
+                if (isdel) {
+                    collect();
+                } else {
+                    delCollect();
+                }
                 break;
             case R.id.title_to_shop_car://标题栏加入购物按钮
                 toShopCar();
+                startActivity(new Intent(getApplicationContext(), ShopCarActivity.class));
                 break;
             case R.id.add_to_shopcar:
-                if (TextUtils.isEmpty(DictionaryTool.getToken(getApplicationContext()))){
-                    ToastUtils.show(getApplication(),"请先登录",true);
+                if (TextUtils.isEmpty(DictionaryTool.getToken(getApplicationContext()))) {
+                    ToastUtils.show(getApplication(), "请先登录", true);
                     return;
                 }
                 if (isHaveChooesOption()) {
 //                    addToShopCar();
-                    chooseOption();
+                    chooseOption("add");
                 } else {
                     addToShopCar();
                 }
-//                ToastUtils.show(this, "加入购物车成功~");
                 break;
             case R.id.add_to_gopay:
-//                chooseOption();//选择尺寸颜色后购买
-                Intent intent = new Intent(getApplication(), PayActivity.class);
-                startActivity(intent);
+                if (TextUtils.isEmpty(DictionaryTool.getToken(getApplicationContext()))) {
+                    ToastUtils.show(getApplication(), "请先登录", true);
+                    return;
+                }
+                chooseOption("pay");//选择尺寸颜色后购买
                 break;
-            case R.id.goods_choose_del://pupup弹窗内的"x"
+            case R.id.goods_choose_del:
                 mPopWindow.dismiss();
                 break;
         }
     }
+
     boolean isCanColorSure = false;
     boolean isCanSizeSure = false;
     /**
      * 如果特殊商品有选择种类选项
      */
-    private void chooseOption() {
+    private void chooseOption(String type) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_choosekind, null);
         mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
@@ -258,8 +266,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
         mPopWindow.setFocusable(true);
         mPopWindow.setOutsideTouchable(true);
-        chooseChicun = (LinearLayout) contentView.findViewById(R.id.choose_chicun_layout);
-        chooseColor = (LinearLayout) contentView.findViewById(R.id.choose_color_layout);
+        chooseChicun = (FlowLayout) contentView.findViewById(R.id.choose_chicun_layout);
+        chooseColor = (FlowLayout) contentView.findViewById(R.id.choose_color_layout);
         ImageView less = (ImageView) contentView.findViewById(R.id.choose_less);
         ImageView more = (ImageView) contentView.findViewById(R.id.choose_more);
         ImageView del = (ImageView) contentView.findViewById(R.id.goods_choose_del);
@@ -298,61 +306,73 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         btn_sure.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                isCanColorSure =false;
-                isCanSizeSure =false;
-                String size = "",color = "";
-                if (isHaveChooesOption(0)){//判断是颜色
+                isCanColorSure = false;
+                isCanSizeSure = false;
+                String size = "", color = "";
+                if (isHaveChooesOption(0)) {//判断是颜色
                     // TODO: 2016/4/3 尺寸颜色有问题
                     int childCount = chooseColor.getChildCount();
-                    for (int i = 0;i < childCount; i++){
+                    for (int i = 0; i < childCount; i++) {
                         View child = chooseColor.getChildAt(i);
-                        if (child.isSelected()){
+                        if (child.isSelected()) {
                             isCanColorSure = true;
-                            color =  ((TextView)child).getText().toString();
+                            color = ((TextView) child).getText().toString();
                         }
                     }
-                }else{
+                } else {
                     isCanColorSure = true;
                 }
 
-                if (isHaveChooesOption(1)){//判断是否尺寸
+                if (isHaveChooesOption(1)) {//判断是否尺寸
                     int childCount = chooseChicun.getChildCount();
-                    for (int i = 0;i < childCount; i++){
+                    for (int i = 0; i < childCount; i++) {
                         View child = chooseChicun.getChildAt(i);
-                        if (child.isSelected()){
+                        if (child.isSelected()) {
                             isCanSizeSure = true;
-                            size =  ((TextView)child).getText().toString();
+                            size = ((TextView) child).getText().toString();
                         }
                     }
 
-                }else {
+                } else {
 
                     isCanSizeSure = true;
                 }
 
-                if (isCanColorSure && isCanSizeSure){
+                if (isCanColorSure && isCanSizeSure) {
                     List<FxModel.OptionsIdEntity> options_id = fxModel.getOptions_id();
-                    for (FxModel.OptionsIdEntity entity : options_id){
+                    for (FxModel.OptionsIdEntity entity : options_id) {
                         String spec_1 = entity.getSpec_1();
                         String spec_2 = entity.getSpec_2();
-                        Log.i(TAG, "spec_1 = "+spec_1);
-                        Log.i(TAG, "spec_2 = "+spec_2);
-                        Log.i(TAG, "color = "+color);
-                        Log.i(TAG, "size = "+size);
-                        if (color.equals(spec_1) && size.equals(spec_2)){
-                            Log.i(TAG, "fxModel.getGoods_id() = "+ fxModel.getGoods_id());
-                            Log.i(TAG, "entity.getId()"+ entity.getId());
-                            Log.i(TAG, "count.getText().toString() = "+ count.getText().toString());
-                            Log.i(TAG, "Integer.getInteger(count.getText().toString()) = "+ Integer.valueOf(count.getText().toString()));
-                            addCart(fxModel.getGoods_id(),entity.getId(),Integer.valueOf(count.getText().toString()));
+                        Log.i(TAG, "spec_1 = " + spec_1);
+                        Log.i(TAG, "spec_2 = " + spec_2);
+                        Log.i(TAG, "color = " + color);
+                        Log.i(TAG, "size = " + size);
+                        if (color.equals(spec_1) && size.equals(spec_2)) {
+                            Log.i(TAG, "fxModel.getGoods_id() = " + fxModel.getGoods_id());
+                            Log.i(TAG, "entity.getId()" + entity.getId());
+                            Log.i(TAG, "count.getText().toString() = " + count.getText().toString());
+                            Log.i(TAG, "Integer.getInteger(count.getText().toString()) = " + Integer.valueOf(count.getText().toString()));
+                            if ("add".equals(type)) {
+                                addCart(fxModel.getGoods_id(), entity.getId(), Integer.valueOf(count.getText().toString()));
+                            }
+                            if ("pay".equals(type)) {
+//                                params.addBodyParameter("good_id",goods_id+"");
+//                                params.addBodyParameter("count",""+count);
+//                                params.addBodyParameter("option_id",id+"");
+                                Intent intent = new Intent(getApplication(), PayActivity.class);
+                                intent.putExtra("fxModel", fxModel);
+                                intent.putExtra("count", count.getText().toString());
+                                intent.putExtra("OptionsIdEntity", entity);
+                                startActivity(intent);
+                            }
                             mPopWindow.dismiss();
-                            Log.i(TAG, "entity.toString() = "+entity.toString());
+                            Log.i(TAG, "entity.toString() = " + entity.toString());
                             return;
                         }
                     }
 
-                }else {
-                    ToastUtils.show(DetailActivity.this.getApplication(),"请选择商品属性",true);
+                } else {
+                    ToastUtils.show(DetailActivity.this.getApplication(), "请选择商品属性", true);
                 }
             }
         });
@@ -370,18 +390,25 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
+    /**
+     * 尺寸分类
+     * */
     private void addSizeChildView(int i, final List<String> list) {
         if (i == 1 && list != null) {//尺寸分类
-
             for (int j = 0, sizej = list.size(); j < sizej; j++) {
                 if (!TextUtils.isEmpty(list.get(j))) {
                     // TODO: 2016/4/1 添加尺寸view
                     LinearLayout size2LL = null;
                     TextView chicun = new TextView(this);
                     //通过给textView设置 selector背景来选择
-                    chicun.setBackgroundResource(R.drawable.item_filter_selector);
+//                    chicun.setBackgroundResource(R.drawable.item_filter_selector);
                     chicun.setText("" + list.get(j));
-                    chicun.setPadding(10, 10, 10, 10);
+                    chicun.setTextAppearance(this, R.style.text_flag);
+                    ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    marginLayoutParams.setMargins(5, 5, 5, 5);
+                    chicun.setLayoutParams(marginLayoutParams);
+                    chicun.setBackgroundResource(R.drawable.text_selector_shape);
+//                    chicun.setPadding(10, 10, 10, 10);
                     chicun.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -396,17 +423,26 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
                 }
             }
+            chooseChicun.requestLayout();
+            chooseChicun.invalidate();
         }
     }
 
+    /**
+     * 颜色分类
+     * */
     private void addColorChildView(int i, final List<String> list) {
         if (i == 0 && list != null) {//颜色分类
             for (int j = 0, sizej = list.size(); j < sizej; j++) {
                 if (!TextUtils.isEmpty(list.get(j))) {
                     // TODO: 2016/4/1 添加颜色view
                     TextView color = new TextView(this);
-                    color.setBackgroundResource(R.drawable.item_filter_selector);
-                    color.setPadding(10, 10, 10, 10);
+
+                    color.setTextAppearance(this, R.style.text_flag);
+                    ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    marginLayoutParams.setMargins(5, 5, 5, 5);
+                    color.setLayoutParams(marginLayoutParams);
+                    color.setBackgroundResource(R.drawable.text_selector_shape);
                     color.setText(list.get(j));
                     color.setOnClickListener(new OnClickListener() {
                         @Override
@@ -422,6 +458,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
                     chooseColor.addView(color);
                 }
             }
+            chooseColor.requestLayout();
+            chooseColor.invalidate();
 
         }
     }
@@ -437,7 +475,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         }
         int goods_id = fxModel.getGoods_id();
         int id = fxModel.getOptions_id().get(0).getId();
-        addCart(goods_id, id,1);
+        addCart(goods_id, id, 1);
         /*switch (kind) {
             case "fx":
             case "tk":
@@ -463,15 +501,16 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     /**
      * 加入购物车
+     *
      * @param goods_id
      * @param id
      * @param count
      */
-    private void addCart(int goods_id, int id,int count) {
+    private void addCart(int goods_id, int id, int count) {
         RequestParams params = new RequestParams(Net.URL_GOODS_CARTS);
-        params.addBodyParameter("good_id",goods_id+"");
-        params.addBodyParameter("count",""+count);
-        params.addBodyParameter("option_id",id+"");
+        params.addBodyParameter("good_id", goods_id + "");
+        params.addBodyParameter("count", "" + count);
+        params.addBodyParameter("option_id", id + "");
         // TODO: 2016/4/1 处理没有用户的情况
 //        Log.i(TAG, "token = "+ DictionaryTool.getToken(getApplicationContext()));
         params.addHeader("AUTHORIZATION", DictionaryTool.getToken(getApplicationContext()));
@@ -483,15 +522,17 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "add cart onSuccess = "+ s);
-                ToastUtils.show(DetailActivity.this,"加入购物车成功",true);
+                Log.i(TAG, "add cart onSuccess = " + s);
+//                ToastUtils.show(DetailActivity.this, "加入购物车成功", true);
+                startActivity(new Intent(DetailActivity.this,ShopCarActivity.class));
+                sendBroadcast(new Intent(Const.SHOP_CAR_RECIEVER));//发送通知刷新购物车
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
                 String errorSt = throwable.toString();
-                Log.i(TAG, "add cart onError = "+ errorSt);
-                if (errorSt.contains("401") && errorSt.contains("no user")){
+                Log.i(TAG, "add cart onError = " + errorSt);
+                if (errorSt.contains("401") && errorSt.contains("no user")) {
                     reQuestToken();
                 }
             }
@@ -505,7 +546,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     /**
@@ -516,17 +557,17 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     }
 
 
-    /**
-     * 有选项的购物车
-     *
-     * @param count
-     * @param size
-     * @param color
-     */
-    private void addToShopCar(String count, String size, String color) {
-        //接口访问 操作购物车数据
-        //to-do
-    }
+//    /**
+//     * 有选项的购物车
+//     *
+//     * @param count
+//     * @param size
+//     * @param color
+//     */
+//    private void addToShopCar(String count, String size, String color) {
+//        //接口访问 操作购物车数据
+//        //to-do
+//    }
 
     /**
      * 确定选择的内容
@@ -563,12 +604,33 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     }
 
+    /**
+     * 收藏
+     */
     private void collect() {
         mCollect.setSelected(!mCollect.isSelected());
         mTitleCollect.setSelected(!mTitleCollect.isSelected());
         //处理收藏数据
-
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("good_id", String.valueOf(fxModel.getGoods_id()));
+//        map.put("token",DictionaryTool.getToken(this));
+        Log.e("map", map.toString());
+        CommandBase.requestDataMapToken(getApplicationContext(), Const.URL_COLLECT, handler, map);
     }
+
+    /**
+     * 删除收藏
+     */
+    private void delCollect() {
+        mCollect.setSelected(!mCollect.isSelected());
+        mTitleCollect.setSelected(!mTitleCollect.isSelected());
+        Map<String, String> map = new HashMap<String, String>();
+//        map.put("good_id", String.valueOf(fxModel.getGoods_id()));
+//        map.put("token",DictionaryTool.getToken(this));
+        Log.e("map", map.toString());
+        CommandBase.requestDataMapDel(getApplicationContext(), "http://211.149.231.116:3000/collects/" + fxModel.getGoods_id() + ".json", delhandler, map);
+    }
+
 
     @Override
     public void onNetSuccess(String response, int requestCode) {
@@ -582,14 +644,37 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         }
     }
 
+    /**
+     * 收藏成功
+     */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == Const.SUCCESS) {
-                startActivity(new Intent(getApplicationContext(), ShopCarActivity.class));
+                isdel = false;
+                Toast.makeText(getApplicationContext(), "收藏成功", Toast.LENGTH_SHORT).show();
+//                startActivity(new Intent(getApplicationContext(), ShopCarActivity.class));
             } else if (msg.what == Const.ERROR) {
-
+                isdel = true;
+                Toast.makeText(getApplicationContext(), "收藏失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+    /**
+     * 取消收藏
+     */
+    private Handler delhandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == Const.SUCCESS) {
+                isdel = true;
+                Toast.makeText(getApplicationContext(), "取消收藏成功", Toast.LENGTH_SHORT).show();
+//              startActivity(new Intent(getApplicationContext(), ShopCarActivity.class));
+            } else if (msg.what == Const.ERROR) {
+                isdel = false;
+                Toast.makeText(getApplicationContext(), "取消收藏失败", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -613,6 +698,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
 
     /**
      * 判断商品尺寸或者颜色选项
+     *
      * @param i
      * @return
      */

@@ -51,8 +51,7 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
                 }
             }
         }
-        holder.setText(R.id.item_gwc_market_price,
-                "¥" + optionsIdBean.getMarket_price());
+        holder.setText(R.id.item_gwc_market_price, "¥" + optionsIdBean.getMarket_price());
         //中间画横线
         TextView textView = holder.getView(R.id.item_gwc_market_price);
         textView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
@@ -77,13 +76,13 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
             }
         });
         if (shopCarModel.getQuantity() == 1){
-            holder.setEnable(R.id.item_gwc_ischecked,false);
+            holder.setEnable(R.id.item_gwc_less,true);//之前为false
         }
         holder.setOnClickListener(R.id.item_gwc_less, new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (shopCarModel.getQuantity() == 1) {
-                    holder.setEnable(R.id.item_gwc_ischecked,false);
+                    holder.setEnable(R.id.item_gwc_ischecked,true);//之前为false
                     return;
                 }
                 incrementGood(shopCarModel,"-");
@@ -169,9 +168,9 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
 
         String url = "";
         if (shopCarModel.getIschecked() == 1){
-            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_checked.json";
-        }else{
             url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_unchecked.json";
+        }else{
+            url = Net.HOST+"carts/"+shopCarModel.getRec_id()+"/set_checked.json";
         }
         RequestParams params = new RequestParams(url);
         params.addHeader("AUTHORIZATION", DictionaryTool.getToken(mContext.getApplicationContext()));
@@ -179,7 +178,6 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
             @Override
             public void onSuccess(String s) {
                 Log.i(TAG, "onSuccess = "+ s);
-
             }
 
             @Override

@@ -6,9 +6,7 @@ import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-/**
- * Created by Administrator on 2015/12/9.
- */
+
 public class HttpUtils {
 
     public static  Callback.Cancelable HttpGetMethod(Callback.CommonCallback<String> requestCallBack,RequestParams params){

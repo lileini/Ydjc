@@ -1,5 +1,6 @@
 package com.zangcun.store.person;
 
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,13 +16,19 @@ import com.zangcun.store.R;
 import com.zangcun.store.dao.CityDao;
 import com.zangcun.store.model.AddressModel;
 import com.zangcun.store.model.CityModel;
+import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.GsonUtil;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 //添加地址
@@ -34,7 +41,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private Spinner city_spinner;//市
     private Spinner county_spinner;//县
 
-    private int[] city = {R.array.beijin_province_item, R.array.tianjin_province_item, R.array.heibei_province_item, R.array.shanxi1_province_item, R.array.neimenggu_province_item, R.array.liaoning_province_item, R.array.jilin_province_item, R.array.heilongjiang_province_item, R.array.shanghai_province_item, R.array.jiangsu_province_item, R.array.zhejiang_province_item, R.array.anhui_province_item, R.array.fujian_province_item, R.array.jiangxi_province_item, R.array.shandong_province_item, R.array.henan_province_item, R.array.hubei_province_item, R.array.hunan_province_item, R.array.guangdong_province_item,  R.array.guangxi_province_item, R.array.hainan_province_item, R.array.chongqing_province_item, R.array.sichuan_province_item, R.array.guizhou_province_item, R.array.yunnan_province_item, R.array.xizang_province_item, R.array.shanxi2_province_item, R.array.gansu_province_item, R.array.qinghai_province_item, R.array.linxia_province_item, R.array.xinjiang_province_item, R.array.hongkong_province_item, R.array.aomen_province_item, R.array.taiwan_province_item};
+    private int[] city = {R.array.beijin_province_item, R.array.tianjin_province_item, R.array.heibei_province_item, R.array.shanxi1_province_item, R.array.neimenggu_province_item, R.array.liaoning_province_item, R.array.jilin_province_item, R.array.heilongjiang_province_item, R.array.shanghai_province_item, R.array.jiangsu_province_item, R.array.zhejiang_province_item, R.array.anhui_province_item, R.array.fujian_province_item, R.array.jiangxi_province_item, R.array.shandong_province_item, R.array.henan_province_item, R.array.hubei_province_item, R.array.hunan_province_item, R.array.guangdong_province_item, R.array.guangxi_province_item, R.array.hainan_province_item, R.array.chongqing_province_item, R.array.sichuan_province_item, R.array.guizhou_province_item, R.array.yunnan_province_item, R.array.xizang_province_item, R.array.shanxi2_province_item, R.array.gansu_province_item, R.array.qinghai_province_item, R.array.linxia_province_item, R.array.xinjiang_province_item, R.array.hongkong_province_item, R.array.aomen_province_item, R.array.taiwan_province_item};
     private int[] countyOfBeiJing = {R.array.beijin_city_item};
     private int[] countyOfTianJing = {R.array.tianjin_city_item};
     private int[] countyOfHeBei = {R.array.shijiazhuang_city_item, R.array.tangshan_city_item, R.array.qinghuangdao_city_item, R.array.handan_city_item, R.array.xingtai_city_item, R.array.baoding_city_item, R.array.zhangjiakou_city_item, R.array.chengde_city_item, R.array.cangzhou_city_item, R.array.langfang_city_item, R.array.hengshui_city_item};
@@ -84,16 +91,34 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private EditText etName;
     private EditText etMobile;
     private EditText etDetialedAddress;
+    private boolean isEdit = false;
+    private GetAddressResultModel.AddressBean addressBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_address);
         init();
+        initDate();
     }
-    private void popupChoose(){
+
+    private void initDate() {
+        Intent intent = getIntent();
+        if (intent == null)
+            return;
+        addressBean = (GetAddressResultModel.AddressBean) intent.getSerializableExtra("addressBean");
+
+        if (addressBean == null)
+            return;
+        isEdit = true;
+        etName.setText(addressBean.getConsignee());
+        etMobile.setText(addressBean.getMobile());
+        etDetialedAddress.setText(addressBean.getAddress());
+    }
+
+    private void popupChoose() {
         View contentView = LayoutInflater.from(this).inflate(R.layout.popupwindow_week, null);
-        mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT,true);
+        mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
         mPopWindow.setFocusable(true);
         mPopWindow.setOutsideTouchable(true);
@@ -102,7 +127,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         TextView tv1 = (TextView) contentView.findViewById(R.id.one_five);
         TextView tv2 = (TextView) contentView.findViewById(R.id.six_seven);
         TextView tv3 = (TextView) contentView.findViewById(R.id.one_seven);
-
         tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
         tv3.setOnClickListener(this);
@@ -119,7 +143,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         mTitleRight.setOnClickListener(this);
         mBack = (ImageView) findViewById(R.id.personal_back);
         mBack.setOnClickListener(this);
-        week = (TextView)findViewById(R.id.tv_week);
+        week = (TextView) findViewById(R.id.tv_week);
         week.setOnClickListener(this);
         etName = (EditText) findViewById(R.id.et_shouhuoren);
         etMobile = (EditText) findViewById(R.id.et_Mobile);
@@ -309,7 +333,12 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.pesonal_right:
                 //点击完成执行操作
-                addAddress();
+                if (isEdit) {
+                    requestChangeAddress();
+                } else {
+
+                    addAddress();
+                }
                 break;
             case R.id.one_five:
                 mPopWindow.dismiss();
@@ -332,54 +361,40 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void addAddress() {
+    private void requestChangeAddress() {
+        RequestParams params = new RequestParams(Net.HOST + "addresses/" + addressBean.getId() + ".json");
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
         String name = etName.getText().toString();
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)){
-            ToastUtils.show(getApplication(),"请填写完信息");
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
+            ToastUtils.show(getApplication(), "请填写完整信息");
             return;
         }
-        StringBuilder region_id = new StringBuilder();
         Log.i(TAG, "strProvince " + strProvince);
         Log.i(TAG, "strCity " + strCity);
         Log.i(TAG, "strCounty " + strCounty);
         CityModel province = CityDao.findCity(strProvince);
-        CityModel city = CityDao.findCity(strCity,province.getId());
-        CityModel county = CityDao.findCity(strCounty,city.getId());
-
-        if (province != null){
-            region_id.append(province.getId());
-        }
-        if (city != null){
-            region_id.append(city.getId());
-        }
-        if (county != null){
-            region_id.append(county.getId());
-        }
-        Log.i(TAG, "province =  "+province);
-        Log.i(TAG, "city =  "+city);
-        Log.i(TAG, "county =  "+county);
-        AddressModel addressModel = new AddressModel(strProvince+strCity+strCounty+detialedAddress,mobile,region_id.toString(),name);
-        requestAddAddress(addressModel);
-    }
-
-    private void requestAddAddress(AddressModel addressModel) {
-        String json = GsonUtil.toJson(addressModel);
-        Log.i(TAG, "json =  "+ json);
-        RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
-        params.addBodyParameter("address",json);
-        params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
-
-        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
+        CityModel city = CityDao.findCity(strCity, province.getId());
+        CityModel county = CityDao.findCity(strCounty);
+        addressBean.setAddress(strProvince + strCity + strCounty + detialedAddress);
+        addressBean.setMobile(mobile);
+        addressBean.setConsignee(name);
+        addressBean.setRegion_id(county.getId());
+        String json = GsonUtil.toJson(addressBean);
+        com.zangcun.store.utils.Log.i(TAG, "json = " + json);
+        params.addBodyParameter("address", json);
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "requestAddAddress onSuccess = "+ s);
+                ToastUtils.show(getApplicationContext(), "修改成功");
+                setResult(101);
+                finish();
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                Log.i(TAG, "requestAddAddress onError = "+throwable.toString());
+                ToastUtils.show(getApplicationContext().getApplicationContext(), "修改失败");
             }
 
             @Override
@@ -391,6 +406,70 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             public void onFinished() {
 
             }
-        },params);
+        }, params);
+    }
+
+    private void addAddress() {
+        String name = etName.getText().toString();
+        String mobile = etMobile.getText().toString();
+        String detialedAddress = etDetialedAddress.getText().toString();
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
+            ToastUtils.show(getApplication(), "请填写完整信息");
+            return;
+        }
+        StringBuilder region_id = new StringBuilder();
+        Log.i(TAG, "strProvince " + strProvince);
+        Log.i(TAG, "strCity " + strCity);
+        Log.i(TAG, "strCounty " + strCounty);
+        CityModel province = CityDao.findCity(strProvince);
+        CityModel city = CityDao.findCity(strCity, province.getId());
+        CityModel county = CityDao.findCity(strCounty);
+
+        if (province != null) {
+            region_id.append(province.getId());
+        }
+        if (city != null) {
+            region_id.append(city.getId());
+        }
+        if (county != null) {
+            region_id.append(county.getId());
+        }
+        Log.i(TAG, "province =  " + province);
+        Log.i(TAG, "city =  " + city);
+        Log.i(TAG, "county =  " + county);
+        AddressModel addressModel = new AddressModel(strProvince + strCity + strCounty +detialedAddress, mobile, county.getId() + "", name);
+        requestAddAddress(addressModel);
+    }
+
+    private void requestAddAddress(AddressModel addressModel) {
+        String json = GsonUtil.toJson(addressModel);
+        Log.i(TAG, "json =" + json);
+        RequestParams params = new RequestParams(Net.URL_ADD_ADDRESSES);
+        params.addBodyParameter("address", json);
+        params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
+        params.addHeader("Content-Type", "application/json");
+        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "requestAddAddress onSuccess = " + s);
+                setResult(100);
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "requestAddAddress onError = " + throwable.toString());
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        }, params);
     }
 }

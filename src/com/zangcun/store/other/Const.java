@@ -10,8 +10,11 @@ public class Const {
     public final static int REQUEST_FX = 3;
     public final static int REQUEST_XD = 4;
     public final static int REQUEST_FSYP = 5;
-    public final static int REQUEST_DETAIL = 6;
+    public final static int REQUEST_ZZYP = 6;
+    public final static int REQUEST_FZPS = 7;
+    public final static int REQUEST_DETAIL = 8;
 
+    public static final String HOST = "http://211.149.231.116:3000/";//主机名
     public final static String BASE_URL = "http://211.149.231.116:3000";
     // 获取手机验证码
     public final static String URL_SENDMESSGE = "http://211.149.231.116:3000/auth_token/get_code.json";
@@ -21,9 +24,9 @@ public class Const {
     //POST请求注册
     public final static String URL_USER = "http://211.149.231.116:3000/user.json";
     //PUT请求修改密码
-    public final static String URL_RESET_PASSWORD = "http://211.149.231.116:3000/apipie/user/reset_password.json";
+    public final static String URL_RESET_PASSWORD = "http://211.149.231.116:3000/user/reset_password.json";
     //PUT请求重置密码
-    public final static String URL_NEW_PASSWORD = "http://211.149.231.116:3000/apipie/user/new_password.json";
+    public final static String URL_NEW_PASSWORD = "http://211.149.231.116:3000/user/new_password.json";
 
     //用户登录
     public final static String URL_AUTH_TOKEN = "http://211.149.231.116:3000/auth_token.json";
@@ -42,15 +45,21 @@ public class Const {
     //PUT请求 提醒发货
     public final static String URL_CARTS = "http://211.149.231.116:3000/carts.json";
 
-    //商品分類
+    //商品分类
     public final static String URL_PRODUCTS_FX = BASE_URL + "/products/foxiang.json";
-
-
     public final static String URL_PRODUCTS_TK = BASE_URL + "/products/tangka.json";
-
-
     public final static String URL_PRODUCTS_FS = BASE_URL + "/products/fsyp.json";
     public final static String URL_PRODUCTS_XD = BASE_URL + "/products/xianglu.json";
 
+    //广播接收
+    public final static String SHOP_CAR_RECIEVER = "shop_car_reciever";
+
+
+    //POST请求收藏商品
+    public final static String URL_COLLECT = "http://211.149.231.116:3000/collects.json";
+    //DELETE删除商品
+    public static final String URL_COLLECT_DELETE = HOST + "collects/:id.json";
+    //GET请求获取收藏商品列表
+    public final static String URL_COLLECT_LIEBIAO = "http://211.149.231.116:3000/collects.json";
 
 }

@@ -68,6 +68,8 @@
         <activity android:name=".activity.TkActivity"/>
         <activity android:name=".activity.XdActivity"/>
         <activity android:name=".activity.FsypActivity"/>
+        <activity android:name=".activity.ZzypActivity"/>
+        <activity android:name=".activity.FzpsActivity"/>
         <activity android:name=".activity.GetCordActivity"/>
         <activity android:name=".activity.RefundActivity"/>
         <!--个人中心里的activity-->
@@ -80,7 +82,7 @@
         <activity android:name=".person.LinCollectionActivity"/>
         <activity android:name=".person.LinDeliverActivity"/>
         <activity android:name=".person.LinPayActivity"/>
-        <activity android:name=".person.LinPJActivity"/>
+        <!--<activity android:name=".person.LinPJActivity"/>-->
         <activity android:name=".activity.RegisterCordActivity"/>
         <activity android:name=".person.AddAddressActivity"/>
     </application>

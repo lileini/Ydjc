@@ -28,7 +28,14 @@ public class Net {
 
 
     public static final String URL_ADDRESSES = HOST + "addresses/options.json";//收货地址，登录之后带上Token请求
-    public static final String URL_ADD_ADDRESSES = HOST + "addresses.json ";//添加收货地址
+    public static final String URL_ADD_ADDRESSES = HOST + "addresses.json";//添加收货地址
+    public static final String URL_GET_ADDRESSES = HOST + "user.json";//获取收货地址
+
+    public static final String URL_CEAT_ORDER = HOST + "orders.json";//创建订单
+//    public static final String URL_GET_ADDRESSES = HOST + "user.json";//获取收货地址
+//    public static final String URL_GET_ADDRESSES = HOST + "user.json";//获取收货地址
+
+
 
 
     //防止解析报错

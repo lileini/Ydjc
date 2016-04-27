@@ -8,7 +8,9 @@ import android.widget.TextView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 
-//个人中心--关于我们
+/**
+ * 关于我们
+ * */
 public class AboutActivity extends BaseActivity {
     private ImageView mBack;
     private TextView mTitle;

@@ -2,9 +2,6 @@ package com.zangcun.store.entity;
 
 import java.util.List;
 
-/**
- * Created by Administrator on 2016/3/31.
- */
 public class RegisterEntity {
 
     /**

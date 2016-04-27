@@ -10,9 +10,7 @@ import org.xutils.x;
 import java.io.File;
 import java.util.List;
 
-/**
- * Created by Administrator on 2016/4/8.
- */
+
 public class CityDao {
     private static DbManager db;
     static DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()

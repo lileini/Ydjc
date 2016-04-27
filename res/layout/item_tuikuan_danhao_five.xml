@@ -52,7 +52,7 @@
             >
                 <EditText android:layout_width="match_parent"
                           android:layout_height="35dp"
-                          android:hint="请填写快递公司及运单号"
+                          android:hint="请填写运单号"
                           android:textSize="15sp"
                           android:padding="8dp"
                           android:background="@drawable/dtk_btn_wl"

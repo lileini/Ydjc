@@ -1,6 +1,8 @@
 package com.zangcun.store.adapter;
 
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,16 +15,21 @@ import java.util.List;
 //详情界面Viewpager适配器
 public class GoodsViewPagerAdapter extends PagerAdapter {
 
+	private Context mCtx;
+	private SparseArray<ImageView> mImageList;
+	private GoodsViewPagerAdapter.IPagerClick iPagerClick;
 	private List<String> mDatas;
-	
 
-	public GoodsViewPagerAdapter(List<String> mDatas) {
+
+	public GoodsViewPagerAdapter(Context mCtx, List<String> mDatas, GoodsViewPagerAdapter.IPagerClick iPagerClick) {
+		this.mCtx = mCtx;
 		this.mDatas = mDatas;
+		this.iPagerClick = iPagerClick;
 	}
 
 	@Override
 	public int getCount() {
-		return mDatas.size();
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
@@ -44,6 +51,15 @@ public class GoodsViewPagerAdapter extends PagerAdapter {
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
 		container.removeView((View) object);
+	}
+
+	//返回集合
+	public SparseArray<ImageView> getViewList() {
+		return mImageList;
+	}
+
+	public interface IPagerClick {
+		void onPagerClick(int pos);
 	}
 
 }

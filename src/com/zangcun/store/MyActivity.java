@@ -1,8 +1,11 @@
 package com.zangcun.store;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,11 +14,9 @@ import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.dao.CityDao;
 import com.zangcun.store.fragment.*;
 import com.zangcun.store.model.CityModel;
-import com.zangcun.store.net.Http;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.DictionaryTool;
-import com.zangcun.store.utils.GsonUtil;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.TabLayout;
@@ -38,6 +39,14 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
     private boolean isLogin;
     private String strFlag = null;
     private Object adressId;
+    private boolean canEixt;
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            canEixt = false;
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +93,8 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
 
     private void login(String user, String pwd) {
         RequestParams params = new RequestParams(Const.URL_AUTH_TOKEN);
-        params.addBodyParameter("phone",user);
-        params.addBodyParameter("password",pwd);
+        params.addBodyParameter("phone", user);
+        params.addBodyParameter("password", pwd);
         HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
             @Override
             public boolean onCache(String s) {
@@ -94,15 +103,15 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
 
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "onSuccess = "+ s);
+                Log.i(TAG, "onSuccess = " + s);
                 try {
                     JSONObject obj = new JSONObject(s);
                     String token = obj.getString("token");
 //                    Log.i(TAG, "onSuccess = " + token);
-                    if (TextUtils.isEmpty(token)){
+                    if (TextUtils.isEmpty(token)) {
                         return;
                     }
-                    DictionaryTool.saveToken(getApplicationContext(),token);
+                    DictionaryTool.saveToken(getApplicationContext(), token);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -112,7 +121,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(getApplication(),"自动登录失败");
+                ToastUtils.show(getApplication(), "自动登录失败");
             }
 
             @Override
@@ -124,16 +133,16 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     private void initFragment() {
-        if (isLogin){
+        if (isLogin) {
             for (int i = 0; i < mTabs.length; i++) {
                 putFragment(mTabs1[i], getFragmentByIndex(i));
             }
             mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
-        }else {
+        } else {
             for (int i = 0; i < mTabs.length; i++) {
                 putFragment(mTabs[i], getFragmentByIndex(i));
             }
@@ -166,9 +175,9 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             mTitle.setVisibility(View.GONE);
         } else {
             mTitle.setVisibility(View.VISIBLE);
-            if (isLogin){
+            if (isLogin) {
                 mTitleText.setText(mTabs1[index]);
-            }else {
+            } else {
                 mTitleText.setText(mTabs[index]);
             }
         }
@@ -191,10 +200,10 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             case 2:
                 return ShopFragment.getInstance();
             case 3:
-                if (isLogin){
+                if (isLogin) {
                     PersonalFragment personalFragment = PersonalFragment.getInstance();
                     return personalFragment;
-                }else {
+                } else {
                     UserFragment fragment = UserFragment.getInstance();
                     fragment.setOnLoginClickListener(this);
                     return fragment;
@@ -241,24 +250,48 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         isLogin = true;
         Log.i(TAG, "onPersionLoginClick ");
     }
+    /**
+     * 监听返回键
+     * */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    /**
+     * 按两次退出程序
+     * */
+    private void exit() {
+        if (!canEixt) {
+            canEixt = true;
+            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            mHandler.sendEmptyMessageDelayed(0, 2000);
+        } else {
+            finish();
+            System.exit(0);
+        }
+    }
 
     /**
      * 获取收货地址id存进数据库
-     * @return
      */
     public void getAdressId() {
         RequestParams params = new RequestParams(Net.URL_ADDRESSES);
-        params.addHeader("Authorization",DictionaryTool.getToken(getApplicationContext()));
+        params.addHeader("Authorization", DictionaryTool.getToken(getApplicationContext()));
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "onSuccess = "+ s);
-                List<CityModel> cityList = new Gson().fromJson(s,new TypeToken<ArrayList<CityModel>>(){}.getType());
-                Log.i(TAG, "cityList= "+ cityList);
-                if(cityList == null){
+                Log.i(TAG, "onSuccess = " + s);
+                List<CityModel> cityList = new Gson().fromJson(s, new TypeToken<ArrayList<CityModel>>() {
+                }.getType());
+                Log.i(TAG, "cityList= " + cityList);
+                if (cityList == null) {
                     return;
                 }
-                new Thread(){
+                new Thread() {
                     @Override
                     public void run() {
                         super.run();
@@ -281,6 +314,6 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 }

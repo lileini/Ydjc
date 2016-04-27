@@ -18,7 +18,9 @@ import com.zangcun.store.R;
 
 import java.util.HashMap;
 
-//个人中心--第三方账号绑定
+/**
+ * 三方绑定
+ * */
 public class AcountActivity extends BaseActivity implements View.OnClickListener, PlatformActionListener {
     private ImageView mBack;
     private TextView mTitle;

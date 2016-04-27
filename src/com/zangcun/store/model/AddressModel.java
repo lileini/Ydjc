@@ -7,9 +7,9 @@ public class AddressModel {
     private String region_id;//区域id
     private String consignee;//收件人姓名
 
+
     public AddressModel() {
     }
-
     public AddressModel(String address, String mobile, String region_id, String consignee) {
         this.address = address;
         this.mobile = mobile;
@@ -24,6 +24,7 @@ public class AddressModel {
     public void setAddress(String address) {
         this.address = address;
     }
+
 
     public String getMobile() {
         return mobile;

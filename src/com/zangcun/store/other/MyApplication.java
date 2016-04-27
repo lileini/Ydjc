@@ -7,7 +7,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import org.xutils.x;
 
-//图片加载器
+//ImageLoader图片加载器
 public class MyApplication extends Application {
     public static DisplayImageOptions sImageNoRoundOptions;
     public static MyApplication instance;

@@ -12,6 +12,7 @@
     <color name="loess">#ae8327</color>
     <color name="btn_b">#FF009acd</color>
     <color name="btn_ay">#AA009acd</color>
-    <color name="red">#980202</color>
+    <color name="red">#9d1404</color>
     <color name="green">#FF12980D</color>
+    <color name="line">#33666666</color>
 </resources>

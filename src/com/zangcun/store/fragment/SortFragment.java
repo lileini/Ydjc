@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import com.zangcun.store.R;
-import com.zangcun.store.activity.FsypActivity;
-import com.zangcun.store.activity.FxActivity;
-import com.zangcun.store.activity.TkActivity;
-import com.zangcun.store.activity.XdActivity;
+import com.zangcun.store.activity.*;
 
 //分类
 public class SortFragment extends BaseFragment implements View.OnClickListener {
@@ -15,6 +12,9 @@ public class SortFragment extends BaseFragment implements View.OnClickListener {
     private TextView mTk;
     private TextView mFsyp;
     private TextView mXd;
+    private TextView mZzyp;
+    private TextView mFzps;
+//    private SortAdapter mAdapter;
 
     public static SortFragment getInstance() {
         SortFragment fragment = new SortFragment();
@@ -37,10 +37,14 @@ public class SortFragment extends BaseFragment implements View.OnClickListener {
         mTk = (TextView) mView.findViewById(R.id.activity_tk);
         mFsyp = (TextView) mView.findViewById(R.id.activity_fsyp);
         mXd = (TextView) mView.findViewById(R.id.activity_xd);
+        mZzyp= (TextView) mView.findViewById(R.id.activity_zzyp);
+        mFzps= (TextView) mView.findViewById(R.id.activity_fzps);
         mFx.setOnClickListener(this);
         mTk.setOnClickListener(this);
         mFsyp.setOnClickListener(this);
         mXd.setOnClickListener(this);
+        mZzyp.setOnClickListener(this);
+        mFzps.setOnClickListener(this);
     }
 
     @Override
@@ -67,6 +71,12 @@ public class SortFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.activity_xd:
                 startActivity(new Intent(mThis, XdActivity.class));
+                break;
+            case R.id.activity_zzyp:
+                startActivity(new Intent(mThis, ZzypActivity.class));
+                break;
+            case R.id.activity_fzps:
+                startActivity(new Intent(mThis, FzpsActivity.class));
                 break;
         }
     }

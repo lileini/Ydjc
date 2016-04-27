@@ -3,9 +3,6 @@ package com.zangcun.store.model;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
-/**
- * Created by Administrator on 2016/4/8.
- */
 @Table(name = "CityModel")
 public class CityModel {
 

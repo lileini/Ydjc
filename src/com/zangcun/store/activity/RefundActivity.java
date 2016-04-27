@@ -10,7 +10,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
-import com.zangcun.store.adapter.RefundAdapter;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
 
@@ -23,7 +22,7 @@ public class RefundActivity extends BaseActivity implements View.OnClickListener
     private TextView mTitle;
 
     private ListView mListView;
-    private RefundAdapter mAdapter;
+//    private RefundAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class RefundActivity extends BaseActivity implements View.OnClickListener
         mTitle.setText("申请退款");
 
         mListView= (ListView) findViewById(R.id.refund_lv);
-        mListView.setAdapter(mAdapter);
+//        mListView.setAdapter(mAdapter);
 
     }
 

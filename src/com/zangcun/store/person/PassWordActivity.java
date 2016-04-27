@@ -5,25 +5,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.MyActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DictionaryTool;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-//个人中心--重置密码
+/**
+ * 重置密码
+ * */
 public class PassWordActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mBack;
     private TextView mTitle;
-
     private EditText mOld_password;
     private EditText mNewPassWord;
     private EditText mSureNewPassWord;
@@ -61,12 +62,12 @@ public class PassWordActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-
     private void requestData() {
         Map<String, String> map = new HashMap<>();
         map.put("old_password", mOld_password.getText().toString().trim());
         map.put("password", mNewPassWord.getText().toString());
-        CommandBase.requestDataMapPut(getApplicationContext(), Const.URL_RESET_PASSWORD, handler, map);
+        Log.i(TAG, "password = "+map);
+        CommandBase.requestDataMapPass(getApplicationContext(), Const.URL_RESET_PASSWORD, handler, map);
     }
 
     private Handler handler = new Handler() {
@@ -74,11 +75,18 @@ public class PassWordActivity extends BaseActivity implements View.OnClickListen
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == Const.SUCCESS) {
-                Intent intent = new Intent(getApplicationContext(), MyActivity.class);
+                try {
+                    JSONObject object = new JSONObject(msg.obj.toString());
+                    String strToken = object.getString("Authorization");
+                    DictionaryTool.saveToken(getApplicationContext(),strToken);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "重置密码成功", Toast.LENGTH_SHORT).show();
+                }
+                Intent intent = new Intent(new Intent(PassWordActivity.this, MyActivity.class));
                 intent.putExtra("getCord", "get");
                 startActivity(intent);
             } else if (msg.what == Const.ERROR) {
-
+                Toast.makeText(getApplicationContext(), "重置密码失败", Toast.LENGTH_SHORT).show();
             }
         }
     };

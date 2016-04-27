@@ -2,7 +2,6 @@ package com.zangcun.store.activity;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +13,10 @@ import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.android.volley.VolleyError;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.FilterAdapter;
@@ -24,10 +27,6 @@ import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.MultImageVIew;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,14 +38,12 @@ import java.util.List;
 public class TkActivity extends BaseActivity implements View.OnClickListener, Http.INetWork ,OnItemClickListener {
 
     private static final int DEFAUT_FO_IV = 0;
-    private static final int OPEN_FO_IV = 1;
-
     private int[] resIds = new int[]{R.drawable.icon_nor, R.drawable.icon_jx, R.drawable.icon_sx};
 
     private TextView mTvDef;
     private TextView mTvPrice;
     private TextView mTvNum;
-    private TextView mTvChoose;
+    private LinearLayout mTvChoose;
     private MultImageVIew mIvPrice;
     private MultImageVIew mIvNum;
     private ImageView mTkLeft;
@@ -68,6 +65,8 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
     private Button mTvCacle;
     private Button mTvSure;
     private PopupWindow mPopWindow;
+    private TextView mTkTvChoose;
+    private ImageView mIvChoose;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +81,9 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
         mTvDef = (TextView) findViewById(R.id.sort_tk_mr);
         mTvPrice = (TextView) findViewById(R.id.sort_tk_price);
         mTvNum = (TextView) findViewById(R.id.sort_tk_num);
-        mTvChoose = (TextView) findViewById(R.id.root_choose);
+        mTvChoose = (LinearLayout) findViewById(R.id.root_choose);
+        mTkTvChoose= (TextView) findViewById(R.id.tk_tv_choose);
+        mIvChoose = (ImageView) findViewById(R.id.tk_choose_order);
         mIvPrice = (MultImageVIew) findViewById(R.id.tk_price_order);
         mIvNum = (MultImageVIew) findViewById(R.id.tk_num_order);
         mPullToRefreshGridView = (PullToRefreshGridView) findViewById(R.id.gv);
@@ -115,7 +116,7 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
         mTvDef.setTextColor(getTextColor());
         mTvPrice.setTextColor(getTextColor());
         mTvNum.setTextColor(getTextColor());
-        mTvChoose.setTextColor(getTextColor());
+        mTkTvChoose.setTextColor(getTextColor());
 		mTvChoose.setOnClickListener(this);
         mTvDef.setOnClickListener(this);
         mTkLeft.setOnClickListener(this);
@@ -124,9 +125,11 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
         mIv2CurrState = DEFAUT_FO_IV;
         mIvPrice.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
         mIvNum.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
+        mIvChoose.setBackgroundResource(R.drawable.icon_sx_nor);
         this.findViewById(R.id.root_price).setOnClickListener(this);
         this.findViewById(R.id.root_num).setOnClickListener(this);
         this.findViewById(R.id.root_choose).setOnClickListener(this);
+        this.findViewById(R.id.sort_tk_mr).setOnClickListener(this);
 
     }
 
@@ -143,7 +146,7 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
         if (mDefautDatas == null )
             return;
 		double page = (double) mDefautDatas.size() / 10;
-		page += 1.9; // 因为服务器返回的可能会少于10条，所以采用小数进一法加载下一页
+		page += 1.9;
 		mHttp.get(Net.URL_TK, this, (int) page, Const.REQUEST_TK);
 	}
 
@@ -157,8 +160,9 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
             case R.id.sort_tk_mr:
                 mTvDef.setSelected(true);
                 mTvPrice.setSelected(false);
-                mTvChoose.setSelected(false);
                 mTvNum.setSelected(false);
+                mIvPrice.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
+                mIvNum.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
                 Collections.shuffle(mDefautDatas);
                 mAdapter.notifyDataSetChanged();
                 break;
@@ -166,25 +170,25 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
                 mTvDef.setSelected(false);
                 mTvPrice.setSelected(true);
                 mTvNum.setSelected(false);
-                mTvChoose.setSelected(false);
+                mIvNum.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
                 setIvStateAndResource(mIvPrice);
                 break;
             case R.id.root_choose:
-            	mTvDef.setSelected(false);
-    			mTvPrice.setSelected(false);
-    			mTvNum.setSelected(false);
-    			mTvChoose.setSelected(true);
+                mTvChoose.setSelected(true);
+                mIvChoose.setBackgroundResource(R.drawable.sx_icon);
                 popupChoose();
     			break;
             case R.id.root_num:
-            	mTvChoose.setSelected(false);
                 mTvDef.setSelected(false);
                 mTvPrice.setSelected(false);
                 mTvNum.setSelected(true);
+                mIvPrice.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
                 setIvStateAndResource(mIvNum);
                 break;
             case R.id.tv_calce:
                 mPopWindow.dismiss();
+                mTvChoose.setSelected(false);
+                mIvChoose.setBackgroundResource(R.drawable.icon_sx_nor);
                 break;
             case R.id.tv_sure:
                 getSelectedChildView();
@@ -195,9 +199,6 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
         View contentView = LayoutInflater.from(this).inflate(R.layout.filter_layout, null);
         mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, mGv.getHeight(),true);
         mPopWindow.setContentView(contentView);
-        mPopWindow.setFocusable(true);
-        mPopWindow.setOutsideTouchable(true);
-        mPopWindow.setBackgroundDrawable(new BitmapDrawable());
         mFilterGrid1 = (GridView) contentView.findViewById(R.id.filter_grid_1);
         mFilterGrid2 = (GridView) contentView.findViewById(R.id.filter_grid_2);
         TextView title1 = (TextView) contentView.findViewById(R.id.filter_title1);
@@ -208,14 +209,9 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
         mTvSure = (Button) contentView.findViewById(R.id.tv_sure);
         mTvCacle.setOnClickListener(this);
         mTvSure.setOnClickListener(this);
-        mTvChoose = (TextView) findViewById(R.id.root_choose);
+        mTvChoose = (LinearLayout) findViewById(R.id.root_choose);
         title1.setText("唐卡");
         title2.setText("材料");
-//		tv1.setVisibility(View.GONE);
-//		tv2.setVisibility(View.GONE);
-        //这里只有唐卡一个种类就隐藏另一个layout
-//		LinearLayout layout = (LinearLayout) view.findViewById(R.id.filter_layout2);
-//		layout.setVisibility(View.GONE);
 
         //模拟数据
         for (int i = 0; i < 15; i++) {
@@ -300,7 +296,7 @@ public class TkActivity extends BaseActivity implements View.OnClickListener, Ht
 
     private ColorStateList getTextColor() {
         return new ColorStateList(new int[][]{new int[]{android.R.attr.state_selected}, new int[0]
-        }, new int[]{0xFFCD9207, 0xFF000000});
+        }, new int[]{0xFFAE9962, 0xFF000000});
 
     }
 

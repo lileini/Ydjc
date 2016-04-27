@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_selected="true"><bitmap android:src="@drawable/icon_saix">
-    </bitmap></item>
-    <item android:state_selected="false"><color android:color="#ffffff" />
+    <item android:state_selected="true"><color android:color="@color/yellow">
+    </color></item>
+    <item android:state_selected="false"><bitmap android:src="@drawable/dtk_btn_wl" />
     </item>
 
 </selector>

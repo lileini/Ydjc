@@ -16,7 +16,7 @@
         <ImageView android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:src="@drawable/gwc_del"
-                   android:padding="10dp"
+                   android:padding="5dp"
                    android:layout_gravity="center_horizontal"
                    android:id="@+id/goods_choose_del"/>
         <View android:layout_width="match_parent"
@@ -34,13 +34,12 @@
                 android:layout_marginTop="5dp"
                 android:textSize="14sp"/>
         <!-- 这里动态加载 选择尺寸的选项 -->
-        <LinearLayout
+        <com.zangcun.store.widget.FlowLayout
                 android:id="@+id/choose_chicun_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-        </LinearLayout>
+                android:layout_marginTop="5dp">
+        </com.zangcun.store.widget.FlowLayout>
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -54,13 +53,12 @@
                 android:text="颜色分类:"
                 android:layout_marginLeft="5dp"
                 android:textSize="14sp"/>
-        <LinearLayout
+        <com.zangcun.store.widget.FlowLayout
                 android:id="@+id/choose_color_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-        </LinearLayout>
+                android:layout_marginTop="5dp">
+        </com.zangcun.store.widget.FlowLayout>
 
         <View
                 android:layout_width="match_parent"
@@ -68,17 +66,15 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@color/divider"/>
-
-
         <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
         >
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="5dp"
                     android:text="购买数量:"/>
             <LinearLayout android:layout_width="wrap_content"
@@ -91,24 +87,23 @@
                 <ImageView
                         android:id="@+id/choose_less"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
+                        android:layout_height="wrap_content"
                         android:src="@drawable/icon_sp_js"/>
 
                 <EditText
                         android:id="@+id/choose_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
                         android:gravity="center"
+                        android:singleLine="true"
+                        android:textSize="13sp"
                         android:background="@color/white"
-                        android:padding="10dp"
                         android:text="1"/>
 
                 <ImageView
                         android:id="@+id/choose_more"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:src="@drawable/icon_sp_zj"/>
             </LinearLayout>
@@ -119,8 +114,6 @@
               android:layout_marginLeft="10dp"
               android:layout_marginRight="10dp"
         />
-
-
     </LinearLayout>
     <Button
             android:id="@+id/btn_sure"
@@ -131,7 +124,5 @@
             android:layout_weight="1"
             android:textColor="@color/white"
             android:layout_gravity="center"
-            android:textSize="14sp" />
-
-
+            android:textSize="14sp"/>
 </LinearLayout>
