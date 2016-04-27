@@ -41,8 +41,12 @@ public class ShopCarActivity extends BaseActivity {
 					ShopCarActivity.this.finish();
 			}
 		});
+
 		mShopFragment = ShopFragment.getInstance();
-		getSupportFragmentManager().beginTransaction().replace(R.id.container, mShopFragment).commit();
+
+		//引用fragment替换当前fragment
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.container, mShopFragment).commit();
 		
 		
 	}

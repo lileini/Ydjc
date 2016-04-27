@@ -11,10 +11,18 @@ import android.widget.TextView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.IndentAdapter;
+import com.zangcun.store.model.IndentModel;
 import com.zangcun.store.net.CommandBase;
+import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.HttpUtils;
+import com.zangcun.store.utils.Log;
+import com.zangcun.store.utils.ToastUtils;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //个人中心--全部订单
@@ -30,6 +38,44 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.personal_indent);
         init();
+        initDate();
+
+    }
+
+    private void initDate() {
+        RequestParams params =new RequestParams(Net.HOST);
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+                List<IndentModel> mDataList = null;
+                if (mDataList == null || mDataList.size() == 0 )
+                    return;
+                if (mAdapter == null){
+                    mAdapter = new IndentAdapter(IndentActivity.this,mDataList);
+                    mListView.setAdapter(mAdapter);
+                }else {
+                    mAdapter.setDate(mDataList);
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "onError  = "+ throwable.toString());
+                ToastUtils.show(IndentActivity.this,"网络错误");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
     }
 
     private void init() {
@@ -39,7 +85,7 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         mBack.setOnClickListener(this);
 
         mListView= (ListView) findViewById(R.id.lv_indent);
-        mListView.setAdapter(mAdapter);
+
 
     }
 

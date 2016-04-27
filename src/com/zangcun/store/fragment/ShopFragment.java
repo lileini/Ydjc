@@ -1,9 +1,13 @@
 package com.zangcun.store.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -26,9 +30,26 @@ import java.util.List;
 // 购物车
 public class ShopFragment extends BaseFragment implements
         ShopCarAdapter.PriceAndCountChangeListener {
+    private static ShopFragment fragment = null;
+
+
+    public ShopFragment() {
+        fragment = this;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i("TAG", "onCreate");
+
+    }
+
     public static ShopFragment getInstance() {
-        ShopFragment fragment = new ShopFragment();
-        return fragment;
+        if (fragment == null){
+            return new ShopFragment();
+        }else {
+            return fragment;
+        }
     }
 
     private ListView mListView;
@@ -40,6 +61,7 @@ public class ShopFragment extends BaseFragment implements
     private List<ShopCarModel> mDatas;
     private ShopCarAdapter mAdapter;
     private int count;
+
 
     @Override
     protected int contentViewId() {
@@ -104,8 +126,8 @@ public class ShopFragment extends BaseFragment implements
      * 请求数据
      */
     private void requestCart() {
-        if (TextUtils.isEmpty(DictionaryTool.getUser(getActivity())) || TextUtils.isEmpty(DictionaryTool.getToken(getActivity()))){
-            ToastUtils.show(getActivity().getApplication(),"请先登录");
+        if (TextUtils.isEmpty(DictionaryTool.getUser(getActivity())) || TextUtils.isEmpty(DictionaryTool.getToken(getActivity()))) {
+            ToastUtils.show(getActivity().getApplication(), "请先登录");
             return;
         }
         RequestParams params = new RequestParams(Net.URL_CARTS);
@@ -118,12 +140,13 @@ public class ShopFragment extends BaseFragment implements
 
             @Override
             public void onSuccess(String s) {
-                Log.i(TAG, "onSuccess = "+ s);
-                mDatas =  new Gson().fromJson(s,new TypeToken<List<ShopCarModel>>(){}.getType());
+                Log.i(TAG, "onSuccess = " + s);
+                mDatas = new Gson().fromJson(s, new TypeToken<List<ShopCarModel>>() {
+                }.getType());
 //                mDatas = GsonUtil.getResult2(s, ShopCarModel.class);
-                Log.i(TAG, "result2 = "+ mDatas.toString());
-                Log.i(TAG, "result2.size = "+ mDatas.size());
-                Log.i(TAG, "model = "+ mDatas.get(0));
+                Log.i(TAG, "result2 = " + mDatas.toString());
+                Log.i(TAG, "result2.size = " + mDatas.size());
+                Log.i(TAG, "model = " + mDatas.get(0));
                 /*for (ShopCarModel model :mDatas){
                     Log.i(TAG, "model = "+ model);
                 }*/
@@ -133,14 +156,14 @@ public class ShopFragment extends BaseFragment implements
                     mToBuyLayout.setVisibility(View.GONE);
                     return;
                 }
-                if (mAdapter == null){
+                if (mAdapter == null) {
 
                     mAdapter = new ShopCarAdapter(getActivity(), mDatas,
                             R.layout.item_shop_car);
                     mAdapter.setListener(ShopFragment.this);
                     mListView.setDividerHeight(20);
                     mListView.setAdapter(mAdapter);
-                }else {
+                } else {
                     mAdapter.setData(mDatas);
                 }
 
@@ -161,7 +184,7 @@ public class ShopFragment extends BaseFragment implements
             public void onFinished() {
 
             }
-        },params);
+        }, params);
     }
 
     private void init() {
@@ -207,9 +230,50 @@ public class ShopFragment extends BaseFragment implements
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden){
+        if (hidden) {
             requestCart();
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("TAG", "onResume");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i("TAG", "onStart");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("TAG", "onPause");
+    }
+
+
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i("TAG", "onCreateView");
+
+//        View view = inflater.inflate(inflater,null);
+//
+//        ViewGroup group = (ViewGroup) view.getParent();
+//
+//        if(group != null){
+//            group.removeView(view);
+//        }
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i("TAG", "onStop");
+    }
 }

@@ -23,7 +23,10 @@ public class IndentAdapter extends BaseAdapter {
         this.mContext = mContext;
         this.mDataList = mDataList;
     }
-
+    public void setDate(List<IndentModel> mDataList){
+        this.mDataList = mDataList;
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         return mDataList.size();
