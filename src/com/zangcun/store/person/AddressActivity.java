@@ -25,7 +25,9 @@ import org.xutils.http.RequestParams;
 import java.util.HashMap;
 import java.util.Map;
 
-//个人中心--收货地址
+/**
+ * 收货地址
+ * */
 public class AddressActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     private ImageView mBack;
     private TextView mTitle;

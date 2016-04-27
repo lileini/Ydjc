@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.activity.DetailActivity;
+import com.zangcun.store.activity.OrderActivity;
 import com.zangcun.store.adapter.LinCollectionAdapter;
 import com.zangcun.store.adapter.LinDeLiverAdapter;
 import com.zangcun.store.net.CommandBase;
@@ -84,9 +85,9 @@ public class LinCollectionActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(LinCollectionActivity.this, DetailActivity.class);
-        intent.putExtra("lincollection", mDatas.get(position));
-        intent.putExtra("kind", "lincollection");
+        Intent intent = new Intent(LinCollectionActivity.this, OrderActivity.class);
+//        intent.putExtra("lincollection", mDatas.get(position));
+//        intent.putExtra("kind", "lincollection");
         startActivity(intent);
     }
 }

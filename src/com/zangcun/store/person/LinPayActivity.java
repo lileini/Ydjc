@@ -48,6 +48,7 @@ public class LinPayActivity extends BaseActivity implements View.OnClickListener
         mAdapter = new LinPayAdapter(this, mDatas);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+
     }
 
     @Override
@@ -65,7 +66,6 @@ public class LinPayActivity extends BaseActivity implements View.OnClickListener
     private void requestData() {
         CommandBase.requestDataNoGet(getApplicationContext(), Const.URL_WAITING_FOR_PAY, handler, null);
     }
-
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

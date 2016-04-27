@@ -19,7 +19,9 @@ import com.zangcun.store.other.Const;
 import java.util.ArrayList;
 import java.util.List;
 
-//个人中心--我的收藏
+/**
+ * 我的收藏
+ * */
 public class CollectActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     private ImageView mBack;
     private TextView mTitle;
@@ -43,7 +45,7 @@ public class CollectActivity extends BaseActivity implements View.OnClickListene
         mTitle.setText("我的收藏");
         mRight = (TextView) findViewById(R.id.pesonal_right);
         mRight.setText("编辑");
-        layout= (LinearLayout) findViewById(R.id.layout);
+        layout = (LinearLayout) findViewById(R.id.layout);
         mBack = (ImageView) findViewById(R.id.personal_back);
         mBack.setOnClickListener(this);
         mRight.setOnClickListener(this);
@@ -51,7 +53,7 @@ public class CollectActivity extends BaseActivity implements View.OnClickListene
         mAdapter = new CollectAdapter(this, mCollects);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
-//
+
 //        if (mCollects!=null||mCollects.size()!=0){
 //            layout.setVisibility(View.GONE);
 //            mGridView.setVisibility(View.VISIBLE);
@@ -89,7 +91,7 @@ public class CollectActivity extends BaseActivity implements View.OnClickListene
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-                if (msg.what == Const.SUCCESS) {
+            if (msg.what == Const.SUCCESS) {
                 mCollects = JSON.parseArray(msg.obj.toString(), FxModel.class);
                 mAdapter.chageView(mCollects);
             } else if (msg.what == Const.ERROR) {

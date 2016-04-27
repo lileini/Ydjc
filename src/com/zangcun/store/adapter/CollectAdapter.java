@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 import com.squareup.picasso.Picasso;
 import com.zangcun.store.R;

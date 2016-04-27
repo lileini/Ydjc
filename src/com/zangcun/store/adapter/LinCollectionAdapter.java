@@ -56,6 +56,12 @@ public class LinCollectionAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        //        holder.tv_lin_time.setText(mDataList.get(position).getGoods_name());//时间
+        //图片
+//        Picasso.with(mContext).load(Net.DOMAIN + mDataList.get(position)
+//                .getDefault_image()).placeholder(R.drawable.sp_icon_zw).error(R.drawable.sp_icon_zw).into((ImageView) holder.lin_img);
+//        holder.lin_number.setText(mDataList.get(position).getGoods_name());//数量
+//        holder.money.setText("¥" + mDataList.get(position).getPrice());//金额
         return convertView;
     }
 

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginTop="10dp"
@@ -24,7 +24,7 @@
         />
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:text="等待付款"
+                  android:text="显示状态"
                   android:textSize="14sp"
                   android:layout_marginRight="10dp"
                   android:id="@+id/tv_lin_zt"
@@ -63,7 +63,7 @@
                 />
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
-                          android:text="1"
+                          android:text="2"
                           android:layout_toRightOf="@+id/linpay_chen"
                           android:layout_alignBottom="@+id/linpay_chen"
                           android:textSize="16sp"
@@ -120,21 +120,20 @@
                   android:layout_marginLeft="10dp"
                   android:id="@+id/tv_money"
                   android:layout_centerVertical="true"
-
         />
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:text="￥ 236"
                   android:layout_toRightOf="@+id/tv_money"
                   android:layout_marginLeft="6dp"
-                  android:textSize="18sp"
+                  android:textSize="14sp"
                   android:id="@+id/money"
                   android:textColor="@color/red"
                   android:layout_centerVertical="true"
         />
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="xxxx"
+                android:text="对应内容"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/btn_go_pay"
                 android:id="@+id/btn_lin_cancle"
@@ -146,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_go_pay"
                 android:textSize="14sp"
-                android:text="xxxx"
+                android:text="对应内容"
                 android:textColor="@color/loess"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"

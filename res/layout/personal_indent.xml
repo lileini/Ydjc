@@ -9,8 +9,10 @@
     <ListView android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:id="@+id/lv_indent"
-    >
-    </ListView>
+              android:layout_weight="1"
+              android:padding="5dp"
+              android:cacheColorHint="#00000000"
+    />
 
 
 </LinearLayout>

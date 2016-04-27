@@ -92,7 +92,6 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         mAdapter = new IndentAdapter(this, mDatas);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
-
     }
 
     @Override

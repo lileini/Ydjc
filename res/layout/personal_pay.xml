@@ -12,7 +12,6 @@
               android:id="@+id/lv_pay"
               android:layout_weight="1"
               android:padding="5dp"
-              android:stretchMode="columnWidth"
               android:cacheColorHint="#00000000"
     />
     <LinearLayout android:layout_width="match_parent"
