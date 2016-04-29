@@ -1,28 +1,31 @@
 package com.zangcun.store.utils;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.support.v4.widget.ContentLoadingProgressBar;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import com.zangcun.store.R;
-import com.zangcun.store.widget.CustomProgressDialog;
 
-import java.io.DataInput;
-
-/**
- * 动态添加progressBar
- */
-public final class DialogUtil {
-    private  static CustomProgressDialog dialog;
-    public static  void showDialog(Context context){
-        if (dialog == null ){
-            dialog = new CustomProgressDialog(context);
-        }
+public  class DialogUtil {
+    public static void dialogUser(Context ctx, String message) {
+        LayoutInflater inflaterDl = LayoutInflater.from(ctx);
+        RelativeLayout layout = (RelativeLayout) inflaterDl.inflate(R.layout.showdialog, null);
+        final Dialog dialog = new AlertDialog.Builder(ctx).create();
         dialog.show();
+        dialog.getWindow().setContentView(layout);
+        TextView tv = (TextView) layout.findViewById(R.id.dialog_text);
+        tv.setText(message);
+        Button btnCancel = (Button) layout.findViewById(R.id.dialog_sure);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
-    public static  void dissmissDialog(){
-        dialog.dismiss();
-    }
+
 }

@@ -16,15 +16,10 @@ import com.zangcun.store.MyActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.entity.RegisterEntity;
 import com.zangcun.store.fragment.UserFragment;
-import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.*;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
-
-import java.util.HashMap;
-import java.util.Map;
-
 //设置注册密码
 public class RegisterCordActivity extends BaseActivity implements View.OnClickListener {
 
@@ -76,7 +71,7 @@ public class RegisterCordActivity extends BaseActivity implements View.OnClickLi
                 //点击注册直接跳转到PersonalFragment
                 String s = mPhone.getText().toString();
                 if (TextUtils.isEmpty(s)){
-                    ToastUtils.show(getApplication(),"密码不能为空",true);
+                    DialogUtil.dialogUser(this,"密码不能为空");
                     return;
                 }
                 requestData();
@@ -125,9 +120,9 @@ public class RegisterCordActivity extends BaseActivity implements View.OnClickLi
                 Log.i(TAG, "onError = "+throwable.toString());
                 String s = throwable.toString();
                 if (s.contains("该手机号已注册")){
-                    ToastUtils.show(getApplication(),"注册失败，该手机已经注册");
+                    DialogUtil.dialogUser(getApplication(),"该手机已经注册");
                 }else {
-                    ToastUtils.show(getApplication(),"注册失败");
+                    DialogUtil.dialogUser(getApplication(),"注册失败");
                 }
             }
 

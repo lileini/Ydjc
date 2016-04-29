@@ -18,10 +18,7 @@ import com.zangcun.store.model.AddressModel;
 import com.zangcun.store.model.CityModel;
 import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.net.Net;
-import com.zangcun.store.utils.DictionaryTool;
-import com.zangcun.store.utils.GsonUtil;
-import com.zangcun.store.utils.HttpUtils;
-import com.zangcun.store.utils.ToastUtils;
+import com.zangcun.store.utils.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.xutils.common.Callback;
@@ -368,7 +365,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
-            ToastUtils.show(getApplication(), "请填写完整信息");
+            DialogUtil.dialogUser(this,"请填写完整信息");
             return;
         }
         Log.i(TAG, "strProvince " + strProvince);
@@ -414,7 +411,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
-            ToastUtils.show(getApplication(), "请填写完整信息");
+            DialogUtil.dialogUser(this,"请填写完整信息");
             return;
         }
         StringBuilder region_id = new StringBuilder();

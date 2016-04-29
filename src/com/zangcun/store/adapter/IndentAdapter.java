@@ -8,7 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import com.zangcun.store.R;
+import com.zangcun.store.entity.OrderResultEntity;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.HttpUtils;
@@ -16,19 +18,21 @@ import com.zangcun.store.utils.ToastUtils;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 //全部订单适配器
 public class IndentAdapter extends BaseAdapter {
     private Context mContext;
-    private List<String> mDataList;
+    private List<OrderResultEntity.OrderBean> mDataList;
     private int order_id;
 
-    public IndentAdapter(Context mContext, List<String> mDataList) {
+    public IndentAdapter(Context mContext, List<OrderResultEntity.OrderBean> mDataList) {
         this.mContext = mContext;
         this.mDataList = mDataList;
     }
-    public void setDate(List<IndentModel> mDataList){
+    public void setDate(List<OrderResultEntity.OrderBean> mDataList){
         this.mDataList = mDataList;
         notifyDataSetChanged();
     }
@@ -50,6 +54,7 @@ public class IndentAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+        OrderResultEntity.OrderBean orderBean = mDataList.get(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_lindo, null);
             holder = new ViewHolder();
@@ -65,15 +70,15 @@ public class IndentAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        //        holder.tv_lin_time.setText(mDataList.get(position).getGoods_name());//时间
+        holder.tv_lin_time.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date(orderBean.getAdd_time())));//时间
 //        holder.tv_lin_zt.setText(mDataList.get(position).getGoods_name());//状态
-        //图片
-//        Picasso.with(mContext).load(Net.DOMAIN + mDataList.get(position)
-//                .getDefault_image()).placeholder(R.drawable.sp_icon_zw).error(R.drawable.sp_icon_zw).into((ImageView) holder.lin_img);
-//        holder.lin_number.setText(mDataList.get(position).getGoods_name());//数量
-//        holder.money.setText("¥" + mDataList.get(position).getPrice());//金额
+//        图片
+        Picasso.with(mContext).load(Net.DOMAIN + orderBean.getOrder_goods().get(0).getGood().getDefault_image())
+                .placeholder(R.drawable.sp_icon_zw).error(R.drawable.sp_icon_zw).into((ImageView) holder.lin_img);
+        holder.lin_number.setText(orderBean.getOrder_goods().get(0).getGoods_numbers());//数量
+        holder.money.setText("¥" + orderBean.getOrder_amount());//金额
 //        holder.btn_lin_cancle.setOnClickListener(new MyDelLister(position));//取消订单
-        //去支付
+//        去支付
 //        holder.btn_go_pay.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

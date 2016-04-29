@@ -8,16 +8,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.IndentAdapter;
-import com.zangcun.store.model.IndentModel;
+import com.zangcun.store.entity.OrderResultEntity;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
-import com.zangcun.store.utils.HttpUtils;
-import com.zangcun.store.utils.Log;
-import com.zangcun.store.utils.ToastUtils;
+import com.zangcun.store.utils.*;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
@@ -25,7 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//个人中心--全部订单
+/**
+ * 全部订单
+ * */
 public class IndentActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mBack;
     private TextView mTitle;
@@ -43,12 +45,13 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initDate() {
-        RequestParams params =new RequestParams(Net.HOST);
+        RequestParams params =new RequestParams(Net.URL_CEAT_ORDER);
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
                 Log.i(TAG, "onSuccess = "+ s);
-                List<IndentModel> mDataList = null;
+                List<OrderResultEntity.OrderBean> mDataList = new Gson().fromJson(s,new TypeToken<List<OrderResultEntity.OrderBean>>(){}.getType());
                 if (mDataList == null || mDataList.size() == 0 )
                     return;
                 if (mAdapter == null){
@@ -57,13 +60,12 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
                 }else {
                     mAdapter.setDate(mDataList);
                 }
-
             }
 
             @Override
             public void onError(Throwable throwable, boolean b) {
                 Log.i(TAG, "onError  = "+ throwable.toString());
-                ToastUtils.show(IndentActivity.this,"网络错误");
+                DialogUtil.dialogUser(IndentActivity.this,"网络错误");
             }
 
             @Override

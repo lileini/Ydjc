@@ -1,9 +1,5 @@
 package com.zangcun.store.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -12,13 +8,13 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DialogUtil;
 import com.zangcun.store.utils.DictionaryTool;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -67,23 +63,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 //startActivity(new Intent(RegisterActivity.this, RegisterCordActivity.class));
             } else if (msg.what == Const.ERROR) {
                 if (isOnclick) {
-//                    Toast.makeText(getApplicationContext(), "请输入手机号码", Toast.LENGTH_SHORT).show();
+                    DialogUtil.dialogUser(RegisterActivity.this,"请填写正确的手机号码");
                     mCountTimer.cancel();
-                    LayoutInflater inflaterDl = LayoutInflater.from(RegisterActivity.this);
-                    RelativeLayout layout = (RelativeLayout)inflaterDl.inflate(R.layout.showdialog, null );
-                    final Dialog dialog = new AlertDialog.Builder(RegisterActivity.this).create();
-                    dialog.show();
-                    dialog.getWindow().setContentView(layout);
-                    TextView tv = (TextView) layout.findViewById(R.id.dialog_text);
-                    tv.setText("请填写正确的手机号。");
-                    Button btnCancel = (Button) layout.findViewById(R.id.dialog_sure);
-                    btnCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-
                 } else {
                     Toast.makeText(getApplicationContext(), "失败了", Toast.LENGTH_SHORT).show();
                 }
@@ -169,25 +150,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void savecord() {
         if (phone.getText().toString().trim().equals("")) {
-//            Toast.makeText(getApplicationContext(), "请输入手机号码", Toast.LENGTH_SHORT).show();
-            LayoutInflater inflaterDl = LayoutInflater.from(this);
-            RelativeLayout layout = (RelativeLayout)inflaterDl.inflate(R.layout.showdialog, null );
-            final Dialog dialog = new AlertDialog.Builder(this).create();
-            dialog.show();
-            dialog.getWindow().setContentView(layout);
-            TextView tv = (TextView) layout.findViewById(R.id.dialog_text);
-            tv.setText("请填写正确的手机号。");
-            Button btnCancel = (Button) layout.findViewById(R.id.dialog_sure);
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
+            DialogUtil.dialogUser(RegisterActivity.this,"请填写正确的手机号");
             return;
 
         } else if (cord.getText().toString().trim().equals("")) {
-            Toast.makeText(getApplicationContext(), "请输入验证码", Toast.LENGTH_SHORT).show();
+            DialogUtil.dialogUser(RegisterActivity.this,"验证码不能为空");
             return;
         }
 

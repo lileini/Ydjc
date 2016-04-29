@@ -1,58 +1,44 @@
 package com.zangcun.store.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.content.IntentFilter;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.*;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.R;
+import com.zangcun.store.activity.DetailActivity;
 import com.zangcun.store.activity.PayActivity;
+import com.zangcun.store.adapter.FxGridAdapter;
 import com.zangcun.store.adapter.ShopCarAdapter;
+import com.zangcun.store.model.FxModel;
 import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.Net;
+import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.*;
+import com.zangcun.store.utils.Log;
+import com.zangcun.store.widget.BaseListview;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 // 购物车
-public class ShopFragment extends BaseFragment implements
-        ShopCarAdapter.PriceAndCountChangeListener {
-    private static ShopFragment fragment = null;
-
-
-    public ShopFragment() {
-        fragment = this;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i("TAG", "onCreate");
-
-    }
-
+public class ShopFragment extends BaseFragment implements ShopCarAdapter.PriceAndCountChangeListener , UserFragment.ILoginClick{
     public static ShopFragment getInstance() {
-        if (fragment == null){
-            return new ShopFragment();
-        }else {
-            return fragment;
-        }
+        ShopFragment fragment = new ShopFragment();
+        return fragment;
     }
 
-    private ListView mListView;
+    private BaseListview mListView;
     private TextView mShoudPay;
     private TextView mToPay;
     private LinearLayout mEmptyLayout;
@@ -61,7 +47,7 @@ public class ShopFragment extends BaseFragment implements
     private List<ShopCarModel> mDatas;
     private ShopCarAdapter mAdapter;
     private int count;
-
+    private List<FxModel> mDefautDatas;
 
     @Override
     protected int contentViewId() {
@@ -92,8 +78,18 @@ public class ShopFragment extends BaseFragment implements
 
         init();
         initData();
-
+        UserFragment fragment = UserFragment.getInstance();
+        fragment.setOnLoginClickListener(this);
+        IntentFilter filter = new IntentFilter(Const.SHOP_CAR_RECIEVER);
+        getActivity().registerReceiver(shopCarReciever, filter);
     }
+
+    private BroadcastReceiver shopCarReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            requestCart();
+        }
+    };
 
     private void initData() {
 
@@ -107,19 +103,19 @@ public class ShopFragment extends BaseFragment implements
         /*for (int i = 0; i < 5; i++) {
             mDatas.add(new ShopCarModel());
         }
+        */
         // 如果没有数据则显示为空
-        if (mDatas == null || mDatas.size() == 0) {
-            mEmptyLayout.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
-            mToBuyLayout.setVisibility(View.GONE);
-        } else {
-            mAdapter = new ShopCarAdapter(getActivity(), mDatas,
-                    R.layout.item_shop_car);
-            mAdapter.setListener(this);
-            mListView.setDividerHeight(20);
-            mListView.setAdapter(mAdapter);
-        }*/
-
+//        if (mDatas == null || mDatas.size() == 0) {
+//            mEmptyLayout.setVisibility(View.VISIBLE);
+//            mListView.setVisibility(View.GONE);
+//            mToBuyLayout.setVisibility(View.GONE);
+//        } else {
+//            mAdapter = new ShopCarAdapter(getActivity(), mDatas,
+//                    R.layout.item_shop_car);
+//            mAdapter.setListener(this);
+//            mListView.setDividerHeight(20);
+//            mListView.setAdapter(mAdapter);
+//        }
     }
 
     /**
@@ -154,20 +150,21 @@ public class ShopFragment extends BaseFragment implements
                     mEmptyLayout.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.GONE);
                     mToBuyLayout.setVisibility(View.GONE);
+                    mListView.setVisibility(View.GONE);
                     return;
                 }
+                mListView.setVisibility(View.VISIBLE);
                 if (mAdapter == null) {
 
                     mAdapter = new ShopCarAdapter(getActivity(), mDatas,
                             R.layout.item_shop_car);
                     mAdapter.setListener(ShopFragment.this);
+
                     mListView.setDividerHeight(20);
                     mListView.setAdapter(mAdapter);
                 } else {
                     mAdapter.setData(mDatas);
                 }
-
-
             }
 
             @Override
@@ -188,18 +185,26 @@ public class ShopFragment extends BaseFragment implements
     }
 
     private void init() {
-
-        mListView = (ListView) mView.findViewById(R.id.gwc_listview);
+        mListView = (BaseListview) mView.findViewById(R.id.gwc_listview);
         mToPay = (TextView) mView.findViewById(R.id.gwc_to_pay);
         mShoudPay = (TextView) mView.findViewById(R.id.gwc_should_pay);
         mToPay.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (count <= 0) {
+                    ToastUtils.show(getActivity(), "请选择商品");
                     return;
                 }
                 startActivity(new Intent(getContext(), PayActivity.class));
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(mThis, DetailActivity.class);
+                //购物车传数据到详情页面
+                startActivity(intent);
             }
         });
 
@@ -228,52 +233,41 @@ public class ShopFragment extends BaseFragment implements
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (hidden) {
-            requestCart();
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(shopCarReciever);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("TAG", "onResume");
+        if(PersonalFragment.shop){
+            PersonalFragment.shop=false;
+            if(mDatas!=null) {
+                mDatas.clear();
+                mAdapter.calCount();
+                mAdapter.calMoney();
+                mAdapter.notifyDataSetChanged();
+                count = 0;
+            }else {
+                return;
+            }
+        }
+        if(UserFragment.Login)
+        {
+            UserFragment.Login=false;
+            init();
+            initData();
+            IntentFilter filter = new IntentFilter(Const.SHOP_CAR_RECIEVER);
+            getActivity().registerReceiver(shopCarReciever, filter);
+        }
+        android.util.Log.e("ShopFragment","黑黑");
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i("TAG", "onStart");
-    }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.i("TAG", "onPause");
-    }
-
-
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.i("TAG", "onCreateView");
-
-//        View view = inflater.inflate(inflater,null);
-//
-//        ViewGroup group = (ViewGroup) view.getParent();
-//
-//        if(group != null){
-//            group.removeView(view);
-//        }
-
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i("TAG", "onStop");
+    public void onLoginClick(String text) {
+        ToastUtils.show(getActivity(),"wori");
+        android.util.Log.e("ShopFragment",text);
     }
 }

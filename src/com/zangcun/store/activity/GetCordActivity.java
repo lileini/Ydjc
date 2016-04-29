@@ -16,6 +16,7 @@ import com.zangcun.store.MyActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DialogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class GetCordActivity extends BaseActivity implements View.OnClickListene
 //               yanZheng();
                 //验证之前需要判断用户输入的信息是否为空
                 if (user_phone.getText().toString().trim().equals("")) {
-                    Toast.makeText(getApplicationContext(), "请输入有效的电话号码", Toast.LENGTH_SHORT).show();
+                    DialogUtil.dialogUser(this,"请输入有效的电话号码");
                 } else {
                     requestData();
                 }

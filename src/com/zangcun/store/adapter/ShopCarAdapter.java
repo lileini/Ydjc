@@ -245,7 +245,7 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
     }
 
 
-    protected void calMoney() {
+    public void calMoney() {
         int money = 0;
         for (int i = 0; i < mDatas.size(); i++) {
             if (mDatas.get(i).getIschecked() == 1) {
@@ -256,7 +256,7 @@ public class ShopCarAdapter extends CommonAdapter<ShopCarModel> {
             listener.onPriceChanged(money);
     }
 
-    protected void calCount() {
+    public void calCount() {
         int count = 0;
         for (int i = 0; i < mDatas.size(); i++) {
             if (mDatas.get(i).getIschecked() == 1) {

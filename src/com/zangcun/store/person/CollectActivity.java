@@ -15,6 +15,7 @@ import com.zangcun.store.adapter.CollectAdapter;
 import com.zangcun.store.model.FxModel;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DialogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,8 @@ public class CollectActivity extends BaseActivity implements View.OnClickListene
                 mCollects = JSON.parseArray(msg.obj.toString(), FxModel.class);
                 mAdapter.chageView(mCollects);
             } else if (msg.what == Const.ERROR) {
-                Toast.makeText(CollectActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(CollectActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                DialogUtil.dialogUser(CollectActivity.this,"网络错误");
             }
         }
     };

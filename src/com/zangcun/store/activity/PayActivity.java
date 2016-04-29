@@ -29,10 +29,7 @@ import com.zangcun.store.person.AddressActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.other.Const;
-import com.zangcun.store.utils.DictionaryTool;
-import com.zangcun.store.utils.GsonUtil;
-import com.zangcun.store.utils.HttpUtils;
-import com.zangcun.store.utils.ToastUtils;
+import com.zangcun.store.utils.*;
 import com.zangcun.store.widget.InnerListView;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -335,7 +332,7 @@ public class PayActivity extends BaseActivity implements OnClickListener {
         params.addBodyParameter("address_id", addressBean.getId() + "");
         params.addHeader("Authorization", DictionaryTool.getToken(this));
         if (!HttpUtils.isHaveNetwork()) {
-            ToastUtils.show(this, "请检查网络设置");
+            DialogUtil.dialogUser(this,"请检查网络设置");
         }
         HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
             @Override

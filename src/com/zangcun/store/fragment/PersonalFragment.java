@@ -2,10 +2,12 @@ package com.zangcun.store.fragment;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.zangcun.store.MyActivity;
 import com.zangcun.store.person.*;
 import com.zangcun.store.R;
 import com.zangcun.store.utils.DictionaryTool;
@@ -24,7 +26,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private LinearLayout mLinCollection;//待收货
     //    private LinearLayout mLinPJ;//待评价
     private TextView tvPhone;
-
+    public static boolean aBoolean=false;
+    public static boolean shop=false;
     public static PersonalFragment getInstance() {
         PersonalFragment fragment = new PersonalFragment();
         return fragment;
@@ -109,8 +112,14 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 startActivity(new Intent(mThis, AcountActivity.class));
                 break;
             case R.id.exit://退出
-                if (listener != null)
-                    listener.onPersionLoginClick("登录");
+                aBoolean=true;
+                shop=true;
+//                if (listener != null)
+//                    listener.onPersionLoginClick("登录");
+                //startActivity(new Intent(mThis),);
+//                Log.e("PersonalFragmetn","退出登录");
+                DictionaryTool.clear(mThis);
+                startActivity(new Intent(mThis, MyActivity.class));
                 break;
             case R.id.about://关于我们
                 startActivity(new Intent(mThis, AboutActivity.class));

@@ -26,10 +26,7 @@ import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Http;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
-import com.zangcun.store.utils.DictionaryTool;
-import com.zangcun.store.utils.HttpUtils;
-import com.zangcun.store.utils.ToastHelper;
-import com.zangcun.store.utils.ToastUtils;
+import com.zangcun.store.utils.*;
 import com.zangcun.store.widget.AdapterIndicator;
 import com.zangcun.store.widget.FlowLayout;
 import com.zangcun.store.widget.MyScrollView;
@@ -640,7 +637,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
     @Override
     public void onNetError(VolleyError error, int requestCode) {
         if (this != null) {
-            ToastUtils.show(this, "网络连接失败");
+            DialogUtil.dialogUser(this,"网络连接错误");
         }
     }
 

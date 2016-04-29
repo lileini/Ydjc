@@ -24,6 +24,7 @@ import com.zangcun.store.model.FxModel;
 import com.zangcun.store.net.Http;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DialogUtil;
 import com.zangcun.store.utils.ToastUtils;
 import com.zangcun.store.widget.MultImageVIew;
 
@@ -47,6 +48,7 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
     private GridView mGv;
     private PullToRefreshGridView mPullToRefreshGridView;
     private List<FxModel> mDefautDatas;
+    private List<FxModel> mDefautDatas1 = new ArrayList<>();
     private FsypGridAdapter mAdapter;
 
     private int mIv1CurrState;
@@ -65,6 +67,9 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
     private PopupWindow mPopWindow;
     private TextView mFsypTvChoose;
     private ImageView mIvChoose;
+    private boolean isChage = true;
+    private int flag;
+    private boolean action = true;
 
 
     @Override
@@ -88,6 +93,8 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
         mPullToRefreshGridView = (PullToRefreshGridView) findViewById(R.id.gv);
         mGv = mPullToRefreshGridView.getRefreshableView();
         mGv.setOnItemClickListener(this);
+        mFsypLeft = (ImageView) findViewById(R.id.fsyp_left);
+
         mPullToRefreshGridView.setMode(Mode.BOTH);
         mPullToRefreshGridView.setOnRefreshListener(new OnRefreshListener2<GridView>() {
             @Override
@@ -98,6 +105,7 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
                 if (mDefautDatas != null) {
                     mDefautDatas.clear();
                 }
+                isChage = false;
                 mHttp.get(Net.URL_FSYP, FsypActivity.this, Const.REQUEST_FSYP);
             }
 
@@ -105,11 +113,15 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
                 if (mDefautDatas == null)
                     return;
+                isChage = false;
                 loadMoreDatas();
             }
 
         });
-        mFsypLeft = (ImageView) findViewById(R.id.fsyp_left);
+        this.findViewById(R.id.root_price).setOnClickListener(this);
+        this.findViewById(R.id.root_num).setOnClickListener(this);
+        this.findViewById(R.id.root_choose).setOnClickListener(this);
+        this.findViewById(R.id.sort_fsyp_mr).setOnClickListener(this);
     }
 
     private void initEvent() {
@@ -126,10 +138,6 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
         mIvPrice.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
         mIvNum.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
         mIvChoose.setBackgroundResource(R.drawable.icon_sx_nor);
-        this.findViewById(R.id.root_price).setOnClickListener(this);
-        this.findViewById(R.id.root_num).setOnClickListener(this);
-        this.findViewById(R.id.root_choose).setOnClickListener(this);
-        this.findViewById(R.id.sort_fsyp_mr).setOnClickListener(this);
     }
 
     private void loadDatas() {
@@ -150,11 +158,13 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
+        try {
         switch (v.getId()) {
             case R.id.fsyp_left:
                 finish();
                 break;
             case R.id.sort_fsyp_mr:
+                isChage = true;
                 mTvDef.setSelected(true);
                 mTvPrice.setSelected(false);
                 mTvNum.setSelected(false);
@@ -164,23 +174,27 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.root_price:
+                isChage = true;
+                action = true;
                 mTvDef.setSelected(false);
                 mTvPrice.setSelected(true);
                 mTvNum.setSelected(false);
                 mIvNum.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
                 setIvStateAndResource(mIvPrice);
                 break;
-            case R.id.root_choose:
-                mTvChoose.setSelected(true);
-                mIvChoose.setBackgroundResource(R.drawable.sx_icon);
-                popupChoose();
-                break;
             case R.id.root_num:
+                isChage = true;
+                action = false;
                 mTvDef.setSelected(false);
                 mTvPrice.setSelected(false);
                 mTvNum.setSelected(true);
                 mIvPrice.setStateAndImg(MultImageVIew.DEFAUT, resIds[0]);
                 setIvStateAndResource(mIvNum);
+                break;
+            case R.id.root_choose:
+                mTvChoose.setSelected(true);
+                mIvChoose.setBackgroundResource(R.drawable.sx_icon);
+                popupChoose();
                 break;
             case R.id.tv_calce:
                 mPopWindow.dismiss();
@@ -190,6 +204,8 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.tv_sure:
                 getSelectedChildView();
                 break;
+        }
+        }catch (Exception e){
         }
     }
 
@@ -244,16 +260,24 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
             }
         }
     }
+
     /**
      * 排序
-     * */
+     */
     private void setIvStateAndResource(MultImageVIew vIew) {
-        //如果没有数据则无操作
+        if(!isChage){
+            if(flag==MultImageVIew.DEFAUT){
+                vIew.setStateAndImg(MultImageVIew.DEFAUT, resIds[2]);
+            }else if(flag==MultImageVIew.HEIGHT_TO_LOW){
+                vIew.setStateAndImg(MultImageVIew.HEIGHT_TO_LOW, resIds[1]);
+            }
+        }
         if (mDefautDatas == null) {
             return;
         }
         switch (vIew.getCurrState()) {
             case MultImageVIew.DEFAUT:
+                flag=MultImageVIew.DEFAUT;
                 vIew.setStateAndImg(MultImageVIew.HEIGHT_TO_LOW, resIds[1]);
                 if (vIew == mIvPrice) {
                     Collections.sort(mDefautDatas, new Comparator<FxModel>() {
@@ -274,7 +298,8 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
 
                 break;
             case MultImageVIew.HEIGHT_TO_LOW:
-                vIew.setStateAndImg(MultImageVIew.LOW_TO_HEIGHT, resIds[2]);
+                flag=MultImageVIew.HEIGHT_TO_LOW;
+                vIew.setStateAndImg(MultImageVIew.DEFAUT, resIds[2]);
                 if (vIew == mIvPrice) {
                     Collections.sort(mDefautDatas, new Comparator<FxModel>() {
                         @Override
@@ -320,11 +345,17 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
         // 第一次进入
         if (mDefautDatas == null) {
             mDefautDatas = responseData;
-            mAdapter = new FsypGridAdapter(this, mDefautDatas,
-                    R.layout.item_gv_layout);
+            mDefautDatas1.addAll(mDefautDatas);
+            mAdapter = new FsypGridAdapter(this, mDefautDatas, R.layout.item_gv_layout);
             mGv.setAdapter(mAdapter);
         } else {
-            mAdapter.addMoreData(responseData);
+            mDefautDatas.addAll(responseData);
+            mAdapter.setData(mDefautDatas);
+            if(action){
+                setIvStateAndResource(mIvPrice);
+            }else {
+                setIvStateAndResource(mIvNum);
+            }
         }
         mPullToRefreshGridView.onRefreshComplete();
     }
@@ -332,7 +363,7 @@ public class FsypActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onNetError(VolleyError error, int requestCode) {
         if (this != null) {
-            ToastUtils.show(this, "网络连接失败");
+            DialogUtil.dialogUser(this,"网络连接错误");
             mPullToRefreshGridView.onRefreshComplete();
         }
     }

@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:layout_margin="60dp">
+                android:background="@android:color/transparent">
 
     <RelativeLayout
             android:id="@+id/rl_dialog_content"
@@ -15,21 +14,23 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="提示"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:maxLines="5"
+                android:textColor="@color/black"
                 android:gravity="center"
-                android:textSize="18sp"
+                android:textSize="16sp"
         />
         <TextView
                 android:id="@+id/dialog_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="55dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:maxLines="5"
+                android:text="这里显示内容"
                 android:textSize="14sp"
                 android:gravity="center"
         />
@@ -47,7 +48,7 @@
                 android:maxLines="5"
                 android:gravity="center"
                 android:padding="10dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@color/btn_b"
                 android:layout_alignParentBottom="true"
         />

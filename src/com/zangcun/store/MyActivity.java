@@ -40,6 +40,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
     private String strFlag = null;
     private Object adressId;
     private boolean canEixt;
+
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -66,6 +67,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
     }
 
     private void initEvent() {
+//        Log.e("MyActivity","执行了这里");
         if (strFlag != null) {
             mTab.setTab(3);
         } else {
@@ -152,12 +154,21 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             putFragment(mTabs[i], getFragmentByIndex(i));
         }*/
         if (strFlag != null) {
-            for (int i = 0; i < mTabs.length; i++) {
-                putFragment(mTabs[i], getFragmentByIndexPersion(i));
+            if (strFlag.equals("退出登录")) {
+                for (int i = 0; i < mTabs.length; i++) {
+                    putFragment(mTabs[i], getFragmentByIndex(i));
+                }
+                switchFragment(mTabs[3]);
+                mTab.setTabText(3, "登录", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
+            } else {
+                for (int i = 0; i < mTabs.length; i++) {
+                    putFragment(mTabs[i], getFragmentByIndexPersion(i));
+                }
+                switchFragment(mTabs[3]);
+                mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
             }
-            switchFragment(mTabs[3]);
-            mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
-        } else {
+        }
+        else {
             switchFragment(mTabs[0]);
         }
     }
@@ -224,6 +235,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
             case 3:
                 PersonalFragment fragment = PersonalFragment.getInstance();
                 fragment.setPersionOnLoginClickListener(this);
+//                ToastUtils.show(this,"asdfa");
                 return fragment;
             default:
                 return null;
@@ -234,7 +246,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
     public void onLoginClick(String text) {
         putFragment(text, PersonalFragment.getInstance());
         // mTab.setTabText(3,text);
-        mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
+        mTab.setTabText(3, text, R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
         Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
         mTitleText.setText(text);
         switchFragment(text);
@@ -248,7 +260,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         mTitleText.setText(text);
         switchFragment(text);
         isLogin = true;
-        Log.i(TAG, "onPersionLoginClick ");
+//        Log.i(TAG, "onPersionLoginClick ");
     }
     /**
      * 监听返回键
@@ -315,5 +327,32 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
 
             }
         }, params);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+//        Log.e("onRestart","执行了这里");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(PersonalFragment.aBoolean){
+            PersonalFragment.aBoolean=false;
+            isLogin=false;
+            strFlag="退出登录";
+            initFragment();
+        }
+        if(UserFragment.Login){
+            putFragment("个人中心", PersonalFragment.getInstance());
+            // mTab.setTabText(3,text);
+            mTab.setTabText(3, "个人中心", R.drawable.btn_icon_gr_sel, R.drawable.btn_icon_gr);
+            Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
+            mTitleText.setText("个人中心");
+            switchFragment("个人中心");
+            isLogin = true;
+        }
+
     }
 }

@@ -17,6 +17,7 @@ import com.zangcun.store.R;
 import com.zangcun.store.activity.GetCordActivity;
 import com.zangcun.store.activity.RegisterActivity;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.utils.DialogUtil;
 import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
@@ -39,7 +40,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
     private ImageView mQQ;
     private ImageView mWeiXin;
     private UserFragment mUserFragment;
-
+    public static boolean Login=false;
     public static UserFragment getInstance() {
         UserFragment fragment = new UserFragment();
         return fragment;
@@ -138,12 +139,14 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
                     if (TextUtils.isEmpty(token)){
                         return;
                     }
-
                     DictionaryTool.saveToken(getActivity().getApplicationContext(),token);
                     DictionaryTool.saveUser(getActivity(),uername);
                     DictionaryTool.savePWD(getActivity().getApplicationContext(),password);
-                    if (listener != null)
-                        listener.onLoginClick("个人中心");
+                    Login=true;
+                    startActivity(new Intent(getActivity(),MyActivity.class));
+//                    Login=true;
+//                    if (listener != null)
+//                        listener.onLoginClick("个人中心");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -152,7 +155,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(getActivity().getApplication(),"账号或密码错误，\n请重新输入");
+                DialogUtil.dialogUser(mThis,"请输入正确的手机号与密码");
             }
 
             @Override
