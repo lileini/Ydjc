@@ -20,12 +20,14 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.adapter.ChooseShopCarAdapter;
+import com.zangcun.store.adapter.OrderAdapter;
 import com.zangcun.store.alipay.AliPayUtil;
 import com.zangcun.store.alipay.PayResult;
 import com.zangcun.store.entity.OrderResultEntity;
@@ -35,10 +37,10 @@ import com.zangcun.store.model.ShopCarModel;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
-import com.zangcun.store.utils.DictionaryTool;
-import com.zangcun.store.utils.HttpUtils;
-import com.zangcun.store.utils.ToastUtils;
+import com.zangcun.store.utils.*;
 import com.zangcun.store.widget.InnerListView;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
@@ -136,7 +138,6 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
     }
 
     private void initData() {
-        mTitle.setText("订单中心");
         mTitle.setTextSize(16);
         /*Bundle bundle = getIntent().getBundleExtra("bundle");
         String color = bundle.getString("color");
@@ -163,23 +164,64 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
 //        bundle.putString("size",size);
 //        bundle.putString("count",mCount.getText().toString());
 //        bundle.putSerializable("OptionsIdEntity",getIntent().getSerializableExtra("OptionsIdEntity"));
-        ArrayList<Parcelable> mDates = getIntent().getParcelableArrayListExtra("mDates");
+//        ArrayList<Parcelable> mDates = getIntent().getParcelableArrayListExtra("mDates");
+//        OrderResultEntity.OrderBean orderBean = getIntent().getParcelableExtra("OrderBean");
         order_id = getIntent().getIntExtra("order_id", -1);
-        OrderResultEntity.OrderBean orderBean = getIntent().getParcelableExtra("OrderBean");
-
-        if (mDates == null || mDates.size() == 0) {
+        boolean isOrderDetail = getIntent().getBooleanExtra("mDataList", false);
+        if (!HttpUtils.isHaveNetwork()) {
+            DialogUtil.dialogUser(this,"请检查网络设置");
             return;
         }
-        List<ShopCarModel> list = new ArrayList<>(mDates.size());
-        for (Parcelable parcelable : mDates) {
-            list.add((ShopCarModel) parcelable);
+        if (isOrderDetail){
+            mTitle.setText("订单详情");
+        }else {
+            mTitle.setText("订单中心");
         }
-        ChooseShopCarAdapter chooseShopCarAdapter = new ChooseShopCarAdapter(this, list, R.layout.item_pay);
+        RequestParams params = new RequestParams(Net.HOST + "orders/"+order_id+".json");
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
+        if (!HttpUtils.isHaveNetwork()) {
+            DialogUtil.dialogUser(this,"请检查网络设置");
+            return;
+        }
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+                OrderResultEntity.OrderBean orderBean= GsonUtil.getResult(s,OrderResultEntity.OrderBean.class);
+                Log.i(TAG,"orderResultEntity = "+orderBean.toString());
+                Log.i(TAG,"getOrder_id() = "+ orderBean.getOrder_id());
+                if (orderBean != null) {
+                    initData2(orderBean);
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+
+    }
+
+    private void initData2(OrderResultEntity.OrderBean orderBean) {
+        List<OrderResultEntity.OrderBean.OrderGoodsBean> order_goodsList = orderBean.getOrder_goods();
+
+        OrderAdapter chooseShopCarAdapter = new OrderAdapter(this, order_goodsList, R.layout.item_pay);
         mListView.setAdapter(chooseShopCarAdapter);
-        GetAddressResultModel.AddressBean addressBean = (GetAddressResultModel.AddressBean) getIntent().getSerializableExtra("addressBean");
-        orderUsername.setText(addressBean.getConsignee());
-        orderAddress.setText(addressBean.getAddress());
-        orderPhone.setText(addressBean.getMobile());
+
+        orderUsername.setText(orderBean.getConsignee());
+        orderAddress.setText(orderBean.getAddress());
+        orderPhone.setText(orderBean.getMobile());
 
         //网络获取数据
         //初始化数据
@@ -223,8 +265,8 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
             case R.id.pup_go_pay://去支付
                 if (mZFB.isSelected()) {//支付宝支付
                     try {
-                        AliPayUtil aliPayUtil = new AliPayUtil(this, mHandler);
-                        aliPayUtil.pay(0.01);
+                        requestAlipay();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -238,9 +280,55 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
     }
 
     /**
+     * 请求支付宝支付
+     */
+    private void requestAlipay() {
+        RequestParams params = new RequestParams(Net.HOST + "orders/"+order_id+"/create_alipay.json");
+        params.addHeader("Authorization",DictionaryTool.getToken(this));
+        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+s);
+                JSONObject object = null;
+                AliPayUtil aliPayUtil = null;
+                try {
+                    object = new JSONObject(s);
+                    String message = object.getString("message");
+                    aliPayUtil = new AliPayUtil(OrderActivity.this, mHandler);
+                    aliPayUtil.pay(message);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG,"alipay failed");
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
+    }
+
+    /**
      * 请求取消订单
      */
     private void requestCancelOrder() {
+        if (!HttpUtils.isHaveNetwork()) {
+            DialogUtil.dialogUser(this,"请检查网络设置");
+            return;
+        }
         RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/cancel.json ");
         params.addHeader("Authorization", DictionaryTool.getToken(this));
         HttpUtils.HttpPutMethod(new Callback.CacheCallback<String>() {

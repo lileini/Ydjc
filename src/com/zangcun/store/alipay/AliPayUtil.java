@@ -67,8 +67,8 @@ public class AliPayUtil {
 	 * call alipay sdk pay. 调用SDK支付
 	 * 
 	 */
-	public void pay(double payMoney) {
-		if (TextUtils.isEmpty(PARTNER) || TextUtils.isEmpty(RSA_PRIVATE) || TextUtils.isEmpty(SELLER)) {
+	public void pay(final String payInfo) {
+		/*if (TextUtils.isEmpty(PARTNER) || TextUtils.isEmpty(RSA_PRIVATE) || TextUtils.isEmpty(SELLER)) {
 			new AlertDialog.Builder(context).setTitle("警告").setMessage("需要配置PARTNER | RSA_PRIVATE| SELLER")
 					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialoginterface, int i) {
@@ -80,24 +80,23 @@ public class AliPayUtil {
 		}
 		String orderInfo = getOrderInfo("测试的商品", "该测试商品的详细描述", payMoney);
 
-		/**
+		*//**
 		 * 特别注意，这里的签名逻辑需要放在服务端，切勿将私钥泄露在代码中！
-		 */
+		 *//*
 		String sign = sign(orderInfo);
 		try {
-			/**
+			*//**
 			 * 仅需对sign 做URL编码
-			 */
+			 *//*
 			sign = URLEncoder.encode(sign, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		/**
 		 * 完整的符合支付宝参数规范的订单信息
 		 */
-		final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
-
+//		final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
 		Runnable payRunnable = new Runnable() {
 
 			@Override

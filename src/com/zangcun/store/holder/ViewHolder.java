@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.*;
 
-//封装的ViewHolder
 public class ViewHolder {
     private SparseArray<View> mViews;
     private int mPosition;
@@ -84,6 +83,11 @@ public class ViewHolder {
         tv.setText(text);
         return this;
     }
+    public ViewHolder setEnable(int viewId, boolean enable) {
+        View view = getView(viewId);
+        view.setEnabled(enable);
+        return this;
+    }
 
     public ViewHolder setImageResource(int viewId, int resId) {
         ImageView view = getView(viewId);
@@ -144,11 +148,6 @@ public class ViewHolder {
     public ViewHolder setVisible(int viewId, boolean visible) {
         View view = getView(viewId);
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
-        return this;
-    }
-    public ViewHolder setEnable(int viewId, boolean enable) {
-        View view = getView(viewId);
-        view.setEnabled(enable);
         return this;
     }
 

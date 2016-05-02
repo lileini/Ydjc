@@ -333,6 +333,7 @@ public class PayActivity extends BaseActivity implements OnClickListener {
         params.addHeader("Authorization", DictionaryTool.getToken(this));
         if (!HttpUtils.isHaveNetwork()) {
             DialogUtil.dialogUser(this,"请检查网络设置");
+            return;
         }
         HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
             @Override

@@ -33,6 +33,8 @@ public class OrderResultEntity {
         return order;
     }
 
+
+
     public void setOrder(OrderBean order) {
         this.order = order;
     }
@@ -191,6 +193,7 @@ public class OrderResultEntity {
             this.order_goods = order_goods;
         }
 
+
         public static class OrderGoodsBean implements Parcelable {
             private int id;
             private String goods_sn;
@@ -288,7 +291,27 @@ public class OrderResultEntity {
                  * sku : 2
                  * image_url : null
                  */
+                private GoodBean.OptionsIdBean optionsIdBean;
 
+
+                public GoodBean.OptionsIdBean getOptionsIdBean() {
+                    return optionsIdBean;
+                }
+
+                public void setOptionsIdBean(GoodBean.OptionsIdBean optionsIdBean) {
+                    this.optionsIdBean = optionsIdBean;
+                }
+
+                public String[] getColorSize() {
+                    return colorSize;
+                }
+
+                public void setColorSize(String[] colorSize) {
+                    this.colorSize = colorSize;
+                }
+
+
+                private String[] colorSize;
                 private List<OptionsIdBean> options_id;
 
                 public int getGoods_id() {
