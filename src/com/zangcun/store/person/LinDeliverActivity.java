@@ -155,7 +155,7 @@ public class LinDeliverActivity extends BaseActivity implements View.OnClickList
     }
 
     private void requestLoadMore() {
-        RequestParams params =new RequestParams(Net.URL_CEAT_ORDER+"?page="+page);
+        RequestParams params =new RequestParams(Net.URL_WAIT_FOR_SHIP+"?page="+page);
         params.addHeader("Authorization", DictionaryTool.getToken(this));
 
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {

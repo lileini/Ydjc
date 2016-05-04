@@ -13,10 +13,7 @@ import com.zangcun.store.entity.OrderResultEntity;
 import com.zangcun.store.entity.UpDateOrder;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.person.IndentActivity;
-import com.zangcun.store.utils.DialogUtil;
-import com.zangcun.store.utils.DictionaryTool;
-import com.zangcun.store.utils.HttpUtils;
-import com.zangcun.store.utils.ToastUtils;
+import com.zangcun.store.utils.*;
 import de.greenrobot.event.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -30,6 +27,7 @@ import java.util.List;
 public class IndentAdapter extends BaseAdapter {
     private Context mContext;
     private List<OrderResultEntity.OrderBean> mDataList;
+    private String TAG = "IndentAdapter";
 
     public IndentAdapter(Context mContext, List<OrderResultEntity.OrderBean> mDataList) {
         this.mContext = mContext;
@@ -113,25 +111,144 @@ public class IndentAdapter extends BaseAdapter {
         }else {
             holder.btn_cancle.setVisibility(View.VISIBLE);
             holder.btn_gopay.setVisibility(View.VISIBLE);
-            holder.btn_gopay.setText("去支付");
-            holder.btn_cancle.setText("取消订单");
-            holder.btn_gopay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent  intent = new Intent(mContext,OrderActivity.class);
-                    intent.putExtra("order_id",orderBean.getOrder_id());
-                    ((IndentActivity)mContext).startActivityForResult(intent,100);
+            switch (orderBean.getOrder_status()){
+                case 11://等待付款
+                case 40:{//付款成功
+                    holder.btn_gopay.setText("去支付");
+                    holder.btn_cancle.setText("取消订单");
+                    holder.btn_gopay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent  intent = new Intent(mContext,OrderActivity.class);
+                            intent.putExtra("order_id",orderBean.getOrder_id());
+                            ((IndentActivity)mContext).startActivityForResult(intent,100);
+                        }
+                    });
+                    holder.btn_cancle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestCancelOrder(orderBean.getOrder_id());
+                        }
+                    });
+                    break;
                 }
-            });
-            holder.btn_cancle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    requestCancelOrder(orderBean.getOrder_id());
+                case 20:{//等待发货
+                    holder.btn_gopay.setText("提醒发货");
+                    holder.btn_cancle.setText("申请退款");
+                    holder.btn_gopay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestUrgeShip(orderBean.getOrder_id());
+                        }
+                    });
+                    holder.btn_cancle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestRefund(orderBean.getOrder_id());
+                        }
+                    });
+                    break;
                 }
-            });
+                default:{//等待收货
+                    holder.btn_gopay.setText("查看物流");
+                    holder.btn_cancle.setText("申请退款");
+                    holder.btn_gopay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO: 2016/5/4 查看物流
+                        }
+                    });
+                    holder.btn_cancle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestRefund(orderBean.getOrder_id());
+                        }
+                    });
+                    break;
+                }
+            }
+
         }
         holder.tv_lin_zt.setText(getOrderStatus(orderBean.getOrder_status()));
         return convertView;
+    }
+
+    /**
+     * 取消订单
+     * @param order_id
+     */
+    private void requestRefund(int order_id) {
+        if (!HttpUtils.isHaveNetwork()) {
+            DialogUtil.dialogUser(mContext,"请检查网络设置");
+            return;
+        }
+        RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/refund.json");
+        params.addHeader("Authorization", DictionaryTool.getToken(mContext));
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "requestRefund onSuccess = "+ s);
+                ToastUtils.show(mContext, "申请退款成功");
+    EventBus.getDefault().post(new UpDateOrder());
+                // TODO: 2016/5/2 通知界面更新数据
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                ToastUtils.show(mContext, "网络异常,\n申请退款失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        }, params);
+    }
+
+    /**
+     * 提醒发货
+     * @param order_id
+     */
+    private void requestUrgeShip(int order_id) {
+        if (!HttpUtils.isHaveNetwork()) {
+            DialogUtil.dialogUser(mContext,"请检查网络设置");
+            return;
+        }
+        RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/urge_ship.json");
+        params.addHeader("Authorization", DictionaryTool.getToken(mContext));
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
+
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "requestUrgeShip onSuccess = "+ s);
+                ToastUtils.show(mContext, "提醒发货成功");
+//                ((IndentActivity)mContext).initDate();
+                // TODO: 2016/5/2 通知界面更新数据
+
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                ToastUtils.show(mContext, "网络异常,\n提醒失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        }, params);
     }
 
     /**
@@ -167,12 +284,13 @@ public class IndentAdapter extends BaseAdapter {
             DialogUtil.dialogUser(mContext,"请检查网络设置");
             return;
         }
-        RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/cancel.json ");
+        RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/cancel.json");
         params.addHeader("Authorization", DictionaryTool.getToken(mContext));
         HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String s) {
+
                 ToastUtils.show(mContext, "取消订单成功");
 //                ((IndentActivity)mContext).initDate();
                 EventBus.getDefault().post(new UpDateOrder());

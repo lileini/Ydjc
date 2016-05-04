@@ -84,7 +84,7 @@ public class LinPayActivity extends BaseActivity implements View.OnClickListener
      * 封装请求参数
      */
     private void requestData() {
-        RequestParams params =new RequestParams(Net.URL_CEAT_ORDER);
+        RequestParams params =new RequestParams(Net.URL_WAIT_FOR_PAY);
         params.addHeader("Authorization", DictionaryTool.getToken(this));
 
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
@@ -158,7 +158,7 @@ public class LinPayActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void requestLoadMore() {
-        RequestParams params =new RequestParams(Net.URL_CEAT_ORDER+"?page="+page);
+        RequestParams params =new RequestParams(Net.URL_WAIT_FOR_PAY+"?page="+page);
         params.addHeader("Authorization", DictionaryTool.getToken(this));
 
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {

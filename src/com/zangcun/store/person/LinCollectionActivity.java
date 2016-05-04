@@ -156,7 +156,7 @@ public class LinCollectionActivity extends BaseActivity implements View.OnClickL
     }
 
     private void requestLoadMore() {
-        RequestParams params =new RequestParams(Net.URL_CEAT_ORDER+"?page="+page);
+        RequestParams params =new RequestParams(Net.URL_WAIT_FOR_RECEIVE+"?page="+page);
         params.addHeader("Authorization", DictionaryTool.getToken(this));
 
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
