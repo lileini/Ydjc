@@ -10,14 +10,17 @@ import com.squareup.picasso.Picasso;
 import com.zangcun.store.R;
 import com.zangcun.store.activity.OrderActivity;
 import com.zangcun.store.entity.OrderResultEntity;
+import com.zangcun.store.entity.UpDateOrder;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.person.IndentActivity;
 import com.zangcun.store.utils.DialogUtil;
 import com.zangcun.store.utils.DictionaryTool;
 import com.zangcun.store.utils.HttpUtils;
 import com.zangcun.store.utils.ToastUtils;
+import de.greenrobot.event.EventBus;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+import org.xutils.view.annotation.Event;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,7 +74,7 @@ public class IndentAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 //        convertView
-        holder.tv_lin_time.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date(orderBean.getAdd_time())));//时间
+        holder.tv_lin_time.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date(orderBean.getAdd_time()* 1000L)));//时间
 //        holder.tv_lin_zt.setText(mDataList.get(position).getGoods_name());//状态
 //        图片
         List<OrderResultEntity.OrderBean.OrderGoodsBean> order_goods = orderBean.getOrder_goods();
@@ -171,7 +174,8 @@ public class IndentAdapter extends BaseAdapter {
             @Override
             public void onSuccess(String s) {
                 ToastUtils.show(mContext, "取消订单成功");
-                ((IndentActivity)mContext).initDate();
+//                ((IndentActivity)mContext).initDate();
+                EventBus.getDefault().post(new UpDateOrder());
                 // TODO: 2016/5/2 通知界面更新数据
 
             }

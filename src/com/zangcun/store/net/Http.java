@@ -16,6 +16,7 @@ import java.util.Map;
 //对联网的简单封装
 public class Http {
     private RequestQueue mQueue;//队列
+    private String TAG = "Http~~~";
 
     public Http(Context ctx) {
        mQueue = Volley.newRequestQueue(ctx);//队列方法
@@ -26,7 +27,7 @@ public class Http {
 
 //    	url = url+"?"+"page="+page+"&cate_ids="+1+"&size="+3+"&material="+"铜"+"&sort="+2;
     	url = url+"?"+"page="+page;
-    	
+    	Log.i(TAG,"Url = "+url);
     	
         //联网成功
         StringRequest request = new StringRequest

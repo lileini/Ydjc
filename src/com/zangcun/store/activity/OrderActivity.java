@@ -230,7 +230,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         orderNumber.setText(orderBean.getOrder_sn());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        orderTime.setText(sdf.format(orderBean.getAdd_time()));
+        orderTime.setText(sdf.format(orderBean.getAdd_time()*1000L));
         shoopingMoney.setText(orderBean.getGoods_amount());
         allMoney.setText(orderBean.getOrder_amount());
         orderPayMoney.setText(orderBean.getGoods_amount());

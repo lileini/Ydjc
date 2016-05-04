@@ -20,6 +20,8 @@
       <root url="jar://$PROJECT_DIR$/libs/universal-image-loader-1.9.4.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/xUtils-2.3.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/xutils3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/eventbus-3.0.0-beta1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/wheelview_1.3.3.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

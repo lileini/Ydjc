@@ -6,12 +6,13 @@
 
     <include layout="@layout/personal_title"/>
 
-    <ListView android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/lv_collection"
-              android:layout_weight="1"
-              android:padding="5dp"
-              android:cacheColorHint="#00000000"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lv_collection"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:cacheColorHint="#00000000"
     />
 
 </LinearLayout>

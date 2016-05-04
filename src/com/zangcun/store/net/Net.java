@@ -32,6 +32,9 @@ public class Net {
     public static final String URL_GET_ADDRESSES = HOST + "user.json";//获取收货地址
 
     public static final String URL_CEAT_ORDER = HOST + "orders.json";//创建订单
+    public static final String URL_WAIT_FOR_PAY = HOST + "orders/waiting_for_pay.json";//待付款
+    public static final String URL_WAIT_FOR_SHIP = HOST + "orders/waiting_for_ship.json";//待收货
+    public static final String URL_WAIT_FOR_RECEIVE = HOST + "orders/waiting_for_receive.json";//待收货
 //    public static final String URL_GET_ADDRESSES = HOST + "user.json";//获取收货地址
 //    public static final String URL_GET_ADDRESSES = HOST + "user.json";//获取收货地址
 

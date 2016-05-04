@@ -12,18 +12,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.activity.OrderActivity;
 import com.zangcun.store.adapter.IndentAdapter;
 import com.zangcun.store.entity.OrderResultEntity;
+import com.zangcun.store.entity.UpDateOrder;
 import com.zangcun.store.net.CommandBase;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
+import com.zangcun.store.other.MyApplication;
 import com.zangcun.store.utils.*;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +38,14 @@ import java.util.Map;
 /**
  * 全部订单
  * */
-public class IndentActivity extends BaseActivity implements View.OnClickListener,AdapterView.OnItemClickListener {
+public class IndentActivity extends BaseActivity implements View.OnClickListener,AdapterView.OnItemClickListener,PullToRefreshBase.OnRefreshListener2 {
     private ImageView mBack;
     private TextView mTitle;
 
-    private ListView mListView;
+    private PullToRefreshListView mListView;
     private IndentAdapter mAdapter;
     private List<OrderResultEntity.OrderBean> mDataList;
+    private int page;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,25 +53,25 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         setContentView(R.layout.personal_indent);
         init();
         initDate();
+        EventBus.getDefault().register(this);
 
     }
 
     public void initDate() {
         RequestParams params =new RequestParams(Net.URL_CEAT_ORDER);
         params.addHeader("Authorization", DictionaryTool.getToken(this));
+
         HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
                 Log.i(TAG, "onSuccess = "+ s);
-                mDataList = new Gson().fromJson(s,new TypeToken<List<OrderResultEntity.OrderBean>>(){}.getType());
+                mDataList = new Gson().fromJson(s, new TypeToken<List<OrderResultEntity.OrderBean>>() {
+                }.getType());
                 if (mDataList == null || mDataList.size() == 0 )
                     return;
-                if (mAdapter == null){
-                    mAdapter = new IndentAdapter(IndentActivity.this,mDataList);
-                    mListView.setAdapter(mAdapter);
-                }else {
-                    mAdapter.setDate(mDataList);
-                }
+                Log.i(TAG,"mDataList.size() = "+mDataList.size());
+                page = 2;
+                setAdapter();
             }
 
             @Override
@@ -79,9 +87,18 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onFinished() {
-
+                mListView.onRefreshComplete();
             }
         },params);
+    }
+
+    private void setAdapter() {
+        if (mAdapter == null){
+            mAdapter = new IndentAdapter(IndentActivity.this,mDataList);
+            mListView.setAdapter(mAdapter);
+        }else {
+            mAdapter.setDate(mDataList);
+        }
     }
 
     private void init() {
@@ -90,8 +107,10 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         mBack = (ImageView) findViewById(R.id.personal_back);
         mBack.setOnClickListener(this);
 
-        mListView= (ListView) findViewById(R.id.lv_indent);
+        mListView= (PullToRefreshListView) findViewById(R.id.lv_indent);
         mListView.setOnItemClickListener(this);
+        mListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mListView.setOnRefreshListener(this);
 
     }
 
@@ -104,26 +123,17 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    /**
-     * 封装请求参数
-     */
-    private void requestData() {
-        Map<String, String> map = new HashMap<>();
-        map.put("需要传递的key ", "需要传递的值");
-        CommandBase.requestDataMap(getApplicationContext(), Const.URL_USER, handler, null);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe
+    public void updateListView(UpDateOrder upDateOrder){
+        initDate();
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == Const.SUCCESS) {
-                //做逻辑处理
-            } else if (msg.what == Const.ERROR) {
 
-            }
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -135,9 +145,63 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.i(TAG,"onItemClick");
         Intent  intent = new Intent(this,OrderActivity.class);
         intent.putExtra("order_id",mDataList.get(position).getOrder_id());
         intent.putExtra("orderDetail",true);
         startActivityForResult(intent,100);
+    }
+
+
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        initDate();
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        Log.i(TAG,"dateList.size() = "+mDataList.size());
+        Log.i(TAG,"page = "+page);
+        requestLoadMore();
+    }
+
+    private void requestLoadMore() {
+        RequestParams params =new RequestParams(Net.URL_CEAT_ORDER+"?page="+page);
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
+
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+ s);
+
+                List<OrderResultEntity.OrderBean> dateList = new Gson().fromJson(s, new TypeToken<List<OrderResultEntity.OrderBean>>() {
+                }.getType());
+                if (dateList == null || dateList.size() == 0 ){
+                    ToastUtils.show(MyApplication.instance,"没有更多数据了");
+                    return;
+                }
+                Log.i(TAG,"dateList.size() = "+dateList.size());
+                page += 2;
+                mDataList.addAll(dateList);
+                setAdapter();
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG, "onError  = "+ throwable.toString());
+                DialogUtil.dialogUser(IndentActivity.this,"网络错误");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+                mListView.onRefreshComplete();
+            }
+        },params);
     }
 }
