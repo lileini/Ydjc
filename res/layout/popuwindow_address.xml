@@ -4,15 +4,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <com.wx.wheelview.widget.WheelView
-            android:layout_width="50dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:id="@+id/wheel_province"/>
     <com.wx.wheelview.widget.WheelView
-            android:layout_width="50dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:id="@+id/wheel_city"/>
     <com.wx.wheelview.widget.WheelView
-            android:layout_width="50dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:id="@+id/wheel_county"/>
 

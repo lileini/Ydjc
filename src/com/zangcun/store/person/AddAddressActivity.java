@@ -27,9 +27,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 //添加地址
@@ -367,8 +365,11 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 break;
         }
     }
-
+    List<CityModel> province;
+    HashMap<String,List<CityModel>> subMap = null;
+    HashMap<String,List<CityModel>> childMap = null;
     private void popupAddress() {
+        province = CityDao.getCityByPid(1);
         View contentView = LayoutInflater.from(this).inflate(R.layout.popuwindow_address, null);
         mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
@@ -380,45 +381,76 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         WheelView<CityModel> whCity = (WheelView) contentView.findViewById(R.id.wheel_city);
         WheelView<CityModel> whCounty = (WheelView) contentView.findViewById(R.id.wheel_county);
 
-        List<CityModel> province = CityDao.getCityByPid(1);
+
         Collections.sort(province);
         whProvince.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
         whProvince.setSkin(WheelView.Skin.Common); // common皮肤
         whProvince.setWheelData(province);  // 数据集合
-        whProvince.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
+        /*whProvince.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
             @Override
             public void onItemSelected(int i, CityModel cityModel) {
                 List<CityModel> city = CityDao.getCityByPid(cityModel.getPid());
                 Collections.sort(city);
                 whCity.setWheelData(city);
             }
-        });
-        whProvince.setWheelSize(3);
+        });*/
+
 
         List<CityModel> city = CityDao.getCityByPid(2);
         Collections.sort(city);
         whCity.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
         whCity.setSkin(WheelView.Skin.Common); // common皮肤
-        whCity.setWheelData(CityDao.getCityByPid(2));  // 数据集合
-        whCity.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
+
+        whCity.setWheelData(createSubDate().get(province.get(whProvince.getSelection())));  // 数据集合
+        whProvince.join(whCity);
+        whProvince.joinDatas(createSubDate());
+        /*whCity.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
             @Override
             public void onItemSelected(int i, CityModel cityModel) {
                 List<CityModel> county = CityDao.getCityByPid(cityModel.getPid());
                 Collections.sort(county);
                 whCounty.setWheelData(county);
             }
-        });
+        });*/
 
         List<CityModel> county = CityDao.getCityByPid(36);
         Collections.sort(county);
         whCounty.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
         whCounty.setSkin(WheelView.Skin.Common); // common皮肤
-        whCounty.setWheelData(county);  // 数据集合
-        /*whProvince.join(whCity);
-        whCity.join(whCounty);*/
+        whCounty.setWheelData(createChildDate().get(createSubDate().get(province.get(whProvince.getSelection()))));  // 数据集合
+        whCity.join(whCounty);
+        whCity.joinDatas(createChildDate());
 
         View rootview = LayoutInflater.from(this).inflate(R.layout.popupwindow_week, null);
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
+    }
+    private final HashMap<String,List<CityModel>> createSubDate(){
+        if (subMap != null)
+            return subMap;
+        for (CityModel cityModel:province){
+            List<CityModel> citys = CityDao.getCityByPid(cityModel.getId());
+            if (citys == null)
+                continue;
+            subMap.put(cityModel.getName(),citys);
+        }
+        return subMap;
+    }
+    private final HashMap<String,List<CityModel>> createChildDate(){
+        if (childMap != null)
+            return childMap;
+        Collection<List<CityModel>> values = createSubDate().values();
+        Iterator<List<CityModel>> iterator = values.iterator();
+        List<CityModel> cityModels = new ArrayList<>();
+        while (iterator.hasNext()){
+            cityModels.addAll(iterator.next());
+        }
+        for (CityModel cityModel:cityModels){
+            List<CityModel> citys = CityDao.getCityByPid(cityModel.getId());
+            if (citys == null)
+                continue;
+            childMap.put(cityModel.getName(),citys);
+        }
+        return childMap;
     }
 
     private void requestChangeAddress() {
