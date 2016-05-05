@@ -4,7 +4,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 @Table(name = "CityModel")
-public class CityModel {
+public class CityModel implements Comparable<CityModel>{
 
     /**
      * id : 1
@@ -49,5 +49,11 @@ public class CityModel {
                 ", pid=" + pid +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(CityModel another) {
+
+        return this.getId() - another.getId();
     }
 }

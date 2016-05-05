@@ -11,8 +11,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
+import com.wx.wheelview.adapter.ArrayWheelAdapter;
+import com.wx.wheelview.widget.WheelView;
 import com.zangcun.store.BaseActivity;
 import com.zangcun.store.R;
+import com.zangcun.store.adapter.AddAddressWhellAdapter;
 import com.zangcun.store.dao.CityDao;
 import com.zangcun.store.model.AddressModel;
 import com.zangcun.store.model.CityModel;
@@ -25,6 +28,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -90,6 +94,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private EditText etDetialedAddress;
     private boolean isEdit = false;
     private GetAddressResultModel.AddressBean addressBean;
+    private TextView tvAddAddress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,8 +150,10 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         etName = (EditText) findViewById(R.id.et_shouhuoren);
         etMobile = (EditText) findViewById(R.id.et_Mobile);
         etDetialedAddress = (EditText) findViewById(R.id.et_xiangxidizhi);
+        tvAddAddress = (TextView) findViewById(R.id.tv_address);
+        tvAddAddress.setOnClickListener(this);
         //省市县联动
-        province_spinner = (Spinner) findViewById(R.id.province);
+        /*province_spinner = (Spinner) findViewById(R.id.province);
         province_spinner.setPrompt("请选择省份");
         province_adapter = ArrayAdapter.createFromResource(this, R.array.province_item, android.R.layout.simple_spinner_item);
         province_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -313,7 +320,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             public void onNothingSelected(AdapterView<?> arg0) {
 
             }
-        });
+        });*/
     }
 
     private void select(Spinner spin, ArrayAdapter<CharSequence> adapter, int arry) {
@@ -355,7 +362,63 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_week:
                 popupChoose();
                 break;
+            case R.id.tv_address:
+                popupAddress();
+                break;
         }
+    }
+
+    private void popupAddress() {
+        View contentView = LayoutInflater.from(this).inflate(R.layout.popuwindow_address, null);
+        mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
+        mPopWindow.setContentView(contentView);
+        mPopWindow.setFocusable(true);
+        mPopWindow.setOutsideTouchable(true);
+        mPopWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopWindow.setAnimationStyle(R.style.popwin_anim_style);
+        WheelView<CityModel> whProvince = (WheelView) contentView.findViewById(R.id.wheel_province);
+        WheelView<CityModel> whCity = (WheelView) contentView.findViewById(R.id.wheel_city);
+        WheelView<CityModel> whCounty = (WheelView) contentView.findViewById(R.id.wheel_county);
+
+        List<CityModel> province = CityDao.getCityByPid(1);
+        Collections.sort(province);
+        whProvince.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
+        whProvince.setSkin(WheelView.Skin.Common); // common皮肤
+        whProvince.setWheelData(province);  // 数据集合
+        whProvince.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
+            @Override
+            public void onItemSelected(int i, CityModel cityModel) {
+                List<CityModel> city = CityDao.getCityByPid(cityModel.getPid());
+                Collections.sort(city);
+                whCity.setWheelData(city);
+            }
+        });
+        whProvince.setWheelSize(3);
+
+        List<CityModel> city = CityDao.getCityByPid(2);
+        Collections.sort(city);
+        whCity.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
+        whCity.setSkin(WheelView.Skin.Common); // common皮肤
+        whCity.setWheelData(CityDao.getCityByPid(2));  // 数据集合
+        whCity.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
+            @Override
+            public void onItemSelected(int i, CityModel cityModel) {
+                List<CityModel> county = CityDao.getCityByPid(cityModel.getPid());
+                Collections.sort(county);
+                whCounty.setWheelData(county);
+            }
+        });
+
+        List<CityModel> county = CityDao.getCityByPid(36);
+        Collections.sort(county);
+        whCounty.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
+        whCounty.setSkin(WheelView.Skin.Common); // common皮肤
+        whCounty.setWheelData(county);  // 数据集合
+        /*whProvince.join(whCity);
+        whCity.join(whCounty);*/
+
+        View rootview = LayoutInflater.from(this).inflate(R.layout.popupwindow_week, null);
+        mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
     private void requestChangeAddress() {

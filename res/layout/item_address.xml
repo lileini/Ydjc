@@ -123,7 +123,12 @@
                   android:layout_weight="1"
                   android:visibility="gone"
         />
-        <Spinner android:layout_width="80dp"
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_address"
+                android:text="点击选择"/>
+        <!--<Spinner android:layout_width="80dp"
                  android:layout_height="40dp "
                  android:id="@+id/province"
                  android:background="@color/white"/>
@@ -134,7 +139,7 @@
         <Spinner android:layout_width="80dp"
                  android:layout_height="40dp "
                  android:id="@+id/county"
-                 android:background="@color/white"/>
+                 android:background="@color/white"/>-->
     </LinearLayout>
     <!--<View-->
     <!--android:layout_width="match_parent"-->

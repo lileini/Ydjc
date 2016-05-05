@@ -96,4 +96,15 @@ public class CityDao {
         }
         return cityModel;
     }
+    public static List<CityModel> getCityByPid(int pid){
+        List<CityModel> cityModelList = null;
+        try {
+            cityModelList = getDbManger().selector(CityModel.class).where("_pid","=",pid).findAll();
+            Log.i(TAG, "getCityByPid name  success");
+        } catch (DbException e) {
+            e.printStackTrace();
+            Log.i(TAG, "getCityByPid name  fail");
+        }
+        return cityModelList;
+    }
 }
