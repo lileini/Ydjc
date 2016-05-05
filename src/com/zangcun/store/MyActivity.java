@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.dao.CityDao;
 import com.zangcun.store.fragment.*;
+import com.zangcun.store.model.CityDateModule;
 import com.zangcun.store.model.CityModel;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
@@ -307,7 +308,9 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
                     @Override
                     public void run() {
                         super.run();
+                        CityDao.deleteCityList();
                         CityDao.saveCityList(cityList);
+                        new CityDateModule().start();
                     }
                 }.start();
             }
