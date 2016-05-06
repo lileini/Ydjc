@@ -98,11 +98,8 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
         RequestParams params = new RequestParams(Const.URL_AUTH_TOKEN);
         params.addBodyParameter("phone", user);
         params.addBodyParameter("password", pwd);
-        HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
+
 
             @Override
             public void onSuccess(String s) {

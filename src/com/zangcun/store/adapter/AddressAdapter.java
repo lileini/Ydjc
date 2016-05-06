@@ -74,7 +74,7 @@ public class AddressAdapter extends BaseAdapter {
         if (isok) {
             holder.address_layout2.setVisibility(View.VISIBLE);
         } else {
-            holder.address_layout2.setVisibility(View.INVISIBLE);
+            holder.address_layout2.setVisibility(View.GONE);
         }
         if (addressBean != null) {
 

@@ -11,7 +11,7 @@ public class CityModel implements Comparable<CityModel>{
      * pid : 0
      * name : 中国
      */
-    @Column(name = "_id",isId = true)
+    @Column(name = "id",isId = true)
     private int tId;
     @Column(name = "_id")
     private int id;

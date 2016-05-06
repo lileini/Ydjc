@@ -97,11 +97,7 @@ public class RegisterCordActivity extends BaseActivity implements View.OnClickLi
         params.addBodyParameter("password",mPhone.getText().toString());
         Log.i(TAG,"token = "+token);
         params.addHeader("AUTHORIZATION", token);
-        HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String s) {

@@ -124,11 +124,7 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
         RequestParams params = new RequestParams(Const.URL_AUTH_TOKEN);
         params.addBodyParameter("phone",uername);
         params.addBodyParameter("password",password);
-        HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String s) {

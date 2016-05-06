@@ -102,11 +102,7 @@ public class LinPayAdapter extends BaseAdapter {
     private void requestCancelOrder() {
         RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/cancel.json ");
         params.addHeader("Authorization", DictionaryTool.getToken(mContext));
-        HttpUtils.HttpPutMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String s) {

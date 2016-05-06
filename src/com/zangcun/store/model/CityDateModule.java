@@ -20,9 +20,9 @@ public class CityDateModule extends Thread {
         subMap = new HashMap<>();
         for (CityModel cityModel:province){
             int id = cityModel.getId();
-            Log.i(TAG,"id = "+ id);
+//            Log.i(TAG,"id = "+ id);
             List<CityModel> citys = CityDao.getCityByPid(cityModel.getId());
-            Log.i(TAG,"citys = "+citys);
+//            Log.i(TAG,"citys = "+citys);
             if (citys == null)
                 continue;
             subMap.put(cityModel.getName(),citys);

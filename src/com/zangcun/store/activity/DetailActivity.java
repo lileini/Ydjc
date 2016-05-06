@@ -511,11 +511,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener, Htt
         // TODO: 2016/4/1 处理没有用户的情况
 //        Log.i(TAG, "token = "+ DictionaryTool.getToken(getApplicationContext()));
         params.addHeader("AUTHORIZATION", DictionaryTool.getToken(getApplicationContext()));
-        HttpUtils.HttpPostMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String s) {

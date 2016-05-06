@@ -88,6 +88,10 @@ public class IndentAdapter extends BaseAdapter {
                 holder.lin_number.setText(orderGoodsBean.getGoods_numbers()+"");//数量
             }else {
                 RelativeLayout rlGoods = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.item_goods, null);
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0,UtilsUI.getPixByDPI(mContext,5),0,UtilsUI.getPixByDPI(mContext,5));
+
+                rlGoods.setLayoutParams(layoutParams);
                 ImageView ivGoods = (ImageView) rlGoods.getChildAt(0);
                 Picasso.with(mContext).load(Net.DOMAIN + orderGoodsBean.getGood().getDefault_image())
                         .placeholder(R.drawable.sp_icon_zw).error(R.drawable.sp_icon_zw).into(ivGoods);

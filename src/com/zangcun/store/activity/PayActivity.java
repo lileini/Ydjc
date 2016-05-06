@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.zangcun.store.BaseActivity;
+import com.zangcun.store.adapter.AddressAdapter;
 import com.zangcun.store.adapter.ChooseShopCarAdapter;
 import com.zangcun.store.adapter.ShopCarAdapter;
 import com.zangcun.store.entity.OrderResultEntity;
@@ -138,11 +139,8 @@ public class PayActivity extends BaseActivity implements OnClickListener {
         }
         RequestParams params = new RequestParams(Net.URL_CARTS);
         params.addHeader("AUTHORIZATION", DictionaryTool.getToken(getApplicationContext()));
-        HttpUtils.HttpGetMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+
 
             @Override
             public void onSuccess(String s) {
@@ -150,9 +148,9 @@ public class PayActivity extends BaseActivity implements OnClickListener {
                 mDatas = new Gson().fromJson(s, new TypeToken<List<ShopCarModel>>() {
                 }.getType());
 //                mDatas = GsonUtil.getResult2(s, ShopCarModel.class);
-                com.zangcun.store.utils.Log.i(TAG, "result2 = " + mDatas.toString());
-                com.zangcun.store.utils.Log.i(TAG, "result2.size = " + mDatas.size());
-                com.zangcun.store.utils.Log.i(TAG, "model = " + mDatas.get(0));
+                Log.i(TAG, "result2 = " + mDatas.toString());
+                Log.i(TAG, "result2.size = " + mDatas.size());
+                Log.i(TAG, "model = " + mDatas.get(0).toString());
                 /*for (ShopCarModel model :mDatas){
                     Log.i(TAG, "model = "+ model);
                 }*/
@@ -161,9 +159,11 @@ public class PayActivity extends BaseActivity implements OnClickListener {
                     mAddAddress.setVisibility(View.GONE);
                     return;
                 }
+                List<ShopCarModel> shopCarModels = new ArrayList<ShopCarModel>(mDatas.size());
                 for (ShopCarModel shopCarModel : mDatas) {
                     if (shopCarModel.getIschecked() == 0) {
-                        mDatas.remove(shopCarModel);
+//                        mDatas.remove(shopCarModel);
+                        continue;
                     }
                     String[] colorSize = shopCarModel.getColorSize();
                     if (colorSize == null) {
@@ -176,20 +176,23 @@ public class PayActivity extends BaseActivity implements OnClickListener {
                             if (optionsIdBean2.getSpec_1().equals(colorSize[0]) && optionsIdBean2.getSpec_2().equals(colorSize[1])) {
                                 optionsIdBean = optionsIdBean2;
                                 shopCarModel.setOptionsIdBean(optionsIdBean2);
+                                continue;
                             }
                         }
                     }
+                    shopCarModels.add(shopCarModel);
                 }
-                mAddAddress.setVisibility(View.VISIBLE);
+
+//                mAddAddress.setVisibility(View.VISIBLE);
                 if (mAdapter == null) {
-                    mAdapter = new ChooseShopCarAdapter(PayActivity.this, mDatas,
+                    mAdapter = new ChooseShopCarAdapter(PayActivity.this, shopCarModels,
                             R.layout.item_pay);
                     listView.setDividerHeight(20);
                     listView.setAdapter(mAdapter);
                 } else {
-                    mAdapter.setData(mDatas);
+                    mAdapter.setData(shopCarModels);
                 }
-                alculatePay();
+                alculatePay(shopCarModels);
 
             }
 
@@ -213,10 +216,11 @@ public class PayActivity extends BaseActivity implements OnClickListener {
 
     /**
      * 计算总花费
+     * @param shopCarModels
      */
-    private void alculatePay() {
+    private void alculatePay(List<ShopCarModel> shopCarModels) {
         double moneny = 0;
-        for (ShopCarModel shopCarModel : mDatas) {
+        for (ShopCarModel shopCarModel : shopCarModels) {
             moneny += shopCarModel.getQuantity() * Double.valueOf(shopCarModel.getOptionsIdBean().getPrice());
         }
         mTip.setText("总金额 ¥" + moneny  + "(含运费￥0.0)");
@@ -243,6 +247,7 @@ public class PayActivity extends BaseActivity implements OnClickListener {
         mTitle.setText("支付中心");
         mTitle.setTextSize(16);
         requestCart();
+        requestAddress();
 		/*fxModel = (FxModel) getIntent().getSerializableExtra("fxModel");
 		String count = getIntent().getStringExtra("count");
 		Log.i(TAG,"count = "+ count);
@@ -285,7 +290,43 @@ public class PayActivity extends BaseActivity implements OnClickListener {
         //网络接口获取数据
         //展示数据
     }
+    public void requestAddress() {
+        RequestParams params = new RequestParams(Net.URL_GET_ADDRESSES);
+        params.addHeader("Authorization", DictionaryTool.getToken(this));
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                com.zangcun.store.utils.Log.i(TAG, "onSuccess  = " + s);
+                if (TextUtils.isEmpty(s))
+                    return;
+                GetAddressResultModel result = GsonUtil.getResult(s, GetAddressResultModel.class);
+                if (result.getAddress() == null)
+                    return;
+                for (GetAddressResultModel.AddressBean addressBean:result.getAddress()){
+                    if (addressBean.isIs_default()){
+                        PayActivity.this.addressBean = addressBean;
+                        setAddress(addressBean);
+                        return;
+                    }
+                }
+            }
 
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                com.zangcun.store.utils.Log.i(TAG, "onError  = " + throwable.toString());
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        }, params);
+    }
 
     @Override
     public void onClick(View v) {
@@ -379,15 +420,19 @@ public class PayActivity extends BaseActivity implements OnClickListener {
             if (addressBean == null)
                 return;
             Log.i(TAG, "addressBean.getMobile()2 = " + addressBean.getMobile());
-            addressName.setText(addressBean.getConsignee());
-            addressPhone.setText(addressBean.getMobile());
-            addressCity.setText(addressBean.getAddress());
-            addressCity.setTextColor(0xFFA4A4A4);
-            mAddAddress.setVisibility(View.GONE);
-            itemLayout.setVisibility(View.VISIBLE);
-            addressPhone.setVisibility(View.VISIBLE);
-            addressImg.setVisibility(View.VISIBLE);
+            setAddress(addressBean);
         }
+    }
+
+    private void setAddress(GetAddressResultModel.AddressBean addressBean) {
+        addressName.setText(addressBean.getConsignee());
+        addressPhone.setText(addressBean.getMobile());
+        addressCity.setText(addressBean.getAddress());
+        addressCity.setTextColor(0xFFA4A4A4);
+        mAddAddress.setVisibility(View.GONE);
+        itemLayout.setVisibility(View.VISIBLE);
+        addressPhone.setVisibility(View.VISIBLE);
+        addressImg.setVisibility(View.VISIBLE);
     }
 
     ;

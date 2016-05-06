@@ -2,18 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <com.wx.wheelview.widget.WheelView
+              android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp">
+    <com.zangcun.store.widget.MyWheelView
+            android:layout_marginLeft="20dp"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:id="@+id/wheel_province"/>
-    <com.wx.wheelview.widget.WheelView
+    <com.zangcun.store.widget.MyWheelView
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_height="100dp"
             android:id="@+id/wheel_city"/>
-    <com.wx.wheelview.widget.WheelView
+    <com.zangcun.store.widget.MyWheelView
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_height="100dp"
             android:id="@+id/wheel_county"/>
 
 </LinearLayout>

@@ -39,6 +39,7 @@ import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.*;
 import com.zangcun.store.widget.InnerListView;
+import com.zangcun.store.wxpay.WxPayUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
@@ -139,33 +140,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
 
     private void initData() {
         mTitle.setTextSize(16);
-        /*Bundle bundle = getIntent().getBundleExtra("bundle");
-        String color = bundle.getString("color");
-        String size = bundle.getString("size");
-        String count = bundle.getString("count");
-        FxModel.OptionsIdEntity optionsIdEntity = (FxModel.OptionsIdEntity) bundle.getSerializable("OptionsIdEntity");
-        FxModel fxModel = (FxModel) bundle.getSerializable("fxModel");
 
-         ImageLoader.getInstance().loadImage(Net.DOMAIN+fxModel.getDefault_image(),new SimpleImageLoadingListener(){
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                super.onLoadingComplete(imageUri, view, loadedImage);
-                orderGoodImg.setImageBitmap(loadedImage);
-            }
-        });
-        orderGoodName.setText(fxModel.getGoods_name());
-        orderGoodDesc.setText("颜色："+color);
-        orderCailiao.setText("尺寸："+size);
-        orderGoodCount.setText(count);
-        orderGoodPrice.setText("¥"+optionsIdEntity.getPrice());
-        double pay = Double.valueOf(optionsIdEntity.getPrice()) * Integer.valueOf(count.substring(1));
-        orderPayMoney.setText(pay+"");*/
-//        bundle.putString("color",color);
-//        bundle.putString("size",size);
-//        bundle.putString("count",mCount.getText().toString());
-//        bundle.putSerializable("OptionsIdEntity",getIntent().getSerializableExtra("OptionsIdEntity"));
-//        ArrayList<Parcelable> mDates = getIntent().getParcelableArrayListExtra("mDates");
-//        OrderResultEntity.OrderBean orderBean = getIntent().getParcelableExtra("OrderBean");
         order_id = getIntent().getIntExtra("order_id", -1);
         boolean isOrderDetail = getIntent().getBooleanExtra("mDataList", false);
         if (!HttpUtils.isHaveNetwork()) {
@@ -218,7 +193,8 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
 
         OrderAdapter chooseShopCarAdapter = new OrderAdapter(this, order_goodsList, R.layout.item_pay);
         mListView.setAdapter(chooseShopCarAdapter);
-
+        Log.i(TAG,"orderBean.getAddress() = "+ orderBean.getAddress());
+        Log.i(TAG,"orderBean.getMobile() = "+ orderBean.getMobile());
         orderUsername.setText(orderBean.getConsignee());
         orderAddress.setText(orderBean.getAddress());
         orderPhone.setText(orderBean.getMobile());
@@ -273,10 +249,52 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                     return;
                 }
                 if (mWeixin.isSelected()) {//微信支付
+                    requestWxPay();
                     return;
                 }
                 break;
         }
+    }
+
+    /**
+     * 获取微信支付信息
+     */
+    private void requestWxPay() {
+        RequestParams params = new RequestParams(Net.HOST + "orders/"+order_id+"/create_wechat.json");
+        params.addHeader("Authorization",DictionaryTool.getToken(this));
+        HttpUtils.HttpPostMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = "+s);
+                JSONObject object = null;
+                WxPayUtil wxPayUtil = null;
+                try {
+                    wxPayUtil = new WxPayUtil(OrderActivity.this, mHandler);
+                    wxPayUtil.pay(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.i(TAG,"alipay failed");
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG,"alipay failed");
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        },params);
     }
 
     /**
@@ -331,11 +349,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         }
         RequestParams params = new RequestParams(Net.HOST + "orders/" + order_id + "/cancel.json ");
         params.addHeader("Authorization", DictionaryTool.getToken(this));
-        HttpUtils.HttpPutMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpPutMethod(new Callback.CommonCallback<String>() {
 
             @Override
             public void onSuccess(String s) {
@@ -393,26 +407,6 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
-//    /**
-//     * 封装请求参数
-//     */
-//    private void requestData() {
-//        Map<String, String> map = new HashMap<>();
-////        map.put("需要传递的key ", "需要传递的值");
-//        CommandBase.requestDataNoGet(getApplicationContext(), Const.URL_WAITING_FOR_PAY, handler, null);
-//    }
-
-//    private Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            if (msg.what == Const.SUCCESS) {
-//                //做逻辑处理
-//            } else if (msg.what == Const.ERROR) {
-//
-//            }
-//        }
-//    };
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -449,12 +443,15 @@ public class OrderActivity extends BaseActivity implements OnClickListener {
                     mPopWindow.dismiss();
                     break;
                 }
+                case 2:{
+                    // TODO: 2016/5/6 处理微信支付结果
+                    break;
+                }
                 default:
                     break;
             }
         }
 
-        ;
     };
 
 }

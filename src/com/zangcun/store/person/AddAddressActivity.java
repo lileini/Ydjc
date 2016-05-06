@@ -23,6 +23,7 @@ import com.zangcun.store.model.CityModel;
 import com.zangcun.store.model.GetAddressResultModel;
 import com.zangcun.store.net.Net;
 import com.zangcun.store.utils.*;
+import com.zangcun.store.widget.MyWheelView;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.xutils.common.Callback;
@@ -366,7 +367,8 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 break;
         }
     }
-
+    String address = null;
+    int cId = -1;
     private void popupAddress() {
         CityDateModule.province = CityDao.getCityByPid(1);
         View contentView = LayoutInflater.from(this).inflate(R.layout.popuwindow_address, null);
@@ -376,54 +378,76 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         mPopWindow.setOutsideTouchable(true);
         mPopWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopWindow.setAnimationStyle(R.style.popwin_anim_style);
-        WheelView<CityModel> whProvince = (WheelView) contentView.findViewById(R.id.wheel_province);
-        WheelView<CityModel> whCity = (WheelView) contentView.findViewById(R.id.wheel_city);
-        WheelView<CityModel> whCounty = (WheelView) contentView.findViewById(R.id.wheel_county);
-
+        MyWheelView<CityModel> whProvince = (MyWheelView) contentView.findViewById(R.id.wheel_province);
+        MyWheelView<CityModel> whCity = (MyWheelView) contentView.findViewById(R.id.wheel_city);
+        MyWheelView<CityModel> whCounty = (MyWheelView) contentView.findViewById(R.id.wheel_county);
 
         Collections.sort(CityDateModule.province);
         whProvince.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
-        whProvince.setSkin(WheelView.Skin.Common); // common皮肤
+        whProvince.setSkin(WheelView.Skin.Holo); // common皮肤
         whProvince.setWheelData(CityDateModule.province);  // 数据集合
-        /*whProvince.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
+        whProvince.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
             @Override
             public void onItemSelected(int i, CityModel cityModel) {
-                List<CityModel> city = CityDao.getCityByPid(cityModel.getPid());
+                List<CityModel> city = CityDao.getCityByPid(cityModel.getId());
                 Collections.sort(city);
+                Log.i(TAG,"city = "+city);
                 whCity.setWheelData(city);
             }
-        });*/
+        });
 
 
         List<CityModel> city = CityDao.getCityByPid(2);
         Collections.sort(city);
         whCity.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
-        whCity.setSkin(WheelView.Skin.Common); // common皮肤
-        List<CityModel> cityModels = CityDateModule.subMap.get(CityDateModule.province.get(whProvince.getSelection()).getName());
-        Log.i(TAG,"province.get(  = "+CityDateModule.province.get(whProvince.getSelection()));
+        whCity.setSkin(WheelView.Skin.Holo); // common皮肤
+//        List<CityModel> cityModels = CityDateModule.subMap.get(CityDateModule.province.get(whProvince.getSelection()).getName());
+        List<CityModel> cityModels = CityDao.getCityByPid(2);
+         Log.i(TAG,"province.get(  = "+CityDateModule.province.get(whProvince.getSelection()));
         Log.i(TAG,"cityMode = "+cityModels);
         whCity.setWheelData(cityModels);  // 数据集合
-        whProvince.join(whCity);
-        whProvince.joinDatas(CityDateModule.subMap);
-        /*whCity.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
+       /* whProvince.join(whCity);
+        whProvince.joinDatas(CityDateModule.subMap);*/
+        whCity.setOnWheelItemSelectedListener(new WheelView.OnWheelItemSelectedListener<CityModel>() {
             @Override
             public void onItemSelected(int i, CityModel cityModel) {
-                List<CityModel> county = CityDao.getCityByPid(cityModel.getPid());
+                List<CityModel> county = CityDao.getCityByPid(cityModel.getId());
                 Collections.sort(county);
                 whCounty.setWheelData(county);
             }
-        });*/
+        });
+        whCity.setOnWheelDataChangeListener(new MyWheelView.onWheelDataChangeListener() {
+            @Override
+            public void onWheelDataChanged(List datas, int position) {
+                List<CityModel> cityByPid = CityDao.getCityByPid(((CityModel) datas.get(position)).getId());
+                whCounty.setWheelData(cityByPid);
+            }
+        });
 
-        /*List<CityModel> county = CityDao.getCityByPid(36);
+
+        List<CityModel> county = CityDao.getCityByPid(36);
         Collections.sort(county);
         whCounty.setWheelAdapter(new AddAddressWhellAdapter(this)); // 文本数据源
-        whCounty.setSkin(WheelView.Skin.Common); // common皮肤
-        whCounty.setWheelData(CityDateModule.childMap.get(CityDateModule.subMap.get(CityDateModule.province.get(whProvince.getSelection()).getName())));  // 数据集合
-        whCity.join(whCounty);
-        whCity.joinDatas(CityDateModule.childMap);*/
+        whCounty.setSkin(WheelView.Skin.Holo); // common皮肤
+        List<CityModel> cityByPid = CityDao.getCityByPid(52);
+        whCounty.setWheelData(cityByPid);
+
 
         View rootview = LayoutInflater.from(this).inflate(R.layout.popupwindow_week, null);
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
+        mPopWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                CityModel proCityModel = CityDateModule.province.get(whProvince.getCurrentPosition());
+                CityModel cityCityModel = CityDao.getCityByPid(proCityModel.getId()).get(whCity.getCurrentPosition());
+                CityModel countyCityModel = CityDao.getCityByPid(cityCityModel.getId()).get(whCounty.getCurrentPosition());
+                cId = countyCityModel.getId();
+                address = proCityModel.getName() +"  "+cityCityModel.getName() +"  "+countyCityModel.getName();
+                Log.i(TAG,"address = "+address);
+                Log.i(TAG,"cId = "+cId);
+                tvAddAddress.setText(address);
+            }
+        });
     }
 
 
@@ -479,11 +503,11 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String name = etName.getText().toString();
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(address)) {
             DialogUtil.dialogUser(this,"请填写完整信息");
             return;
         }
-        StringBuilder region_id = new StringBuilder();
+        /*StringBuilder region_id = new StringBuilder();
         Log.i(TAG, "strProvince " + strProvince);
         Log.i(TAG, "strCity " + strCity);
         Log.i(TAG, "strCounty " + strCounty);
@@ -502,8 +526,8 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         }
         Log.i(TAG, "province =  " + province);
         Log.i(TAG, "city =  " + city);
-        Log.i(TAG, "county =  " + county);
-        AddressModel addressModel = new AddressModel(strProvince + strCity + strCounty +detialedAddress, mobile, county.getId() + "", name);
+        Log.i(TAG, "county =  " + county);*/
+        AddressModel addressModel = new AddressModel(address +detialedAddress, mobile, cId + "", name);
         requestAddAddress(addressModel);
     }
 

@@ -128,11 +128,8 @@ public class ShopFragment extends BaseFragment implements ShopCarAdapter.PriceAn
         }
         RequestParams params = new RequestParams(Net.URL_CARTS);
         params.addHeader("AUTHORIZATION", DictionaryTool.getToken(getActivity().getApplicationContext()));
-        HttpUtils.HttpGetMethod(new Callback.CacheCallback<String>() {
-            @Override
-            public boolean onCache(String s) {
-                return false;
-            }
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+
 
             @Override
             public void onSuccess(String s) {
@@ -140,9 +137,7 @@ public class ShopFragment extends BaseFragment implements ShopCarAdapter.PriceAn
                 mDatas = new Gson().fromJson(s, new TypeToken<List<ShopCarModel>>() {
                 }.getType());
 //                mDatas = GsonUtil.getResult2(s, ShopCarModel.class);
-                Log.i(TAG, "result2 = " + mDatas.toString());
-                Log.i(TAG, "result2.size = " + mDatas.size());
-                Log.i(TAG, "model = " + mDatas.get(0));
+
                 /*for (ShopCarModel model :mDatas){
                     Log.i(TAG, "model = "+ model);
                 }*/
@@ -150,10 +145,13 @@ public class ShopFragment extends BaseFragment implements ShopCarAdapter.PriceAn
                     mEmptyLayout.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.GONE);
                     mToBuyLayout.setVisibility(View.GONE);
-                    mListView.setVisibility(View.GONE);
                     return;
                 }
+                Log.i(TAG, "result2 = " + mDatas.toString());
+                Log.i(TAG, "result2.size = " + mDatas.size());
+                Log.i(TAG, "model = " + mDatas.get(0));
                 mListView.setVisibility(View.VISIBLE);
+                mToBuyLayout.setVisibility(View.VISIBLE);
                 if (mAdapter == null) {
 
                     mAdapter = new ShopCarAdapter(getActivity(), mDatas,
