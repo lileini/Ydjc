@@ -122,8 +122,6 @@ public class AddressAdapter extends BaseAdapter {
     private void requestAddressDelete(GetAddressResultModel.AddressBean addressBean) {
         RequestParams params = new RequestParams(Net.HOST + "addresses/" + addressBean.getId() + ".json");
         params.addHeader("Authorization", DictionaryTool.getToken(mContext));
-        addressBean.setIs_default(true);
-        params.addBodyParameter("address", GsonUtil.toJson(addressBean));
         HttpUtils.HttpDeleteMethod(new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
@@ -134,6 +132,7 @@ public class AddressAdapter extends BaseAdapter {
 
             @Override
             public void onError(Throwable throwable, boolean b) {
+                Log.i(TAG,"throwable = "+ throwable.toString());
                 ToastUtils.show(mContext.getApplicationContext(), "删除失败");
             }
 

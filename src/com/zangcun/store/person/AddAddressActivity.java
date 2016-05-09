@@ -116,7 +116,13 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         isEdit = true;
         etName.setText(addressBean.getConsignee());
         etMobile.setText(addressBean.getMobile());
-        etDetialedAddress.setText(addressBean.getAddress());
+        String address2 = addressBean.getAddress();
+        Log.i(TAG,"address2 = "+ address2);
+        int indexOf = address2.indexOf(" ", StringUtil.indexofFrom(address2, " ", 3));
+        Log.i(TAG,"indexOf = "+ indexOf);
+        address = addressBean.getAddress().substring(0,indexOf+1);
+        tvAddAddress.setText(address);
+        etDetialedAddress.setText(address2.substring(indexOf+1));
     }
 
     private void popupChoose() {
@@ -173,7 +179,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 if (isEdit) {
                     requestChangeAddress();
                 } else {
-
                     addAddress();
                 }
                 break;
@@ -277,7 +282,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
                 CityModel cityCityModel = CityDao.getCityByPid(proCityModel.getId()).get(whCity.getCurrentPosition());
                 CityModel countyCityModel = CityDao.getCityByPid(cityCityModel.getId()).get(whCounty.getCurrentPosition());
                 cId = countyCityModel.getId();
-                address = proCityModel.getName() +"  "+cityCityModel.getName() +"  "+countyCityModel.getName();
+                address = proCityModel.getName() +" "+cityCityModel.getName() +" "+countyCityModel.getName()+" ";
                 Log.i(TAG,"address = "+address);
                 Log.i(TAG,"cId = "+cId);
                 tvAddAddress.setText(address);
@@ -296,7 +301,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             DialogUtil.dialogUser(this,"请填写完整信息");
             return;
         }
-        addressBean.setAddress(address + detialedAddress);
+        addressBean.setAddress(address + detialedAddress.trim());
         addressBean.setMobile(mobile);
         addressBean.setConsignee(name);
         addressBean.setRegion_id(cId);
@@ -336,7 +341,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             DialogUtil.dialogUser(this,"请填写完整信息");
             return;
         }
-        AddressModel addressModel = new AddressModel(address +detialedAddress, mobile, cId + "", name);
+        AddressModel addressModel = new AddressModel(address +detialedAddress.trim(), mobile, cId + "", name);
         requestAddAddress(addressModel);
     }
 
