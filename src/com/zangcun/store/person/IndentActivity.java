@@ -147,7 +147,8 @@ public class IndentActivity extends BaseActivity implements View.OnClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.i(TAG,"onItemClick");
         Intent  intent = new Intent(this,OrderActivity.class);
-        intent.putExtra("order_id",mDataList.get(position).getOrder_id());
+        Log.i(TAG,"position = "+position);
+        intent.putExtra("order_id",mDataList.get(position-1).getOrder_id());
         intent.putExtra("orderDetail",true);
         startActivityForResult(intent,100);
     }

@@ -1,7 +1,9 @@
 package com.zangcun.store.person;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.wx.wheelview.adapter.ArrayWheelAdapter;
 import com.wx.wheelview.widget.WheelView;
@@ -85,8 +88,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     private ArrayAdapter<CharSequence> city_adapter;
     private ArrayAdapter<CharSequence> county_adapter;
 
-    private Integer provinceId, cityId;
-    private String strProvince, strCity, strCounty;
     private PopupWindow mPopWindow;
     private TextView week;
     private EditText etName;
@@ -152,175 +153,7 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         etDetialedAddress = (EditText) findViewById(R.id.et_xiangxidizhi);
         tvAddAddress = (TextView) findViewById(R.id.tv_address);
         tvAddAddress.setOnClickListener(this);
-        //省市县联动
-        /*province_spinner = (Spinner) findViewById(R.id.province);
-        province_spinner.setPrompt("请选择省份");
-        province_adapter = ArrayAdapter.createFromResource(this, R.array.province_item, android.R.layout.simple_spinner_item);
-        province_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        province_spinner.setAdapter(province_adapter);
-        province_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                provinceId = province_spinner.getSelectedItemPosition();
-                strProvince = province_spinner.getSelectedItem().toString();
-                city_spinner = (Spinner) findViewById(R.id.city);
-                if (true) {
-                    Log.v("test", "province: " + province_spinner.getSelectedItem().toString() + provinceId.toString());
-                    county_spinner = (Spinner) findViewById(R.id.county);
-                    city_spinner = (Spinner) findViewById(R.id.city);
-                    city_spinner.setPrompt("请选择城市");
-                    select(city_spinner, city_adapter, city[provinceId]);
-                    city_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                        @Override
-                        public void onItemSelected(AdapterView<?> arg0,
-                                                   View arg1, int arg2, long arg3) {
-                            cityId = city_spinner.getSelectedItemPosition();
-                            strCity = city_spinner.getSelectedItem().toString();
-                            Log.v("test", "city: " + city_spinner.getSelectedItem().toString() + cityId.toString());
-                            if (true) {
-                                county_spinner = (Spinner) findViewById(R.id.county);
-                                county_spinner.setPrompt("请选择县区");
-                                switch (provinceId) {
-                                    case 0:
-                                        select(county_spinner, county_adapter, countyOfBeiJing[cityId]);
-                                        break;
-                                    case 1:
-                                        select(county_spinner, county_adapter, countyOfTianJing[cityId]);
-                                        break;
-                                    case 2:
-                                        select(county_spinner, county_adapter, countyOfHeBei[cityId]);
-                                        break;
-                                    case 3:
-                                        select(county_spinner, county_adapter, countyOfShanXi1[cityId]);
-                                        break;
-                                    case 4:
-                                        select(county_spinner, county_adapter, countyOfNeiMengGu[cityId]);
-                                        break;
-                                    case 5:
-                                        select(county_spinner, county_adapter, countyOfLiaoNing[cityId]);
-                                        break;
-                                    case 6:
-                                        select(county_spinner, county_adapter, countyOfJiLin[cityId]);
-                                        break;
-                                    case 7:
-                                        select(county_spinner, county_adapter, countyOfHeiLongJiang[cityId]);
-                                        break;
-                                    case 8:
-                                        select(county_spinner, county_adapter, countyOfShangHai[cityId]);
-                                        break;
-                                    case 9:
-                                        select(county_spinner, county_adapter, countyOfJiangSu[cityId]);
-                                        break;
-                                    case 10:
-                                        select(county_spinner, county_adapter, countyOfZheJiang[cityId]);
-                                        break;
-                                    case 11:
-                                        select(county_spinner, county_adapter, countyOfAnHui[cityId]);
-                                        break;
-                                    case 12:
-                                        select(county_spinner, county_adapter, countyOfFuJian[cityId]);
-                                        break;
-                                    case 13:
-                                        select(county_spinner, county_adapter, countyOfJiangXi[cityId]);
-                                        break;
-                                    case 14:
-                                        select(county_spinner, county_adapter, countyOfShanDong[cityId]);
-                                        break;
-                                    case 15:
-                                        select(county_spinner, county_adapter, countyOfHeNan[cityId]);
-                                        break;
-                                    case 16:
-                                        select(county_spinner, county_adapter, countyOfHuBei[cityId]);
-                                        break;
-                                    case 17:
-                                        select(county_spinner, county_adapter, countyOfHuNan[cityId]);
-                                        break;
-                                    case 18:
-                                        select(county_spinner, county_adapter, countyOfGuangDong[cityId]);
-                                        break;
-                                    case 19:
-                                        select(county_spinner, county_adapter, countyOfGuangXi[cityId]);
-                                        break;
-                                    case 20:
-                                        select(county_spinner, county_adapter, countyOfHaiNan[cityId]);
-                                        break;
-                                    case 21:
-                                        select(county_spinner, county_adapter, countyOfChongQing[cityId]);
-                                        break;
-                                    case 22:
-                                        select(county_spinner, county_adapter, countyOfSiChuan[cityId]);
-                                        break;
-                                    case 23:
-                                        select(county_spinner, county_adapter, countyOfGuiZhou[cityId]);
-                                        break;
-                                    case 24:
-                                        select(county_spinner, county_adapter, countyOfYunNan[cityId]);
-                                        break;
-                                    case 25:
-                                        select(county_spinner, county_adapter, countyOfXiZang[cityId]);
-                                        break;
-                                    case 26:
-                                        select(county_spinner, county_adapter, countyOfShanXi2[cityId]);
-                                        break;
-                                    case 27:
-                                        select(county_spinner, county_adapter, countyOfGanSu[cityId]);
-                                        break;
-                                    case 28:
-                                        select(county_spinner, county_adapter, countyOfQingHai[cityId]);
-                                        break;
-                                    case 29:
-                                        select(county_spinner, county_adapter, countyOfNingXia[cityId]);
-                                        break;
-                                    case 30:
-                                        select(county_spinner, county_adapter, countyOfXinJiang[cityId]);
-                                        break;
-                                    case 31:
-                                        select(county_spinner, county_adapter, countyOfHongKong[cityId]);
-                                        break;
-                                    case 32:
-                                        select(county_spinner, county_adapter, countyOfAoMen[cityId]);
-                                        break;
-                                    case 33:
-                                        select(county_spinner, county_adapter, countyOfTaiWan[cityId]);
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-
-                                county_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                                    @Override
-                                    public void onItemSelected(
-                                            AdapterView<?> arg0, View arg1,
-                                            int arg2, long arg3) {
-                                        strCounty = county_spinner.getSelectedItem().toString();
-//                                        display.setText(strProvince+"-"+strCity+"-"+strCounty);
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> arg0) {
-
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> arg0) {
-                        }
-
-                    });
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });*/
     }
 
     private void select(Spinner spin, ArrayAdapter<CharSequence> adapter, int arry) {
@@ -370,6 +203,8 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
     String address = null;
     int cId = -1;
     private void popupAddress() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(tvAddAddress.getWindowToken(),InputMethodManager.HIDE_IMPLICIT_ONLY);
         CityDateModule.province = CityDao.getCityByPid(1);
         View contentView = LayoutInflater.from(this).inflate(R.layout.popuwindow_address, null);
         mPopWindow = new PopupWindow(contentView, ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.WRAP_CONTENT, true);
@@ -457,20 +292,14 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
         String name = etName.getText().toString();
         String mobile = etMobile.getText().toString();
         String detialedAddress = etDetialedAddress.getText().toString();
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress)) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(detialedAddress) || TextUtils.isEmpty(address)) {
             DialogUtil.dialogUser(this,"请填写完整信息");
             return;
         }
-        Log.i(TAG, "strProvince " + strProvince);
-        Log.i(TAG, "strCity " + strCity);
-        Log.i(TAG, "strCounty " + strCounty);
-        CityModel province = CityDao.findCity(strProvince);
-        CityModel city = CityDao.findCity(strCity, province.getId());
-        CityModel county = CityDao.findCity(strCounty);
-        addressBean.setAddress(strProvince + strCity + strCounty + detialedAddress);
+        addressBean.setAddress(address + detialedAddress);
         addressBean.setMobile(mobile);
         addressBean.setConsignee(name);
-        addressBean.setRegion_id(county.getId());
+        addressBean.setRegion_id(cId);
         String json = GsonUtil.toJson(addressBean);
         com.zangcun.store.utils.Log.i(TAG, "json = " + json);
         params.addBodyParameter("address", json);
@@ -507,26 +336,6 @@ public class AddAddressActivity extends BaseActivity implements View.OnClickList
             DialogUtil.dialogUser(this,"请填写完整信息");
             return;
         }
-        /*StringBuilder region_id = new StringBuilder();
-        Log.i(TAG, "strProvince " + strProvince);
-        Log.i(TAG, "strCity " + strCity);
-        Log.i(TAG, "strCounty " + strCounty);
-        CityModel province = CityDao.findCity(strProvince);
-        CityModel city = CityDao.findCity(strCity, province.getId());
-        CityModel county = CityDao.findCity(strCounty);
-
-        if (province != null) {
-            region_id.append(province.getId());
-        }
-        if (city != null) {
-            region_id.append(city.getId());
-        }
-        if (county != null) {
-            region_id.append(county.getId());
-        }
-        Log.i(TAG, "province =  " + province);
-        Log.i(TAG, "city =  " + city);
-        Log.i(TAG, "county =  " + county);*/
         AddressModel addressModel = new AddressModel(address +detialedAddress, mobile, cId + "", name);
         requestAddAddress(addressModel);
     }

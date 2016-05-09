@@ -1,5 +1,6 @@
 package com.zangcun.store;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
@@ -138,6 +140,7 @@ public class MyActivity extends BaseActivity implements TabLayout.ITabClick, Use
 
     private void initFragment() {
         if (isLogin) {
+
             for (int i = 0; i < mTabs.length; i++) {
                 putFragment(mTabs1[i], getFragmentByIndex(i));
             }

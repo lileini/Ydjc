@@ -140,9 +140,9 @@ public class LinPayActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(LinPayActivity.this, OrderActivity.class);
-//        intent.putExtra("linpay", mDatas.get(position));
-//        intent.putExtra("kind", "linpay");
-        startActivity(intent);
+        intent.putExtra("order_id",mDataList.get(position-1).getOrder_id());
+        intent.putExtra("orderDetail",true);
+        startActivityForResult(intent,100);
     }
 
     @Override

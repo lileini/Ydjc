@@ -1,9 +1,11 @@
 package com.zangcun.store.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -11,11 +13,17 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.zangcun.store.MyActivity;
 import com.zangcun.store.R;
 import com.zangcun.store.activity.GetCordActivity;
 import com.zangcun.store.activity.RegisterActivity;
+import com.zangcun.store.dao.CityDao;
+import com.zangcun.store.model.CityDateModule;
+import com.zangcun.store.model.CityModel;
+import com.zangcun.store.net.Net;
 import com.zangcun.store.other.Const;
 import com.zangcun.store.utils.DialogUtil;
 import com.zangcun.store.utils.DictionaryTool;
@@ -26,7 +34,9 @@ import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 //登录
 public class UserFragment extends BaseFragment implements View.OnClickListener, PlatformActionListener {
@@ -140,6 +150,9 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
                     DictionaryTool.savePWD(getActivity().getApplicationContext(),password);
                     Login=true;
                     startActivity(new Intent(getActivity(),MyActivity.class));
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mLogin_pass.getWindowToken(),InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    getAdressId();
 //                    Login=true;
 //                    if (listener != null)
 //                        listener.onLoginClick("个人中心");
@@ -165,6 +178,49 @@ public class UserFragment extends BaseFragment implements View.OnClickListener, 
             }
         },params);
 
+    }
+    /**
+     * 获取收货地址id存进数据库
+     */
+    public void getAdressId() {
+        RequestParams params = new RequestParams(Net.URL_ADDRESSES);
+        params.addHeader("Authorization", DictionaryTool.getToken(getActivity().getApplicationContext()));
+        HttpUtils.HttpGetMethod(new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                Log.i(TAG, "onSuccess = " + s);
+                List<CityModel> cityList = new Gson().fromJson(s, new TypeToken<ArrayList<CityModel>>() {
+                }.getType());
+//                Log.i(TAG, "cityList= " + cityList);
+                if (cityList == null) {
+                    return;
+                }
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        CityDao.deleteCityList();
+                        CityDao.saveCityList(cityList);
+                        new CityDateModule().start();
+                    }
+                }.start();
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        }, params);
     }
 
     /***

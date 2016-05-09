@@ -5,8 +5,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
+import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import org.json.JSONObject;
 
 /**
@@ -28,7 +30,7 @@ public class WxPayUtil {
     public void pay(String payInfo){
         try{
 
-
+                Log.i(TAG,"payInfo = "+payInfo);
                 JSONObject json = new JSONObject(payInfo);
                 if(null != json && !json.has("retcode") ){
                     PayReq req = new PayReq();
@@ -42,6 +44,8 @@ public class WxPayUtil {
                     req.extData			= "app data"; // optional
                     Toast.makeText(context, "正常调起支付", Toast.LENGTH_SHORT).show();
                     // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+
+                    api = WXAPIFactory.createWXAPI(context, req.appId);
                     api.sendReq(req);
                 }else{
                     Log.d(TAG, "返回错误"+json.getString("retmsg"));
